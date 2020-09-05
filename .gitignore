@@ -1,29 +1,67 @@
-#java
-*.class
+Skip to content
+Search or jump to…
 
-#package file
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
-#maven ignore
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@zch-python 
+Learn Git and GitHub without any code!
+Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
+
+
+apache
+/
+dubbo
+3.3k
+33.4k22k
+Code
+Issues
+594
+Pull requests
+140
+Actions
+Projects
+4
+Wiki
+Security
+Insights
+dubbo/.gitignore
+@mercyblitz
+mercyblitz add visual-studio-code ignore (#6221) (#6287)
+…
+Latest commit e4c7330 Jun 8, 2020
+ History
+ 11 contributors
+@chickenlj@liangfei0201@oaoit@mercyblitz@ralf0131@weipeng2k@cvictory@oldratlee@Jeff-Lv@htynkn@LiosWong
+46 lines (38 sloc)  498 Bytes
+  
+# maven ignore
 target/
-build/
+*.jar
+!.mvn/wrapper/*
+*.war
+*.zip
+*.tar
+*.tar.gz
+.flattened-pom.xml
 
-#eclipse ignore
+# eclipse ignore
 .settings/
 .project
-.classpatch
+.classpath
 
-#Intellij idea
+# idea ignore
 .idea/
-/idea/
 *.ipr
 *.iml
 *.iws
 
-# temp file
+# visual-studio-code ignore
+.vscode/
+
+# temp ignore
 *.log
 *.cache
 *.diff
@@ -33,3 +71,27 @@ build/
 # system ignore
 .DS_Store
 Thumbs.db
+*.orig
+
+# license check result
+license-list
+
+# grpc compiler
+compiler/gradle.properties
+compiler/build/*
+compiler/.gradle/*
+
+# protobuf
+dubbo-serialization/dubbo-serialization-protobuf/build/*
+© 2020 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
