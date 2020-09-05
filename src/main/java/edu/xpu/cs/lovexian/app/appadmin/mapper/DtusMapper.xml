@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xpu.cs.earthsite.app.appadmin.mapper.DtusAdminMapper">
+    <resultMap id="dtus" type="edu.xpu.cs.earthsite.app.appadmin.entity.AdminDtus">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="dtu_id" jdbcType="VARCHAR" property="dtuId"/>
+        <result column="dtu_name" jdbcType="varbinary" property="dtuName"/>
+        <result column="longitude" jdbcType="DOUBLE" property="longitude"/>
+        <result column="latitude" jdbcType="DOUBLE" property="latitude"/>
+        <result column="dtu_type" jdbcType="VARCHAR" property="dtuType"/>
+        <result column="elc_volume" jdbcType="VARCHAR" property="elcVolume"/>
+        <result column="elc_power" jdbcType="VARCHAR" property="elcPower"/>
+        <result column="elc_status" jdbcType="INTEGER" property="elcStatus"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="signal_density" jdbcType="VARCHAR" property="signalDensity"/>
+        <result column="elec_charge" jdbcType="VARCHAR" property="elecCharge"/>
+        <result column="rate" jdbcType="VARCHAR" property="rate"/>
+        <result column="frequency" jdbcType="VARCHAR" property="frequency"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="dis_info" jdbcType="VARCHAR" property="disInfo"/>
+    </resultMap>
+</mapper>
