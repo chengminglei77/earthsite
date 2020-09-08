@@ -53,10 +53,16 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
     public IPage<AdminDtus> findDtusByTypeId(QueryRequest request, AdminDtus adminDtus) {
         QueryWrapper<AdminDtus> queryWrapper = new QueryWrapper<>();
 
-        //模糊查询
+        //如果DtuName不为空,那么就模糊查询:dtu名
+        //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
         if(StringUtils.isNotBlank(adminDtus.getDtuName())){
             queryWrapper.lambda().like(AdminDtus::getDtuName,adminDtus.getDtuName());
         }
+        //如果dtuType不为空,那么模糊查询:dtuType
+        if(StringUtils.isNotBlank(adminDtus.getDtuType())){
+            queryWrapper.lambda().like(AdminDtus::getDtuType,adminDtus.getDtuType());
+        }
+
         if(adminDtus.getStatus()!=null){
             //相当于where status=....
             queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
