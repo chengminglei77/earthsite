@@ -1,18 +1,25 @@
 package edu.xpu.cs.lovexian.app.appadmin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGateways;
 import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
+import edu.xpu.cs.lovexian.app.constant.Constant;
+import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
+import edu.xpu.cs.lovexian.common.exception.EarthSiteException;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -37,9 +44,83 @@ public class GatewaysAdminController extends BaseController {
         return EarthSiteResponse.SUCCESS().data(dataTable);
 
     }
-    //info类专用，其他类删除
-    @PostMapping("saveOrUpdate")
-    public void addOrUpdateGateways (AdminGateways adminGateways){
 
+
+    //@Log("网关管理:显示未删除的的信息")
+    @GetMapping("listByTypeId")
+    public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminGateways adminGateways) {
+        IPage<AdminGateways> dtuInfos =gatewaysAdminService.findGatewaysByTypeId(request, adminGateways);
+        Map<String, Object> dataTable = getDataTable(dtuInfos);
+        return EarthSiteResponse.SUCCESS().data(dataTable);
+    }
+
+   // @Log("网关管理:通过id进行删除信息")
+    @DeleteMapping("deleteById")
+    public EarthSiteResponse deleteDtu(String id) {
+        if(gatewaysAdminService.deleteGateWays(id)){
+            return EarthSiteResponse.SUCCESS().message("删除成功");
+        }
+        return EarthSiteResponse.FAIL().message("删除失败");
+    }
+
+    //@Log("网关管理:批量删除信息")
+    @DeleteMapping("BatchDelete/{actionIds}")
+    public EarthSiteResponse deleteBatchGateways(@NotBlank(message = "{required}") @PathVariable String actionIds)
+            throws EarthSiteException {
+        try{
+            //通过逗号进行分割为数组,循环输出进行删除
+            String ids[]=actionIds.split(StringPool.COMMA);
+            Arrays.stream(ids).forEach(id->this.gatewaysAdminService.deleteGateWays(id));
+        }catch (Exception e){
+            message = "批量删除用户失败";
+            log.error(message, e);
+            throw new EarthSiteException(message);
+        }
+        return EarthSiteResponse.SUCCESS().message("批量删除用户成功");
+    }
+
+
+
+    //info类专用，其他类删除
+    //@log("网关管理")
+    @PostMapping("saveOrUpdate")
+    public EarthSiteResponse addOrUpdateGateways (AdminGateways adminGateways){
+        System.out.println("=========================进入Gateways添加功能========================");
+        String currentPort = getCurrentUser();
+        Date date = new Date();
+        if (StringUtils.isEmpty(adminGateways.getId())) {
+            adminGateways.setServerPort(currentPort);//设置网关的端口号
+            adminGateways.setCreatedAt(date);//网关的部署时间
+            adminGateways.setStatus(0);//选择状态
+
+        }
+        adminGateways.setUpdatedAt(date);//设置最后的更新时间
+
+        //保存或更新文章信息
+        boolean actOper = gatewaysAdminService.saveOrUpdate(adminGateways);
+        boolean actCheckOper = false;
+        //根据checkState判断是草稿还是待审核的信息，需要往审核表存储
+        if (adminGateways.getStatus().equals(Constant.CheckStateEnum.draft.getCode())) {
+            System.out.println("这是保存草稿的方法");
+        } else if (adminGateways.getStatus().equals(Constant.CheckStateEnum.uncheck.getCode())) {
+            //发布审核
+
+        }
+        return actOper && actCheckOper ? EarthSiteResponse.SUCCESS()
+                : EarthSiteResponse.SUCCESS().message(adminGateways.getStatus().equals(Constant.CheckStateEnum.draft.getCode())
+                ? "保存草稿出问题了哦！" : "发布工作信息出问题了哦！");
+    }
+    /**
+     * 搜索相关信息
+     * @param request
+     * @param adminGateways
+     * @return
+     */
+    @Log("网关管理:查询相关信息")
+    @GetMapping("queryGateways")
+    public EarthSiteResponse queryGateways(QueryRequest request, AdminGateways adminGateways) {
+        IPage<AdminGateways> dtuInfos = gatewaysAdminService.queryGateways(request, adminGateways);
+        Map<String, Object> dataTable = getDataTable(dtuInfos);
+        return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 }
