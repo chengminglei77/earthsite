@@ -1,14 +1,11 @@
 package edu.xpu.cs.lovexian.app.appadmin.service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
-
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
-import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
+import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 
-import java.util.List;
 /**
  *  Service接口
  *
