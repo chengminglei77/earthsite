@@ -42,9 +42,13 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
     public IPage<AdminGateways> findGatewaysByTypeId(QueryRequest request, AdminGateways adminGateways) {
         QueryWrapper<AdminGateways> queryWrapper = new QueryWrapper<>();
         //模糊查询
-        if (StringUtils.isNotBlank(adminGateways.getServerPort())) {
-            queryWrapper.lambda().like(AdminGateways::getServerPort, adminGateways.getServerPort());
+        if (StringUtils.isNotBlank(adminGateways.getGateId())) {
+            queryWrapper.lambda().like(AdminGateways::getGateId, adminGateways.getGateId());
         }
+
+
+
+
         if (adminGateways.getStatus() != null) {
             //相当于where status=....
             queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus());

@@ -96,20 +96,36 @@ public class GatewaysAdminController extends BaseController {
         }
         adminGateways.setUpdatedAt(date);//设置最后的更新时间
 
-        //保存或更新文章信息
-        boolean actOper = gatewaysAdminService.saveOrUpdate(adminGateways);
-        boolean actCheckOper = false;
-        //根据checkState判断是草稿还是待审核的信息，需要往审核表存储
-        if (adminGateways.getStatus().equals(Constant.CheckStateEnum.draft.getCode())) {
-            System.out.println("这是保存草稿的方法");
-        } else if (adminGateways.getStatus().equals(Constant.CheckStateEnum.uncheck.getCode())) {
-            //发布审核
 
-        }
-        return actOper && actCheckOper ? EarthSiteResponse.SUCCESS()
-                : EarthSiteResponse.SUCCESS().message(adminGateways.getStatus().equals(Constant.CheckStateEnum.draft.getCode())
-                ? "保存草稿出问题了哦！" : "发布工作信息出问题了哦！");
+        //保存或更新dtu信息
+        boolean actOper = gatewaysAdminService.saveOrUpdate(adminGateways);
+
+        return EarthSiteResponse.SUCCESS().data(actOper);
+
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 搜索相关信息
      * @param request
