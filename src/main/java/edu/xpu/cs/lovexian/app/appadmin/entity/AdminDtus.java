@@ -122,4 +122,10 @@ public class AdminDtus {
     @TableField("dis_info")
     private String disInfo;
 
+    /**
+     * 删除状态
+     */
+    @TableField("del_state")
+    private Integer delState;
+
 }
