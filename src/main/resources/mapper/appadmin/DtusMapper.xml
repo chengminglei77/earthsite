@@ -7,6 +7,7 @@
         <result column="dtu_name" jdbcType="VARCHAR" property="dtuName"/>
         <result column="longitude" jdbcType="DOUBLE" property="longitude"/>
         <result column="latitude" jdbcType="DOUBLE" property="latitude"/>
+        <result column="desc_info" jdbcType="VARCHAR" property="descInfo"/>
         <result column="dtu_type" jdbcType="VARCHAR" property="dtuType"/>
         <result column="elc_volume" jdbcType="VARCHAR" property="elcVolume"/>
         <result column="elc_power" jdbcType="VARCHAR" property="elcPower"/>

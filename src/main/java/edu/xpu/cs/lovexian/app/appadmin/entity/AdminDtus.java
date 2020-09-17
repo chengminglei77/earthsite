@@ -1,12 +1,12 @@
 package edu.xpu.cs.lovexian.app.appadmin.entity;
 
-import java.util.Date;
-
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
  *  Entity
@@ -46,6 +46,13 @@ public class AdminDtus {
      */
     @TableField("latitude")
     private Double latitude;
+
+
+    /**
+     * 位置信息
+     */
+    @TableField("desc_info")
+    private String descInfo;
 
     /**
      * dtu类型
@@ -127,5 +134,6 @@ public class AdminDtus {
      */
     @TableField("del_state")
     private Integer delState;
+
 
 }
