@@ -1,12 +1,12 @@
 package edu.xpu.cs.lovexian.app.appadmin.entity;
 
-import java.util.Date;
-
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
  *  Entity
@@ -47,6 +47,12 @@ public class AdminSensors {
      */
     @TableField("latitude")
     private Double latitude;
+
+    /**
+     * 位置信息
+     */
+    @TableField("desc_info")
+    private String descInfo;
 
     /**
      * 采样频率

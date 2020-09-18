@@ -6,6 +6,7 @@
         <result column="gate_id" jdbcType="VARCHAR" property="gateId"/>
         <result column="longitude" jdbcType="DOUBLE" property="longitude"/>
         <result column="latitude" jdbcType="DOUBLE" property="latitude"/>
+        <result column="desc_info" jdbcType="VARCHAR" property="descInfo"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="elec_charge" jdbcType="VARCHAR" property="elecCharge"/>
         <result column="server_ip" jdbcType="VARCHAR" property="serverIp"/>

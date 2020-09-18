@@ -42,6 +42,12 @@ public class AdminGateways {
     private Double latitude;
 
     /**
+     * 位置信息
+     */
+    @TableField("desc_info")
+    private String descInfo;
+
+    /**
      * 状态
      */
     @TableField("status")
