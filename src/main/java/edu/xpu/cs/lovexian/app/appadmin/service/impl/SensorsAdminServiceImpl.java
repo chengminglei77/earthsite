@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
         if(adminSensors.getStatus()!=null){
             queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
         }else{
-            adminSensors.setStatus(0);//0为未删除状态
+            adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志state=="+adminSensors.getStatus());
             queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
         }

@@ -2,10 +2,9 @@ package edu.xpu.cs.lovexian.app.appadmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGateways;
 import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
-import edu.xpu.cs.lovexian.app.constant.Constant;
+import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
@@ -91,7 +90,7 @@ public class GatewaysAdminController extends BaseController {
         if (StringUtils.isEmpty(adminGateways.getId())) {
             adminGateways.setServerPort(currentPort);//设置网关的端口号
             adminGateways.setCreatedAt(date);//网关的部署时间
-            adminGateways.setStatus(0);//选择状态
+            adminGateways.setStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
 
         }
         adminGateways.setUpdatedAt(date);//设置最后的更新时间

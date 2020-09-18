@@ -3,24 +3,18 @@ package edu.xpu.cs.lovexian.app.appadmin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminLawerInfo;
-import edu.xpu.cs.lovexian.app.appadmin.mapper.DtusAdminMapper;
-import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
-import edu.xpu.cs.lovexian.common.annotation.Log;
-import edu.xpu.cs.lovexian.common.domain.EarthSiteConstant;
-import edu.xpu.cs.lovexian.common.domain.QueryRequest;
-import edu.xpu.cs.lovexian.common.utils.SortUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import java.util.List;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.DtusAdminMapper;
+import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
+import edu.xpu.cs.lovexian.common.domain.QueryRequest;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *  Service实现
@@ -67,7 +61,7 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
             //相当于where status=....
             queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
         }else{
-            adminDtus.setStatus(0);//0为未删除状态
+            adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志state=="+adminDtus.getStatus());
             queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
         }

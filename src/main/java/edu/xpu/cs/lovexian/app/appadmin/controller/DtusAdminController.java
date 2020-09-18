@@ -3,15 +3,13 @@ package edu.xpu.cs.lovexian.app.appadmin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminLawerInfo;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
-import edu.xpu.cs.lovexian.app.constant.Constant;
+import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import edu.xpu.cs.lovexian.common.exception.EarthSiteException;
-import edu.xpu.cs.lovexian.common.utils.DateUtil;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -112,7 +109,7 @@ public class DtusAdminController extends BaseController {
         if (StringUtils.isEmpty(adminDtus.getId())) {//如果当前id不为空
             adminDtus.setDtuName(currentUserName);//设置dtu的名称
             adminDtus.setCreatedAt(date);//设置dtu的创建时间
-            adminDtus.setStatus(0);//在前端显示该信息
+            adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//在前端显示该信息
         }
         adminDtus.setUpdatedAt(date);//设置dtu最后更新时间
 

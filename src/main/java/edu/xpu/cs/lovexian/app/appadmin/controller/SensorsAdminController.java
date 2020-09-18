@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
@@ -77,7 +78,7 @@ public class SensorsAdminController extends BaseController {
         //如果当前id不为空
         if (StringUtils.isEmpty(adminSensors.getId())) {
             adminSensors.setCreatedAt(date);//创建的时间
-            adminSensors.setStatus(0);//设置状态
+            adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
         }
         adminSensors.setUpdatedAt(date);//设置Sensors最后更新时间
 
