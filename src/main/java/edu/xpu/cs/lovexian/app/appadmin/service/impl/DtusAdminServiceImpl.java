@@ -93,5 +93,13 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
     }
 
 
+    @Override
+    public boolean completelyDeleteDtus(String id) {
 
+        //删除操作实际上做的是将status设置为1,从而不是真正意义上的在数据库删除,只是不在前端界面显示而已
+        dtusAdminMapper.deleteById(id);
+
+        return true;
+
+    }
 }

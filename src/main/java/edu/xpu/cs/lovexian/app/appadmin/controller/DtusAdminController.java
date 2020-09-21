@@ -104,10 +104,10 @@ public class DtusAdminController extends BaseController {
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateDtus (AdminDtus adminDtus){
         System.out.println("=========================进入dtu添加功能========================");
-        String currentUserName = getCurrentUser();//得到当前用户名
+        //String currentUserName = getCurrentUser();//得到当前用户名
         Date date = new Date();
         if (StringUtils.isEmpty(adminDtus.getId())) {//如果当前id不为空
-            adminDtus.setDtuName(currentUserName);//设置dtu的名称
+            //adminDtus.setDtuName(currentUserName);//设置dtu的名称为当前用户名
             adminDtus.setCreatedAt(date);//设置dtu的创建时间
             adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//在前端显示该信息
         }
@@ -116,6 +116,17 @@ public class DtusAdminController extends BaseController {
         //保存或更新dtu信息
         boolean actOper = dtusAdminService.saveOrUpdate(adminDtus);
         return EarthSiteResponse.SUCCESS().data(actOper);
+    }
+
+
+
+    @Log("dtu管理:彻底删除信息")
+    @DeleteMapping("completelyDelete")
+    public EarthSiteResponse CompletelyDelete(String id) {
+        if(dtusAdminService.completelyDeleteDtus(id)){
+            return EarthSiteResponse.SUCCESS().message("彻底删除成功");
+        }
+        return EarthSiteResponse.FAIL().message("彻底删除失败");
     }
 
 

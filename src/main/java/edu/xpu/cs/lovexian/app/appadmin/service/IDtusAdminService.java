@@ -1,15 +1,10 @@
 package edu.xpu.cs.lovexian.app.appadmin.service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-
-
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminLawerInfo;
-import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
+import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 
 /**
  *  Service接口
@@ -38,6 +33,8 @@ public interface IDtusAdminService extends IService<AdminDtus> {
      * @return
      */
     boolean deleteDtus(String id);
+
+    boolean completelyDeleteDtus(String id);
 
     IPage<AdminDtus> queryDtuInfo(QueryRequest request, AdminDtus adminDtus);
 
