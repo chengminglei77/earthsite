@@ -80,5 +80,15 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
         return this.page(adminGatewaysPage, queryWrapper);
     }
 
+    @Override
+    public boolean completelyDeleteGateway(String id) {
+
+        //删除操作实际上做的是将status设置为1,从而不是真正意义上的在数据库删除,只是不在前端界面显示而已
+        gatewaysAdminMapper.deleteById(id);
+
+        return true;
+
+    }
+
 
 }

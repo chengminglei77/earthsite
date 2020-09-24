@@ -45,7 +45,7 @@ public class GatewaysAdminController extends BaseController {
     }
 
 
-    //@Log("网关管理:显示未删除的的信息")
+    @Log("网关管理:显示未删除的的信息")
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminGateways adminGateways) {
         IPage<AdminGateways> dtuInfos =gatewaysAdminService.findGatewaysByTypeId(request, adminGateways);
@@ -53,7 +53,7 @@ public class GatewaysAdminController extends BaseController {
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 
-   // @Log("网关管理:通过id进行删除信息")
+    @Log("网关管理:通过id进行删除信息")
     @DeleteMapping("deleteById")
     public EarthSiteResponse deleteDtu(String id) {
         if(gatewaysAdminService.deleteGateWays(id)){
@@ -62,7 +62,7 @@ public class GatewaysAdminController extends BaseController {
         return EarthSiteResponse.FAIL().message("删除失败");
     }
 
-    //@Log("网关管理:批量删除信息")
+    @Log("网关管理:批量删除信息")
     @DeleteMapping("BatchDelete/{actionIds}")
     public EarthSiteResponse deleteBatchGateways(@NotBlank(message = "{required}") @PathVariable String actionIds)
             throws EarthSiteException {
@@ -85,10 +85,10 @@ public class GatewaysAdminController extends BaseController {
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateGateways (AdminGateways adminGateways){
         System.out.println("=========================进入Gateways添加功能========================");
-        String currentPort = getCurrentUser();
+        //String currentPort = getCurrentUser();
         Date date = new Date();
         if (StringUtils.isEmpty(adminGateways.getId())) {
-            adminGateways.setServerPort(currentPort);//设置网关的端口号
+            //adminGateways.setServerPort(currentPort);//设置网关的端口号
             adminGateways.setCreatedAt(date);//网关的部署时间
             adminGateways.setStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
 
@@ -103,27 +103,14 @@ public class GatewaysAdminController extends BaseController {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Log("网关管理:彻底删除信息")
+    @DeleteMapping("completelyDelete")
+    public EarthSiteResponse CompletelyDelete(String id) {
+        if(gatewaysAdminService.completelyDeleteGateway(id)){
+            return EarthSiteResponse.SUCCESS().message("彻底删除成功");
+        }
+        return EarthSiteResponse.FAIL().message("彻底删除失败");
+    }
 
     /**
      * 搜索相关信息
@@ -139,3 +126,4 @@ public class GatewaysAdminController extends BaseController {
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 }
+ 
