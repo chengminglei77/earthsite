@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.SensorTypeAdminMapper">
+    <resultMap id="sensorType" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorType">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="sensor_name" jdbcType="VARCHAR" property="sensorName"/>
+        <result column="sensor_type" jdbcType="VARCHAR" property="sensorType"/>
+        <result column="sensor_model" jdbcType="VARCHAR" property="sensorModel"/>
+        <result column="sensor_producer" jdbcType="VARCHAR" property="sensorProducer"/>
+        <result column="sensor_desc" jdbcType="VARCHAR" property="sensorDesc"/>
+        <result column="sensor_frequency" jdbcType="VARCHAR" property="sensorFrequency"/>
+    </resultMap>
+</mapper>
