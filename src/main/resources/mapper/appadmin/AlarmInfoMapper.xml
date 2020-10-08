@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.AlarmInfoAdminMapper">
+    <resultMap id="alarmInfo" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="alarm_info" jdbcType="VARCHAR" property="alarmInfo"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="delete_state" jdbcType="INTEGER" property="delete_state"/>
+        <result column="alarm_time" jdbcType="TIMESTAMP" property="alarmTime"/>
+        <result column="deal_admin" jdbcType="VARCHAR" property="dealAdmin"/>
+        <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime"/>
+        <result column="alarm_reason" jdbcType="VARCHAR" property="alarmReason"/>
+    </resultMap>
+</mapper>

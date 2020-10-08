@@ -86,16 +86,16 @@ public class GatewaysAdminController extends BaseController {
     public EarthSiteResponse addOrUpdateGateways (AdminGateways adminGateways){
         System.out.println("=========================进入Gateways添加功能========================");
         //String currentPort = getCurrentUser();
+        System.out.println(adminGateways.getStatus());
+        String currentPort = getCurrentUser();
         Date date = new Date();
         if (StringUtils.isEmpty(adminGateways.getId())) {
             //adminGateways.setServerPort(currentPort);//设置网关的端口号
             adminGateways.setCreatedAt(date);//网关的部署时间
             adminGateways.setStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
-
         }
+        System.out.println(adminGateways.getStatus());
         adminGateways.setUpdatedAt(date);//设置最后的更新时间
-
-
         //保存或更新dtu信息
         boolean actOper = gatewaysAdminService.saveOrUpdate(adminGateways);
 

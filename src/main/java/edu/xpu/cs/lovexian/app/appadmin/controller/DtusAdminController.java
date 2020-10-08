@@ -46,14 +46,9 @@ public class DtusAdminController extends BaseController {
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminDtus adminDtus) {
         IPage<AdminDtus> dtuInfos = dtusAdminService.findDtusByTypeId(request, adminDtus);
-
         Map<String, Object> dataTable = getDataTable(dtuInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
-
-
-
-
 
 
     @Log("dtu管理:通过id进行删除信息")
