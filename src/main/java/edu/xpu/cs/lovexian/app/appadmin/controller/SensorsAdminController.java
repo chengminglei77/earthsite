@@ -46,9 +46,12 @@ public class SensorsAdminController extends BaseController {
     @Log("sensors管理:通过id删除信息")
     @DeleteMapping("deleteById")
     public EarthSiteResponse deleteSensors(String id) {
+        //调用Service层所对应的删除ID的方法
         if(sensorsAdminService.deleteSensors(id)){
+            //如果成功
             return EarthSiteResponse.SUCCESS().message("删除成功");
         }
+        //失败
         return EarthSiteResponse.FAIL().message("删除失败");
     }
     /*//info类专用，其他类删除
@@ -59,13 +62,17 @@ public class SensorsAdminController extends BaseController {
     @Log("sensors管理:查询相关信息")
     @GetMapping("querySensorsInfo")
     public EarthSiteResponse querySensors(QueryRequest request,AdminSensors adminSensors) {
+        //根据要求调用Service层的模糊查询的方法
         IPage<AdminSensors> sensorsInfos = sensorsAdminService.querySensorsInfo(request, adminSensors);
+        //将数据转化为集合
         Map<String, Object> dataTable = getDataTable(sensorsInfos);
+        //将数据填充到EarthSiteResponse并且返回
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
-    @Log("sensors管理:显示未删除的sensors的信息")
+    @Log("sensors管理:显示sensors的信息")
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request,AdminSensors adminSensors) {
+        //根据查询要求调用Service层的查询未删除的ID的方法
         IPage<AdminSensors> sensorsInfos = sensorsAdminService.findSensorsByTypeId(request, adminSensors);
         Map<String, Object> dataTable = getDataTable(sensorsInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
@@ -73,10 +80,12 @@ public class SensorsAdminController extends BaseController {
     @Log("sensors管理:保存或更新相关信息")
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateSensors (AdminSensors adminSensors){
-        System.out.println("=========================进入Sensors添加功能========================");
+        //System.out.println("=========================进入Sensors添加功能========================");
         Date date = new Date();
+        //String current = getCurrentUser();
         //如果当前id不为空
         if (StringUtils.isEmpty(adminSensors.getId())) {
+           // adminSensors.setSensorId(current);
             adminSensors.setCreatedAt(date);//创建的时间
             adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
         }
@@ -85,6 +94,7 @@ public class SensorsAdminController extends BaseController {
         //保存或更新Sensors信息
         boolean actOper = sensorsAdminService.saveOrUpdate(adminSensors);
         return EarthSiteResponse.SUCCESS().data(actOper);
+
     }
     @Log("sensors管理:批量删除")
     @DeleteMapping("BatchDelete/{actionIds}")
@@ -101,4 +111,15 @@ public class SensorsAdminController extends BaseController {
         }
         return EarthSiteResponse.SUCCESS().message("批量删除用户成功");
     }
+    @Log("sensors管理：彻底删除")
+    @DeleteMapping("completelyDelete")
+    public  EarthSiteResponse completelyDelete(String id)
+    {
+        if(sensorsAdminService.completelyDeleteSensors(id)){
+        return EarthSiteResponse.SUCCESS().message("删除成功");
+    }
+        return EarthSiteResponse.FAIL().message("删除失败");
+
+    }
+
 }

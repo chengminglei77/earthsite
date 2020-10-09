@@ -83,5 +83,4 @@ public class AdminSensors {
      */
     @TableField("dis_info")
     private String disInfo;
-
 }
