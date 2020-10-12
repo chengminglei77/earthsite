@@ -46,17 +46,17 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
         }
 
 
-
-
         if (adminGateways.getStatus() != null) {
             //相当于where status=....
             queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus());
-        } else {
-            adminGateways.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志state==" + adminGateways.getStatus());
-            queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus());
         }
-
+        if (adminGateways.getDeleteState() != null){
+            queryWrapper.lambda().eq(AdminGateways::getDeleteState,adminGateways.getDeleteState());
+        }else {
+            adminGateways.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
+            System.out.println("查询为删除数据的标志state==" + adminGateways.getDeleteState());
+            queryWrapper.lambda().eq(AdminGateways::getDeleteState, adminGateways.getDeleteState());
+        }
         Page<AdminGateways> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
@@ -64,7 +64,7 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
     @Override
     public boolean deleteGateWays(String id) {
         UpdateWrapper<AdminGateways> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(AdminGateways::getId,id).set(AdminGateways::getStatus,1);
+        updateWrapper.lambda().eq(AdminGateways::getId,id).set(AdminGateways::getDeleteState,1);
         return this.update(updateWrapper);
 
     }
@@ -88,6 +88,19 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
 
         return true;
 
+    }
+
+    @Override
+    public boolean restoreGateways(String id) {
+        UpdateWrapper<AdminGateways> updateWrapper = new UpdateWrapper<>();
+        //还原逻辑删除的报警信息
+        updateWrapper.lambda().eq(AdminGateways::getId, id).set(AdminGateways::getDeleteState, 0);
+        return this.update(updateWrapper);
+    }
+
+    @Override
+    public boolean selectDtus(String dtuId) {
+        return false;
     }
 
 

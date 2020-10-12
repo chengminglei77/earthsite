@@ -1,9 +1,9 @@
 package edu.xpu.cs.lovexian.app.appadmin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGateways;
 import edu.xpu.cs.lovexian.app.appadmin.service.IGatewayDtuAdminService;
-import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
+import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -56,4 +55,23 @@ public class GatewayDtuAdminController extends BaseController {
         return EarthSiteResponse.SUCCESS().data(actOper);
     }
 
-}
+
+    //@Log("网关管理:显示未删除的的信息")
+    @GetMapping("listByTypeId")
+    public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminGatewayDtu adminGatewayDtu) {
+        IPage<AdminGatewayDtu> gatewaydtuInfos =gatewayDtuAdminService.findGatewayDtuByTypeId(request, adminGatewayDtu);
+        Map<String, Object> dataTable = getDataTable(gatewaydtuInfos);
+        return EarthSiteResponse.SUCCESS().data(dataTable);
+    }
+
+
+
+    @Log("多表联查，查询dtu的信息")
+    @GetMapping("gatewayDtu")
+    public EarthSiteResponse getGatewayDtu(QueryRequest request,AdminGatewayDtu adminGatewayDtu){
+        Map<String, Object> dataTable = getDataTable(this.gatewayDtuAdminService.getGatewayDtu(request,adminGatewayDtu));
+        return EarthSiteResponse.SUCCESS().data(dataTable);
+
+    }
+
+    }
