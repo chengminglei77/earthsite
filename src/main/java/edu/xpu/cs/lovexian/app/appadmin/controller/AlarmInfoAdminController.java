@@ -51,7 +51,6 @@ public class AlarmInfoAdminController extends BaseController {
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 
-    //info类专用，其他类删除
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateAlarmInfo(AdminAlarmInfo adminAlarmInfo) {
 
@@ -60,7 +59,6 @@ public class AlarmInfoAdminController extends BaseController {
             adminAlarmInfo.setAlarmTime(date);//创建的时间
             adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
         }
-        //adminAlarmInfo.setUpdatedAt(date);//设置最后的更新时间
 
         //保存或更新dtu信息
         boolean actOper = alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
@@ -112,7 +110,7 @@ public class AlarmInfoAdminController extends BaseController {
         return EarthSiteResponse.FAIL().message("彻底删除失败");
     }
     // @Log("报警管理:通过id进行还原信息")
-    @GetMapping("restoreById")
+    @DeleteMapping("restoreById")
     public EarthSiteResponse restoreAlarm(String id) {
         if(alarmInfoAdminService.restoreAlarms(id)){
             return EarthSiteResponse.SUCCESS().message("还原成功");
