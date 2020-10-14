@@ -89,4 +89,13 @@ public class AdminGateways {
     @TableField("dis_info")
     private String disInfo;
 
+    /**
+     * 删除状态
+     */
+    @TableField("delete_state")
+    private Integer deleteState;
+
+    @TableField(exist = false)
+    private String dtuId;
+
 }

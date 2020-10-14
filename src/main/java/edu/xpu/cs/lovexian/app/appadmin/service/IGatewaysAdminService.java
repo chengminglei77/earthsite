@@ -36,4 +36,7 @@ public interface IGatewaysAdminService extends IService<AdminGateways> {
     IPage<AdminGateways> queryGateways(QueryRequest request, AdminGateways adminGateways);
 
     boolean completelyDeleteGateway(String id);
+    public boolean restoreGateways(String id);
+
+    boolean selectDtus(String dtuId);//查到DTU信息，在前端实现网关关联DTU
 }

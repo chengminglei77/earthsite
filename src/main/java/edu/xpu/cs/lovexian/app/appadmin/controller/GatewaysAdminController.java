@@ -48,14 +48,14 @@ public class GatewaysAdminController extends BaseController {
     @Log("网关管理:显示未删除的的信息")
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminGateways adminGateways) {
-        IPage<AdminGateways> dtuInfos =gatewaysAdminService.findGatewaysByTypeId(request, adminGateways);
-        Map<String, Object> dataTable = getDataTable(dtuInfos);
+        IPage<AdminGateways> gatewayInfos =gatewaysAdminService.findGatewaysByTypeId(request, adminGateways);
+        Map<String, Object> dataTable = getDataTable(gatewayInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 
     @Log("网关管理:通过id进行删除信息")
     @DeleteMapping("deleteById")
-    public EarthSiteResponse deleteDtu(String id) {
+    public EarthSiteResponse deleteGateway(String id) {
         if(gatewaysAdminService.deleteGateWays(id)){
             return EarthSiteResponse.SUCCESS().message("删除成功");
         }
@@ -121,9 +121,18 @@ public class GatewaysAdminController extends BaseController {
     @Log("网关管理:查询相关信息")
     @GetMapping("queryGateways")
     public EarthSiteResponse queryGateways(QueryRequest request, AdminGateways adminGateways) {
-        IPage<AdminGateways> dtuInfos = gatewaysAdminService.queryGateways(request, adminGateways);
-        Map<String, Object> dataTable = getDataTable(dtuInfos);
+        IPage<AdminGateways> gatewayInfos = gatewaysAdminService.queryGateways(request, adminGateways);
+        Map<String, Object> dataTable = getDataTable(gatewayInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
+    }
+
+    @Log("还原网关信息")
+    @PostMapping("restoreById")
+    public EarthSiteResponse restoreGateways(String id) {
+        if(gatewaysAdminService.restoreGateways(id)){
+            return EarthSiteResponse.SUCCESS().message("还原成功");
+        }
+        return EarthSiteResponse.FAIL().message("还原失败");
     }
 }
  
