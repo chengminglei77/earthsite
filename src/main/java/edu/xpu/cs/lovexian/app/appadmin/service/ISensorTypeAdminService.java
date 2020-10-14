@@ -27,8 +27,10 @@ public interface ISensorTypeAdminService extends IService<AdminSensorType> {
      * @return IPage<AdminSensorType>
      */
     IPage<AdminSensorType> findSensorTypes(QueryRequest request, AdminSensorType adminSensorType);
-
+    boolean deleteSensorsTypeByid(String id);
     boolean deleteSensorsType(String id);
     IPage<AdminSensorType> findSensorsTypeByTypeId(QueryRequest request, AdminSensorType adminSensorType);
     IPage<AdminSensorType> querySensorsTypeInfo(QueryRequest request,AdminSensorType adminSensorType);
+
+    boolean restoreSensors(String id);
 }

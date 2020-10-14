@@ -67,7 +67,7 @@ public class DtusAdminController extends BaseController {
             throws EarthSiteException {
         try{
             //通过逗号进行分割为数组,循环输出进行删除
-            String ids[]=actionIds.split(StringPool.COMMA);
+            String[] ids =actionIds.split(StringPool.COMMA);
             Arrays.stream(ids).forEach(id->this.dtusAdminService.deleteDtus(id));
         }catch (Exception e){
             message = "批量删除用户失败";

@@ -9,5 +9,6 @@
         <result column="sensor_producer" jdbcType="VARCHAR" property="sensorProducer"/>
         <result column="sensor_desc" jdbcType="VARCHAR" property="sensorDesc"/>
         <result column="sensor_frequency" jdbcType="VARCHAR" property="sensorFrequency"/>
+        <result column="delete_state" jdbcType="INTEGER" property="deleteState"/>
     </resultMap>
 </mapper>

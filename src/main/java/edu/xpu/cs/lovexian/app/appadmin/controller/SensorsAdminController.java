@@ -102,7 +102,7 @@ public class SensorsAdminController extends BaseController {
             throws EarthSiteException {
         try{
             //通过逗号进行分割为数组,循环输出进行删除
-            String ids[]=actionIds.split(StringPool.COMMA);
+            String[] ids =actionIds.split(StringPool.COMMA);
             Arrays.stream(ids).forEach(id->this.sensorsAdminService.deleteSensors(id));
         }catch (Exception e){
             message = "批量删除用户失败";
@@ -120,6 +120,16 @@ public class SensorsAdminController extends BaseController {
     }
         return EarthSiteResponse.FAIL().message("删除失败");
 
+    }
+
+    // @Log("报警管理:通过id进行还原信息")
+    @PostMapping("restoreById")
+    public EarthSiteResponse restoreSensors(String id) {
+        //System.out.println("hahahahahah"+id);
+        if(sensorsAdminService.restoreSensors(id)){
+            return EarthSiteResponse.SUCCESS().message("还原成功");
+        }
+        return EarthSiteResponse.FAIL().message("还原失败");
     }
 
 }
