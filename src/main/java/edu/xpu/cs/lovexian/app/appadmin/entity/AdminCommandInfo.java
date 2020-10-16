@@ -15,7 +15,7 @@ import java.util.Date;
  * @date 2020-09-21 19:42:21
  */
 @Data
-@TableName("command_history")
+@TableName("cmd_history")
 public class AdminCommandInfo {
 
     /**
@@ -34,18 +34,18 @@ public class AdminCommandInfo {
      * 处理状态
      */
     @TableField("cmd_status")
-    private Integer cmd_status;
+    private Integer cmdStatus;
 
     /**
      * 发送时间
      */
     @TableField("send_time")
-    private Date send_Time;
+    private Date sendTime;
     /**
      * 接收时间
      */
     @TableField("receive_time")
-    private Date receive_Time;
+    private Date receiveTime;
 
     /**
      * 计数

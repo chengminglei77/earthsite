@@ -44,6 +44,7 @@ public class CommandInfoAdminController extends BaseController {
     }
 
     //@Log("报警管理:显示未删除的信息")
+    //显示出列表++++查询
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminCommandInfo adminCommandInfo) {
         IPage<AdminCommandInfo> commandInfos =commandInfoAdminService.findCommandInfosByTypeId(request, adminCommandInfo);
@@ -58,7 +59,7 @@ public class CommandInfoAdminController extends BaseController {
         Date date = new Date();
         if (StringUtils.isEmpty(adminCommandInfo.getId())) {
 //            adminCommandInfo.setCommand(date);//创建的时间
-            adminCommandInfo.setCmd_status(StatusEnum.NORMAL_STATE.getCode());//选择状态
+            adminCommandInfo.setCmdStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
         }
         //adminCommandInfo.setUpdatedAt(date);//设置最后的更新时间
 
@@ -103,6 +104,11 @@ public class CommandInfoAdminController extends BaseController {
         }
         return EarthSiteResponse.FAIL().message("删除失败");
     }
+
+
+
+
+
     @Log("报警管理:彻底删除信息")
     @DeleteMapping("completelyDelete")
     public EarthSiteResponse CompletelyDelete(String id) {
@@ -111,6 +117,10 @@ public class CommandInfoAdminController extends BaseController {
         }
         return EarthSiteResponse.FAIL().message("彻底删除失败");
     }
+
+
+
+
     // @Log("报警管理:通过id进行还原信息")
     @GetMapping("restoreById")
     public EarthSiteResponse restoreCommand(String id) {

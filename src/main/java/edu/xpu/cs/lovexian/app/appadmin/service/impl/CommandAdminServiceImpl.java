@@ -37,12 +37,12 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
             queryWrapper.lambda().like(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
         }
 
-        if (adminCommandInfo.getCmd_status() != null) {
-            queryWrapper.lambda().eq(AdminCommandInfo::getCmd_status, adminCommandInfo.getCmd_status());
+        if (adminCommandInfo.getCmdStatus() != null) {
+            queryWrapper.lambda().eq(AdminCommandInfo::getCmdStatus, adminCommandInfo.getCmdStatus());
         }
 
         if(adminCommandInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeFrom()) &&adminCommandInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeTo())){
-            queryWrapper.lambda().between(AdminCommandInfo::getReceive_Time,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
+            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
         }
 
         Page<AdminCommandInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
@@ -55,8 +55,8 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
     public IPage<AdminCommandInfo> queryCommandInfos(QueryRequest request, AdminCommandInfo adminCommandInfo) {
         QueryWrapper<AdminCommandInfo> queryWrapper = new QueryWrapper<>();
         //查询对应字段dtuInfo
-        if (adminCommandInfo.getReceive_Time() != null) {
-            queryWrapper.lambda().eq(AdminCommandInfo::getReceive_Time, adminCommandInfo.getReceive_Time());
+        if (adminCommandInfo.getReceiveTime() != null) {
+            queryWrapper.lambda().eq(AdminCommandInfo::getReceiveTime, adminCommandInfo.getReceiveTime());
         }
         Page<AdminCommandInfo> adminDtusPage = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(adminDtusPage, queryWrapper);
@@ -74,16 +74,16 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
 
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
-        if (adminCommandInfo.getReceive_Time()!=null) {
-            queryWrapper.lambda().like(AdminCommandInfo::getReceive_Time, adminCommandInfo.getReceive_Time());
+        if (adminCommandInfo.getReceiveTime()!=null) {
+            queryWrapper.lambda().like(AdminCommandInfo::getReceiveTime, adminCommandInfo.getReceiveTime());
         }
         if(adminCommandInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeFrom()) &&adminCommandInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeTo())){
-            queryWrapper.lambda().between(AdminCommandInfo::getReceive_Time,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
+            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
         }
 
-        if (adminCommandInfo.getCmd_status() != null) {
+        if (adminCommandInfo.getCmdStatus() != null) {
             //相当于where status=....
-            queryWrapper.lambda().eq(AdminCommandInfo::getCmd_status, adminCommandInfo.getCmd_status());
+            queryWrapper.lambda().eq(AdminCommandInfo::getCmdStatus, adminCommandInfo.getCmdStatus());
         }
 //        if (adminCommandInfo.getDeleteState() != null) {
 //            //相当于where status=....
@@ -103,14 +103,14 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
     public boolean deleteCommands(String id) {
         UpdateWrapper<AdminCommandInfo> updateWrapper = new UpdateWrapper<>();
         //逻辑删除
-        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getCmd_status, 1);
+        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getCmdStatus, 1);
         return this.update(updateWrapper);
     }
     @Override
     public boolean restoreCommands(String id) {
         UpdateWrapper<AdminCommandInfo> updateWrapper = new UpdateWrapper<>();
         //还原逻辑删除的报警信息
-        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getCmd_status, 0);
+        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getCmdStatus, 0);
         return this.update(updateWrapper);
     }
     @Override
