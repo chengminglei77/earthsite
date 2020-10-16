@@ -61,9 +61,10 @@ public  EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor)
 
     @Log("sensors管理：显示sensors信息")
     @GetMapping("selectCheckList")
-    public EarthSiteResponse selectCheckInfoByTypeId(QueryRequest request,AdminDtuSensor adminDtuSensor) {
+    public EarthSiteResponse selectCheckInfoByTypeId(QueryRequest request,@RequestParam("dtuId") String  dtuId ) {
         //System.out.println(adminDtuSensor.toString());
-        IPage<AdminDtuSensor> agentChecks = this.dtuSensorAdminService.findAgentChecks(request, adminDtuSensor);
+        IPage<AdminDtuSensor> agentChecks = this.dtuSensorAdminService.findAgentChecks(request, dtuId);
+        System.out.println(agentChecks);
         Map<String, Object> dataTable = getDataTable(agentChecks);
 
         return EarthSiteResponse.SUCCESS().data(dataTable);
