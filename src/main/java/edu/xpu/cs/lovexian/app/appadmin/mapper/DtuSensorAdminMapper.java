@@ -9,15 +9,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-/**
- *  Mapper
- *
- * @author xpu
- * @date 2020-09-21 16:34:55
- */
+
 @Component
 @DS("slave")
 public interface DtuSensorAdminMapper extends BaseMapper<AdminDtuSensor> {
-    IPage<AdminDtuSensor> selectCheckInfos(Page page, @Param("adminDtuSensor") AdminDtuSensor adminDtuSensor);
+    IPage<AdminDtuSensor> selectCheckInfos(Page page, @Param("dtuId") String dtuId);
+
+
+
 
 }
