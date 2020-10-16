@@ -27,7 +27,7 @@
         JOIN sensors s ON ds.sensor_id=s.sensor_id
 
 <where>
-    d.dtu_id=#{adminDtuSensor.id}
+    d.dtu_id=#{adminDtuSensor.dtuId}
 </where>
 
 

@@ -27,5 +27,5 @@ public interface IDtuSensorAdminService extends IService<AdminDtuSensor> {
 
     IPage<AdminDtuSensor> findSensorsByTypeId(QueryRequest request, AdminDtuSensor adminDtuSensor);
 
-    IPage<AdminDtuSensor> findAgentChecks(QueryRequest request, AdminDtuSensor adminDtuSensor);
+    IPage<AdminDtuSensor> findAgentChecks(QueryRequest request, String dtuId);
 }

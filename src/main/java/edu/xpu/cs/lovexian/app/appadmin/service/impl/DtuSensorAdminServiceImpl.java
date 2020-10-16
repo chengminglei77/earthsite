@@ -51,14 +51,11 @@ public class DtuSensorAdminServiceImpl extends ServiceImpl<DtuSensorAdminMapper,
     }
 
     @Override
-    public IPage<AdminDtuSensor> findAgentChecks(QueryRequest request, AdminDtuSensor adminDtuSensor) {
+    public IPage<AdminDtuSensor> findAgentChecks(QueryRequest request, String dtuId) {
         Page<AdminDtuSensor> page = new Page<>(request.getPageNum(), request.getPageSize());
-        /*AdminDtuSensor adminDtuSensor1 = new AdminDtuSensor();
-        adminDtuSensor1.setDtuId("11");
-        adminDtuSensor1.setId("23123");
-        adminDtuSensor1.setDtuName("sadas");
-        adminDtuSensor1.setSensorId("sdsdaa");*/
-        return dtuSensorAdminMapper.selectCheckInfos(page,adminDtuSensor);
+        IPage<AdminDtuSensor> result=dtuSensorAdminMapper.selectCheckInfos(page,dtuId);
+        System.out.println(result);
+        return dtuSensorAdminMapper.selectCheckInfos(page,dtuId);
     }
 
 
