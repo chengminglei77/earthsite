@@ -22,5 +22,14 @@
     </where>
     </select>
 
+    <select id="getSensorsId" resultType="List">
+        SELECT
+        sensor_id
+        FROM
+        dtu_sensor
+    </select>
+
+
+
 <!--    ,jdbcType=VARCHAR-->
 </mapper>
