@@ -27,7 +27,9 @@ public interface IGatewayDtuAdminService extends IService<AdminGatewayDtu> {
 
     boolean updateGatewayDtu(AdminGatewayDtu adminGatewayDtu);
 
-    IPage<AdminGatewayDtu> getGatewayDtu(QueryRequest request,AdminGatewayDtu adminGatewayDtu);
+    IPage<AdminGatewayDtu> getGatewayDtu(QueryRequest request,String gateId);
 
+
+    //List<AdminGatewayDtu> getGatewayDtu(int currPage, int pageSize);
 
 }

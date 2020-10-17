@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminLawerInfo;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +21,7 @@ public interface DtusAdminMapper extends BaseMapper<AdminDtus> {
     IPage<AdminDtus> selectAll(Page page, @Param("adminDtus") AdminDtus adminDtus);
 
     IPage<AdminDtus> queryDtuInfo(Page page, @Param("adminDtus") AdminDtus adminDtus);
+    IPage<AdminDtus> selectDtuId(Page page, @Param("dtuId") String dtuId);
 
 
 }

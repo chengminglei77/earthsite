@@ -45,6 +45,7 @@ public class DtusAdminController extends BaseController {
     @Log("dtu管理:显示未删除的dtu的信息(status为0的信息)")
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminDtus adminDtus) {
+        System.out.println(adminDtus);
         IPage<AdminDtus> dtuInfos = dtusAdminService.findDtusByTypeId(request, adminDtus);
         System.out.println(dtuInfos);
         Map<String, Object> dataTable = getDataTable(dtuInfos);
@@ -105,7 +106,10 @@ public class DtusAdminController extends BaseController {
         if (StringUtils.isEmpty(adminDtus.getId())) {//如果当前id不为空
             //adminDtus.setDtuName(currentUserName);//设置dtu的名称为当前用户名
             adminDtus.setCreatedAt(date);//设置dtu的创建时间
-            adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//在前端显示该信息
+            adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//在前端显示该信息
+        }
+        if (adminDtus.getStatus() == null){
+            adminDtus.setStatus(StatusEnum.ABNORMAL_STATE.getCode());//当未选择DTU状态时，默认DTU状态为离线
         }
         adminDtus.setUpdatedAt(date);//设置dtu最后更新时间
 
@@ -123,6 +127,24 @@ public class DtusAdminController extends BaseController {
             return EarthSiteResponse.SUCCESS().message("彻底删除成功");
         }
         return EarthSiteResponse.FAIL().message("彻底删除失败");
+    }
+
+    @PostMapping("restoreById")
+    public EarthSiteResponse restoreAlarm(String id) {
+        if(dtusAdminService.restoreDtus(id)){
+            return EarthSiteResponse.SUCCESS().message("还原成功");
+        }
+        return EarthSiteResponse.FAIL().message("还原失败");
+    }
+
+
+    @Log
+    @PostMapping("getDtuId")
+    public EarthSiteResponse getDtuId(String dtuId){
+        if (dtusAdminService.getDtuId(dtuId)){
+            return EarthSiteResponse.SUCCESS().message("关联成功");
+        }
+     return EarthSiteResponse.FAIL().message("关联失败");
     }
 
 

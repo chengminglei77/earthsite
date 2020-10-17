@@ -50,6 +50,7 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
             //相当于where status=....
             queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus());
         }
+
         if (adminGateways.getDeleteState() != null){
             queryWrapper.lambda().eq(AdminGateways::getDeleteState,adminGateways.getDeleteState());
         }else {

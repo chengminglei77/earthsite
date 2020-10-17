@@ -22,6 +22,7 @@ public interface GatewayDtuAdminMapper extends BaseMapper<AdminGatewayDtu> {
 
     IPage<AdminGatewayDtu> queryGatewayDtuinfo(Page page, @Param("adminGatewayDtu") AdminGatewayDtu adminGatewayDtu);
 
-    IPage<AdminGatewayDtu> selectGatewayDtu(Page page,@Param("adminGatewayDtu") AdminGatewayDtu adminGatewayDtu);
+    IPage<AdminGatewayDtu> selectGatewayDtu(Page page,@Param("gateId") String gateId);
 
+    //List<AdminGatewayDtu> selectGatewayDtu();
 }

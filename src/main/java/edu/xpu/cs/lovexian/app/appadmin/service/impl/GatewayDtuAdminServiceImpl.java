@@ -56,12 +56,21 @@ public class GatewayDtuAdminServiceImpl extends ServiceImpl<GatewayDtuAdminMappe
         return this.update(adminGatewayDtu, updateWrapper);
     }
 
+   /* @Override
+    public List<AdminGatewayDtu> getGatewayDtu(int currPage, int pageSize) {
+        List<AdminGatewayDtu> gatewayDtus = gatewayDtuAdminMapper.selectGatewayDtu();
+        int firstIndex = (currPage-1) * pageSize;
+
+        int lastIndex = currPage * pageSize;
+        return gatewayDtus.subList(firstIndex,lastIndex);
+    }*/
+
 
     @Override
-    public IPage<AdminGatewayDtu>  getGatewayDtu(QueryRequest request,AdminGatewayDtu adminGatewayDtu) {
-
+    public IPage<AdminGatewayDtu>  getGatewayDtu(QueryRequest request,String gateId) {
         Page<AdminGatewayDtu> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return gatewayDtuAdminMapper.selectGatewayDtu(page,adminGatewayDtu);
+        return gatewayDtuAdminMapper.selectGatewayDtu(page,gateId);
         }
+
     }
 

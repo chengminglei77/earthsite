@@ -14,12 +14,40 @@
             <id column="status" property="status"/>
         </collection>-->
     </resultMap>
-    <select id="selectGatewayDtu" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu" parameterType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu">
-    SELECT g.gateway_id,d.dtu_id,d.dtu_name,d.dtu_type,d.created_at,d.updated_at,d.`status`
-    FROM gateway_dtu g LEFT OUTER JOIN dtus d ON
-     g.dtu_id = d.dtu_id
-     where
-     gateway_id = '西安';
+    <select id="selectGatewayDtu" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu">
+        select
+        d.dtu_name,
+        d.longitude,
+        d.latitude,
+        d.desc_info,
+        d.dtu_type,
+        d.status,
+        d.created_at,
+        d.updated_at,
+
+        gd.id,
+        gd.gateway_id,
+        gd.dtu_id
+        from
+        gateway_dtu gd
+        join dtus d on (gd.dtu_id = d.dtu_id )
+        <where>
+            gd.gateway_id= #{gateId}
+           <!-- <if test="adminGatewayDtu.dtuId!=null and adminGatewayDtu.dtuId!=''">
+                AND d.dtu_id = #{adminGatewayDtu.dtuId}
+            </if>
+            <if test="adminGatewayDtu.dtuName!=null and adminGatewayDtu.dtuName!=''">
+                AND d.dtu_name = #{adminGatewayDtu.dtuName}
+            </if>
+            <if test="adminGatewayDtu.status!=null">
+                AND d.status = #{adminGatewayDtu.status}
+            </if>
+            <if test="adminGatewayDtu.gatewayId!=null">
+                AND gd.gateway_id= #{adminGatewayDtu.gatewayId}
+            </if>-->
+        </where>
+        ORDER BY d.created_at DESC
+
     </select>
 
 </mapper>
