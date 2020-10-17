@@ -33,8 +33,11 @@ public interface IDtusAdminService extends IService<AdminDtus> {
      * @return
      */
     boolean deleteDtus(String id);
+    public boolean restoreDtus(String id);
 
     boolean completelyDeleteDtus(String id);
+
+    boolean getDtuId(String dtuId);
 
     IPage<AdminDtus> queryDtuInfo(QueryRequest request, AdminDtus adminDtus);
 

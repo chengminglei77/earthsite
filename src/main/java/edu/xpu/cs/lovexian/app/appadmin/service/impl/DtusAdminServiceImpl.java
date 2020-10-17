@@ -49,26 +49,26 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
 
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
-        if(StringUtils.isNotBlank(adminDtus.getDtuName())){
-            queryWrapper.lambda().like(AdminDtus::getDtuName,adminDtus.getDtuName());
-        }
-        //如果dtuType不为空,那么模糊查询:dtuType
-        if(StringUtils.isNotBlank(adminDtus.getDtuType())){
-            queryWrapper.lambda().like(AdminDtus::getDtuType,adminDtus.getDtuType());
+        if (StringUtils.isNotBlank(adminDtus.getDtuId())) {
+            queryWrapper.lambda().like(AdminDtus::getDtuId, adminDtus.getDtuId());
         }
 
-        if(adminDtus.getStatus()!=null){
+
+        if (adminDtus.getStatus() != null) {
             //相当于where status=....
-            queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
-        }else{
-            adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志state=="+adminDtus.getStatus());
-            queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
+            queryWrapper.lambda().eq(AdminDtus::getStatus, adminDtus.getStatus());
         }
 
-        //排除某些字段
+        if (adminDtus.getDelState() != null){
+            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState());
+        }else {
+            adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
+            System.out.println("查询为删除数据的标志state==" + adminDtus.getDelState());
+            queryWrapper.lambda().eq(AdminDtus::getDelState, adminDtus.getDelState());
+        }
         Page<AdminDtus> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
+
     }
 
 
@@ -76,7 +76,15 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
     public boolean deleteDtus(String id) {
         UpdateWrapper<AdminDtus> updateWrapper = new UpdateWrapper<>();
         //删除操作实际上做的是将status设置为1,从而不是真正意义上的在数据库删除,只是不在前端界面显示而已
-        updateWrapper.lambda().eq(AdminDtus::getId,id).set(AdminDtus::getStatus,1);
+        updateWrapper.lambda().eq(AdminDtus::getId,id).set(AdminDtus::getDelState,1);
+        return this.update(updateWrapper);
+    }
+
+    @Override
+    public boolean restoreDtus(String id) {
+        UpdateWrapper<AdminDtus> updateWrapper = new UpdateWrapper<>();
+        //还原逻辑删除的报警信息
+        updateWrapper.lambda().eq(AdminDtus::getId, id).set(AdminDtus::getDelState, 0);
         return this.update(updateWrapper);
     }
 
@@ -101,5 +109,11 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
 
         return true;
 
+    }
+
+    @Override
+    public boolean getDtuId(String dtuId) {
+        dtusAdminMapper.selectById(dtuId);
+        return true;
     }
 }
