@@ -61,9 +61,20 @@ return  null;
        Map<String, Object> dataTable = getDataTable(sensorsTypeByTypeId);
        return EarthSiteResponse.SUCCESS().data(dataTable);
    }
+    @Log("sensorsType管理：删除对应的传感器类型(逻辑删除)")
+    @DeleteMapping("deleteById")
+    public  EarthSiteResponse deleteById(String id)
+    {
+        if(sensorTypeAdminService.deleteSensorsTypeByid(id))
+            return EarthSiteResponse.SUCCESS().message("删除成功");
+        else
+            return  EarthSiteResponse.FAIL().message("删除失败");
+    }
+
+
    @Log("sensorsType管理：删除对应的传感器类型")
-   @DeleteMapping("deleteById")
-   public  EarthSiteResponse deleteById(String id)
+   @DeleteMapping("completelyDelete")
+   public  EarthSiteResponse completelyDelete(String id)
    {
       if(sensorTypeAdminService.deleteSensorsType(id))
           return EarthSiteResponse.SUCCESS().message("删除成功");
@@ -91,8 +102,8 @@ return  null;
    {
        try{
            //通过逗号进行分割为数组,循环输出进行删除
-           String ids[]=actionIds.split(StringPool.COMMA);
-           Arrays.stream(ids).forEach(id->this.sensorTypeAdminService.deleteSensorsType(id));
+           String[] ids =actionIds.split(StringPool.COMMA);
+           Arrays.stream(ids).forEach(id->this.sensorTypeAdminService.deleteSensorsTypeByid(id));
        }catch (Exception e){
            message = "批量删除失败";
            log.error(message, e);
@@ -104,4 +115,13 @@ return  null;
        }
        return EarthSiteResponse.SUCCESS().message("批量删除用户成功");
    }
+    // @Log("报警管理:通过id进行还原信息")
+    @PostMapping("restoreById")
+    public EarthSiteResponse restoreSensors(String id) {
+        //System.out.println("hahahahahah"+id);
+        if(sensorTypeAdminService.restoreSensors(id)){
+            return EarthSiteResponse.SUCCESS().message("还原成功");
+        }
+        return EarthSiteResponse.FAIL().message("还原失败");
+    }
 }

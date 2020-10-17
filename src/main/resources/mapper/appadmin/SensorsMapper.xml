@@ -13,5 +13,6 @@
         <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
         <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
         <result column="dis_info" jdbcType="VARCHAR" property="disInfo"/>
+        <result column="delete_state" jdbcType="INTEGER" property="deleteState"/>
     </resultMap>
 </mapper>

@@ -40,6 +40,15 @@ public class SensorTypeAdminServiceImpl extends ServiceImpl<SensorTypeAdminMappe
     }
 
     @Override
+    public boolean deleteSensorsTypeByid(String id) {
+        UpdateWrapper<AdminSensorType> updateWrapper = new UpdateWrapper<>();
+        //通过条件构造器寻找与给定id值相同的Sensors，将它的状态置为1
+        updateWrapper.lambda().eq(AdminSensorType::getId,id).set(AdminSensorType::getDeleteState,1);
+        //删除数据
+        return this.update(updateWrapper);
+    }
+
+    @Override
     public boolean deleteSensorsType(String id) {
         sensorTypeAdminMapper.deleteById(id);
         return true;
@@ -49,6 +58,16 @@ public class SensorTypeAdminServiceImpl extends ServiceImpl<SensorTypeAdminMappe
     @Override
     public IPage<AdminSensorType> findSensorsTypeByTypeId(QueryRequest request, AdminSensorType adminSensorType) {
         QueryWrapper<AdminSensorType> queryWrapper = new QueryWrapper<>();
+        if(adminSensorType.getDeleteState()!=null)
+        {
+            queryWrapper.lambda().like(AdminSensorType::getDeleteState,adminSensorType.getDeleteState());
+        }
+        else {
+            adminSensorType.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
+            System.out.println("查询为删除数据的标志state==" + adminSensorType.getDeleteState());
+            queryWrapper.lambda().eq(AdminSensorType::getDeleteState, adminSensorType.getDeleteState());
+        }
+
         if(StringUtils.isNotBlank(adminSensorType.getSensorName()))
         {
             queryWrapper.lambda().like(AdminSensorType::getSensorName,adminSensorType.getSensorName());
@@ -70,5 +89,14 @@ public class SensorTypeAdminServiceImpl extends ServiceImpl<SensorTypeAdminMappe
         }
         Page<AdminSensorType> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page,QueryWrapper);
+    }
+
+    @Override
+    public boolean restoreSensors(String id) {
+        UpdateWrapper<AdminSensorType> updateWrapper = new UpdateWrapper<>();
+        //还原逻辑删除的报警信息
+
+        updateWrapper.lambda().eq(AdminSensorType::getId, id).set(AdminSensorType::getDeleteState, 0);
+        return this.update(updateWrapper);
     }
 }

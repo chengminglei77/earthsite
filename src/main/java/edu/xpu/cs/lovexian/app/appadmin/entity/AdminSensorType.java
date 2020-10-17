@@ -1,11 +1,8 @@
 package edu.xpu.cs.lovexian.app.appadmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  *  Entity
@@ -26,7 +23,7 @@ public class AdminSensorType {
     /**
      * 传感器名
      */
-    @TableField("sensor_name")
+    @TableField(value ="sensor_name",condition = SqlCondition.EQUAL)
     private String sensorName;
 
     /**
@@ -58,5 +55,10 @@ public class AdminSensorType {
      */
     @TableField("sensor_frequency")
     private String sensorFrequency;
+    /**
+     * 删除状态
+     */
+    @TableField("delete_state")
+    private Integer deleteState;
 
 }

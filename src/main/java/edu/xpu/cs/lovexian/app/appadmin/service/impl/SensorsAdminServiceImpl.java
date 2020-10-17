@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
@@ -91,4 +92,14 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
         return this.page(page, queryWrapper);
     }
 
+    @Override
+    public IPage<AdminDtuSensor> findSensorsDtuInfo(QueryRequest request, AdminSensors adminSensors) {
+        return null;
+    }
+
+    @Override
+    public boolean completelyDeleteSensors(String id) {
+        sensorsAdminMapper.deleteById(id);
+        return true;
+    }
 }

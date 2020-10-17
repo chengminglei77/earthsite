@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.DtuSensorAdminMapper">
+    <resultMap id="DtuSensor" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="dtu_id" jdbcType="VARCHAR" property="dtuId"/>
+        <result column="sensor_id" jdbcType="VARCHAR" property="sensorId"/>
+    </resultMap>
+
+    <select id="selectCheckInfos" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor" parameterType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor">
+        SELECT
+        d.dtu_id ,
+        s.sensor_id ,
+        s.type_id ,
+        d.dtu_name
+        FROM
+        dtu_sensor ds
+        JOIN dtus d ON ds.dtu_id=d.dtu_id
+        JOIN sensors s ON ds.sensor_id=s.sensor_id
+    <where>
+        d.dtu_id = #{dtuId}
+    </where>
+    </select>
+
+    <select id="getSensorsId" resultType="List">
+        SELECT
+        sensor_id
+        FROM
+        dtu_sensor
+    </select>
+
+
+
+<!--    ,jdbcType=VARCHAR-->
+</mapper>

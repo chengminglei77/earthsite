@@ -83,4 +83,10 @@ public class AdminSensors {
      */
     @TableField("dis_info")
     private String disInfo;
+
+    /**
+     * 删除状态
+     */
+    @TableField("delete_state")
+    private Integer deleteState;
 }
