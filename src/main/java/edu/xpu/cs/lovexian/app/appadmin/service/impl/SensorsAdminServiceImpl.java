@@ -102,4 +102,9 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
         sensorsAdminMapper.deleteById(id);
         return true;
     }
+
+    @Override
+    public boolean restoreSensors(String id) {
+        return false;
+    }
 }

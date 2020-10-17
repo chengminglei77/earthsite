@@ -34,7 +34,7 @@ public class AdminCommandInfo {
      * 处理状态
      */
     @TableField("cmd_status")
-    private Integer cmdStatus;
+    private Integer status;
 
     /**
      * 发送时间
@@ -59,8 +59,12 @@ public class AdminCommandInfo {
     @TableField("description")
     private String description;
 
-    private transient String createTimeFrom;
 
-    private transient String createTimeTo;
+    /**
+     * 删除状态
+     */
+    @TableField("del_state")
+    private Integer delState;
+
 
 }

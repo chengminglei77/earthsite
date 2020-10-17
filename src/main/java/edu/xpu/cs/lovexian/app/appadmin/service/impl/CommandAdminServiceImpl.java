@@ -37,13 +37,13 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
             queryWrapper.lambda().like(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
         }
 
-        if (adminCommandInfo.getCmdStatus() != null) {
-            queryWrapper.lambda().eq(AdminCommandInfo::getCmdStatus, adminCommandInfo.getCmdStatus());
+        if (adminCommandInfo.getStatus() != null) {
+            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }
 
-        if(adminCommandInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeFrom()) &&adminCommandInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeTo())){
-            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
-        }
+//        if(adminCommandInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeFrom()) &&adminCommandInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeTo())){
+//            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
+//        }
 
         Page<AdminCommandInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
@@ -81,9 +81,9 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
 //            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
 //        }
 
-        if (adminCommandInfo.getCmdStatus() != null) {
+        if (adminCommandInfo.getStatus() != null) {
             //相当于where status=....
-            queryWrapper.lambda().eq(AdminCommandInfo::getCmdStatus, adminCommandInfo.getCmdStatus());
+            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }
         if(adminCommandInfo.getCommand()!=null){
             queryWrapper.lambda().eq(AdminCommandInfo::getCommand,adminCommandInfo.getCommand());
@@ -109,14 +109,14 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
     public boolean deleteCommands(String id) {
         UpdateWrapper<AdminCommandInfo> updateWrapper = new UpdateWrapper<>();
         //逻辑删除
-        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getCmdStatus, 1);
+        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getStatus, 1);
         return this.update(updateWrapper);
     }
     @Override
     public boolean restoreCommands(String id) {
         UpdateWrapper<AdminCommandInfo> updateWrapper = new UpdateWrapper<>();
         //还原逻辑删除的报警信息
-        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getCmdStatus, 0);
+        updateWrapper.lambda().eq(AdminCommandInfo::getId, id).set(AdminCommandInfo::getStatus, 0);
         return this.update(updateWrapper);
     }
     @Override

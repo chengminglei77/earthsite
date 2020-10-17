@@ -58,10 +58,10 @@ public class CommandInfoAdminController extends BaseController {
 
         Date date = new Date();
         if (StringUtils.isEmpty(adminCommandInfo.getId())) {
-//            adminCommandInfo.setCommand(date);//创建的时间
-            adminCommandInfo.setCmdStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
+            adminCommandInfo.setSendTime(date);//创建的时间
+            adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
         }
-        //adminCommandInfo.setUpdatedAt(date);//设置最后的更新时间
+        adminCommandInfo.setReceiveTime(date);//设置最后的更新时间
 
         //保存或更新dtu信息
         boolean actOper = commandInfoAdminService.saveOrUpdate(adminCommandInfo);
