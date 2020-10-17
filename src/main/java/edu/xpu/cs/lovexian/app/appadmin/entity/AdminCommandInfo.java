@@ -63,4 +63,9 @@ public class AdminCommandInfo {
 
     private transient String createTimeTo;
 
+    /*
+    * 删除状态
+    * */
+    @TableField("delState")
+    private Integer delState;
 }
