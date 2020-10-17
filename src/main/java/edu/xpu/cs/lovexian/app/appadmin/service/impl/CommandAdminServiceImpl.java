@@ -74,16 +74,22 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
 
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
-        if (adminCommandInfo.getReceiveTime()!=null) {
-            queryWrapper.lambda().like(AdminCommandInfo::getReceiveTime, adminCommandInfo.getReceiveTime());
+        if (adminCommandInfo.getSendTime()!=null) {
+            queryWrapper.lambda().like(AdminCommandInfo::getSendTime, adminCommandInfo.getSendTime());
         }
-        if(adminCommandInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeFrom()) &&adminCommandInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeTo())){
-            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
-        }
+//        if(adminCommandInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeFrom()) &&adminCommandInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeTo())){
+//            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
+//        }
 
         if (adminCommandInfo.getCmdStatus() != null) {
             //相当于where status=....
             queryWrapper.lambda().eq(AdminCommandInfo::getCmdStatus, adminCommandInfo.getCmdStatus());
+        }
+        if(adminCommandInfo.getCommand()!=null){
+            queryWrapper.lambda().eq(AdminCommandInfo::getCommand,adminCommandInfo.getCommand());
+        }
+        if(adminCommandInfo.getDescription()!=null){
+            queryWrapper.lambda().eq(AdminCommandInfo::getDescription,adminCommandInfo.getDescription());
         }
 //        if (adminCommandInfo.getDeleteState() != null) {
 //            //相当于where status=....
