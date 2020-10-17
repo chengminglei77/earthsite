@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CommandInfoAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ICommandInfoAdminService;
-import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,14 +85,14 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
             //相当于where status=....
             queryWrapper.lambda().eq(AdminCommandInfo::getCmdStatus, adminCommandInfo.getCmdStatus());
         }
-        if (adminCommandInfo.getDelState() != null) {
-            //相当于where status=....
-            queryWrapper.lambda().eq(AdminCommandInfo::getDelState, adminCommandInfo.getDelState());
-        } else {
-            adminCommandInfo.setDelState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志state==" + adminCommandInfo.getDelState());
-            queryWrapper.lambda().eq(AdminCommandInfo::getDelState, adminCommandInfo.getDelState());
-        }
+//        if (adminCommandInfo.getDeleteState() != null) {
+//            //相当于where status=....
+//            queryWrapper.lambda().eq(AdminCommandInfo::getDeleteState, adminCommandInfo.getDeleteState());
+//        } else {
+//            adminCommandInfo.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
+//            System.out.println("查询为删除数据的标志state==" + adminCommandInfo.getDeleteState());
+//            queryWrapper.lambda().eq(AdminCommandInfo::getDeleteState, adminCommandInfo.getDeleteState());
+//        }
 
         //排除某些字段
         Page<AdminCommandInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
@@ -122,4 +121,6 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         return true;
 
     }
+
+
 }

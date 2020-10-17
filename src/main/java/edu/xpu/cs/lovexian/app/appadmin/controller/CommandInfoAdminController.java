@@ -81,6 +81,8 @@ public class CommandInfoAdminController extends BaseController {
         Map<String, Object> dataTable = getDataTable(commandInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
+
+
     //@Log("报警管理:批量删除信息")
     @DeleteMapping("BatchDelete/{actionIds}")
     public EarthSiteResponse deleteBatchCommands(@NotBlank(message = "{required}") @PathVariable String actionIds)
@@ -88,7 +90,7 @@ public class CommandInfoAdminController extends BaseController {
         try{
             //通过逗号进行分割为数组,循环输出进行删除
             String ids[]=actionIds.split(StringPool.COMMA);
-            Arrays.stream(ids).forEach(id->this.commandInfoAdminService.deleteCommands(id));
+            Arrays.stream(ids).forEach(id->this.commandInfoAdminService.completelyDeleteCommandInfo(id));
         }catch (Exception e){
             message = "批量删除用户失败";
             log.error(message, e);
@@ -96,6 +98,8 @@ public class CommandInfoAdminController extends BaseController {
         }
         return EarthSiteResponse.SUCCESS().message("批量删除用户成功");
     }
+
+
     // @Log("报警管理:通过id进行删除信息")
     @DeleteMapping("deleteById")
     public EarthSiteResponse deleteCommand(String id) {

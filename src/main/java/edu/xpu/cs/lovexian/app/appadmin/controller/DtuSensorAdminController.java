@@ -1,17 +1,19 @@
 package edu.xpu.cs.lovexian.app.appadmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.DtuSensorAdminMapper;
+import edu.xpu.cs.lovexian.app.appadmin.service.IDtuSensorAdminService;
 import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
-import edu.xpu.cs.lovexian.app.appadmin.service.IDtuSensorAdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +30,9 @@ public class DtuSensorAdminController extends BaseController {
     private String message;
     @Autowired
     private IDtuSensorAdminService dtuSensorAdminService;
+
+    @Autowired
+    private DtuSensorAdminMapper dtuSensorAdminMapper;
 
 
     @GetMapping("list")
@@ -70,6 +75,14 @@ public  EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor)
         return EarthSiteResponse.SUCCESS().data(dataTable);
 
     }
+
+    @Log("sensors管理：显示sensors的id信息")
+    @GetMapping("getSensorsIdList")
+    public List getSensorsIdList(){
+        List<AdminDtuSensor> sensorsIdList = dtuSensorAdminMapper.getSensorsId();
+        return sensorsIdList;
+    }
+
 
 
 }
