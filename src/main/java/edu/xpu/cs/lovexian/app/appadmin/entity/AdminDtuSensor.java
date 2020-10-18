@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *  Entity
@@ -42,5 +43,9 @@ public class AdminDtuSensor implements Serializable {
     private String typeId;
     @TableField(exist = false)
     private String dtuName;
+    @TableField(exist = false)
+    private Integer status;
+    @TableField(exist = false)
+    private Date createdAt;
 
 }

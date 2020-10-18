@@ -84,11 +84,13 @@ public class SensorsAdminController extends BaseController {
         Date date = new Date();
         //String current = getCurrentUser();
         //如果当前id不为空
-        if (StringUtils.isEmpty(adminSensors.getId())) {
+        if (adminSensors.getStatus()==null) {
            // adminSensors.setSensorId(current);
             adminSensors.setCreatedAt(date);//创建的时间
-            adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
+            //adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
+            adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());
         }
+
         adminSensors.setUpdatedAt(date);//设置Sensors最后更新时间
 
         //保存或更新Sensors信息

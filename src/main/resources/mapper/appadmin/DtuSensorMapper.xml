@@ -2,34 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.DtuSensorAdminMapper">
     <resultMap id="DtuSensor" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor">
-        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="dtu_id" jdbcType="VARCHAR" property="dtuId"/>
         <result column="sensor_id" jdbcType="VARCHAR" property="sensorId"/>
+       <!-- <association property="adminDtus" javaType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus" autoMapping="true">
+            <id column="id" property="id"></id>
+            <result column="dtu_name" property="dtuName"></result>
+        </association>
+        <association property="adminSensors" javaType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors" autoMapping="true">
+            <id column="id" property="id"></id>
+            <result column="type_id" property="typeId"></result>
+        </association>-->
     </resultMap>
 
-    <select id="selectCheckInfos" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor" parameterType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor">
+    <select id="selectCheckInfos" resultMap="DtuSensor" >
         SELECT
         d.dtu_id ,
         s.sensor_id ,
         s.type_id ,
-        d.dtu_name
+        d.dtu_name,
+        s.status,
+        s.created_at
         FROM
         dtu_sensor ds
-        JOIN dtus d ON ds.dtu_id=d.dtu_id
+       JOIN dtus d ON ds.dtu_id=d.dtu_id
         JOIN sensors s ON ds.sensor_id=s.sensor_id
-    <where>
-        d.dtu_id = #{dtuId}
-    </where>
-    </select>
 
-    <select id="getSensorsId" resultType="List">
-        SELECT
-        sensor_id
-        FROM
-        dtu_sensor
+<where>
+    d.dtu_id=#{dtuId}
+</where>
+
+
     </select>
 
 
-
-<!--    ,jdbcType=VARCHAR-->
 </mapper>
