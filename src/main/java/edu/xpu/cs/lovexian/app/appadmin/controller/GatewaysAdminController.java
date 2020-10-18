@@ -49,6 +49,7 @@ public class GatewaysAdminController extends BaseController {
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminGateways adminGateways) {
         IPage<AdminGateways> gatewayInfos =gatewaysAdminService.findGatewaysByTypeId(request, adminGateways);
+        System.out.println(gatewayInfos);
         Map<String, Object> dataTable = getDataTable(gatewayInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
@@ -85,12 +86,11 @@ public class GatewaysAdminController extends BaseController {
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateGateways (AdminGateways adminGateways){
         System.out.println("=========================进入Gateways添加功能========================");
-        //String currentPort = getCurrentUser();
-        System.out.println(adminGateways.getDeleteState());
+        System.out.println("deleteState="+adminGateways.getDeleteState());
         if (adminGateways.getStatus() == null){
             System.out.println("status没有获得到值");//如果输出的是null代表status没有获得到值
         }else{
-            System.out.println(adminGateways.getStatus());
+            System.out.println("status="+adminGateways.getStatus());
         }
 
         String currentPort = getCurrentUser();

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.DtusAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -50,8 +49,8 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
 
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
-        if (StringUtils.isNotBlank(adminDtus.getDtuId())) {
-            queryWrapper.lambda().like(AdminDtus::getDtuId, adminDtus.getDtuId());
+        if (StringUtils.isNotBlank(adminDtus.getId())) {
+            queryWrapper.lambda().like(AdminDtus::getId, adminDtus.getId());
         }
         if (StringUtils.isNotBlank(adminDtus.getDtuName())) {
             queryWrapper.lambda().like(AdminDtus::getDtuName, adminDtus.getDtuName());
@@ -68,11 +67,11 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
 
         if (adminDtus.getDelState() != null){
             queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState());
-        }/*else{
+        }else{
             adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为数据的标志delstate=="+adminDtus.getDelState());
             queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState());
-        }*/
+        }
         Page<AdminDtus> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
 
@@ -110,12 +109,8 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
 
     @Override
     public boolean completelyDeleteDtus(String id) {
-
-
         dtusAdminMapper.deleteById(id);
-
         return true;
-
     }
 
     @Override

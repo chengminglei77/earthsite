@@ -10,7 +10,6 @@ import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import edu.xpu.cs.lovexian.common.exception.EarthSiteException;
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -113,7 +112,7 @@ public class SensorsAdminController extends BaseController {
         }
         return EarthSiteResponse.SUCCESS().message("批量删除用户成功");
     }
-    @Log("sensors管理：彻底删除")
+   /* @Log("sensors管理：彻底删除")
     @DeleteMapping("completelyDelete")
     public  EarthSiteResponse completelyDelete(String id)
     {
@@ -122,6 +121,6 @@ public class SensorsAdminController extends BaseController {
     }
         return EarthSiteResponse.FAIL().message("删除失败");
 
-    }
+    }*/
 
 }

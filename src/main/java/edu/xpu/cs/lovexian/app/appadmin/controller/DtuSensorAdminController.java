@@ -84,6 +84,4 @@ public  EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor)
 //        return sensorsIdList;
 //    }
 
-
-
 }

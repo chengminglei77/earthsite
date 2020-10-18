@@ -50,11 +50,12 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
             //相当于where status=....
             queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus());
         }
+
         if (adminGateways.getDeleteState() != null){
             queryWrapper.lambda().eq(AdminGateways::getDeleteState,adminGateways.getDeleteState());
         }else {
             adminGateways.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志state==" + adminGateways.getDeleteState());
+            System.out.println("查询为删除数据的标志deleteState==" + adminGateways.getDeleteState());
             queryWrapper.lambda().eq(AdminGateways::getDeleteState, adminGateways.getDeleteState());
         }
         Page<AdminGateways> page = new Page<>(request.getPageNum(), request.getPageSize());

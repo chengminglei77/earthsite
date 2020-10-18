@@ -79,13 +79,15 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
         if(StringUtils.isNotBlank(adminSensors.getTypeId())){
             queryWrapper.lambda().like(AdminSensors::getTypeId,adminSensors.getTypeId());
         }
+
          if(adminSensors.getStatus()!=null){
             queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
-        }else{
+        }/*else{
             adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为数据的标志state=="+adminSensors.getStatus());
             queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
-        }
+        }*/
+
          if(adminSensors.getDeleteState()!=null)
          {
              queryWrapper.lambda().eq(AdminSensors::getDeleteState,adminSensors.getDeleteState());
