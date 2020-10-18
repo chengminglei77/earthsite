@@ -80,6 +80,9 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         if (StringUtils.isNotBlank(adminCommandInfo.getCommand())) {
             queryWrapper.lambda().like(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
         }
+        if (adminCommandInfo.getCommand()!=null){
+            queryWrapper.lambda().like(AdminCommandInfo::getCommand,adminCommandInfo.getCommand());
+        }
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
         if (adminCommandInfo.getSendTime()!=null) {
@@ -90,11 +93,11 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         }
         if (adminCommandInfo.getStatus() != null) {
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
-        }else {
+        }/*else {
             adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志status==" + adminCommandInfo.getStatus());
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
-        }
+        }*/
         //排除某些字段
         Page<AdminCommandInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
