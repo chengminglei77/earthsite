@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CommandInfoAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ICommandInfoAdminService;
-import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +38,6 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         }
 
         if (adminCommandInfo.getStatus() != null) {
-            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
-        }else {
-            adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志status==" + adminCommandInfo.getStatus());
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }
 
@@ -77,26 +72,36 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
     public IPage<AdminCommandInfo> findCommandInfosByTypeId(QueryRequest request, AdminCommandInfo adminCommandInfo) {
         QueryWrapper<AdminCommandInfo> queryWrapper = new QueryWrapper<>();
 
-        if (StringUtils.isNotBlank(adminCommandInfo.getCommand())) {
-            queryWrapper.lambda().like(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
-        }
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
         if (adminCommandInfo.getSendTime()!=null) {
             queryWrapper.lambda().like(AdminCommandInfo::getSendTime, adminCommandInfo.getSendTime());
         }
+//        if(adminCommandInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeFrom()) &&adminCommandInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getCreateTimeTo())){
+//            queryWrapper.lambda().between(AdminCommandInfo::getReceiveTime,adminCommandInfo.getCreateTimeFrom(),adminCommandInfo.getCreateTimeTo());
+//        }
+
+        if (adminCommandInfo.getStatus() != null) {
+            //相当于where status=....
+            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
+        }
+
+
+        if(adminCommandInfo.getCommand()!=""){
+            queryWrapper.lambda().eq(AdminCommandInfo::getCommand,adminCommandInfo.getCommand());
+        }
 
         if(adminCommandInfo.getDescription()!=null){
             queryWrapper.lambda().eq(AdminCommandInfo::getDescription,adminCommandInfo.getDescription());
         }
-        if (adminCommandInfo.getStatus() != null) {
-            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
-        }else {
-            adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志status==" + adminCommandInfo.getStatus());
-            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
-        }
-
+//        if (adminCommandInfo.getDeleteState() != null) {
+//            //相当于where status=....
+//            queryWrapper.lambda().eq(AdminCommandInfo::getDeleteState, adminCommandInfo.getDeleteState());
+//        } else {
+//            adminCommandInfo.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
+//            System.out.println("查询为删除数据的标志state==" + adminCommandInfo.getDeleteState());
+//            queryWrapper.lambda().eq(AdminCommandInfo::getDeleteState, adminCommandInfo.getDeleteState());
+//        }
 
         //排除某些字段
         Page<AdminCommandInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
