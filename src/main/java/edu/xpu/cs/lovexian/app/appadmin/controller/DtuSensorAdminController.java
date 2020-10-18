@@ -11,9 +11,11 @@ import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,12 +77,12 @@ public  EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor)
 
     }
 
-    @Log("sensors管理：显示sensors的id信息")
-    @GetMapping("getSensorsIdList")
-    public List getSensorsIdList(){
-        List<AdminDtuSensor> sensorsIdList = dtuSensorAdminMapper.getSensorsId();
-        return sensorsIdList;
-    }
+//    @Log("sensors管理：显示sensors的id信息")
+//    @GetMapping("getSensorsIdList")
+//    public List getSensorsIdList(){
+//        List<AdminDtuSensor> sensorsIdList = dtuSensorAdminMapper.getSensorsId();
+//        return sensorsIdList;
+//    }
 
 
 

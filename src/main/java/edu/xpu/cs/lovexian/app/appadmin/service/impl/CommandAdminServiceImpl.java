@@ -85,9 +85,12 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
             //相当于where status=....
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }
-        if(adminCommandInfo.getCommand()!=null){
+
+
+        if(adminCommandInfo.getCommand()!=""){
             queryWrapper.lambda().eq(AdminCommandInfo::getCommand,adminCommandInfo.getCommand());
         }
+
         if(adminCommandInfo.getDescription()!=null){
             queryWrapper.lambda().eq(AdminCommandInfo::getDescription,adminCommandInfo.getDescription());
         }

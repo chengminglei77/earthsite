@@ -110,7 +110,7 @@ public class AlarmInfoAdminController extends BaseController {
         return EarthSiteResponse.FAIL().message("彻底删除失败");
     }
     // @Log("报警管理:通过id进行还原信息")
-    @DeleteMapping("restoreById")
+    @PostMapping("restoreById")
     public EarthSiteResponse restoreAlarm(String id) {
         if(alarmInfoAdminService.restoreAlarms(id)){
             return EarthSiteResponse.SUCCESS().message("还原成功");
