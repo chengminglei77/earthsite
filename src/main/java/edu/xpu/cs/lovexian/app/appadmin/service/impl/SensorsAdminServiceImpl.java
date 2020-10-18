@@ -46,7 +46,7 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
         //新建条件构造器，用来修改Sensors的状态值
         UpdateWrapper<AdminSensors> updateWrapper = new UpdateWrapper<>();
         //通过条件构造器寻找与给定id值相同的Sensors，将它的状态置为1
-        updateWrapper.lambda().eq(AdminSensors::getId,id).set(AdminSensors::getStatus,1);
+        updateWrapper.lambda().eq(AdminSensors::getId,id).set(AdminSensors::getDeleteState,1);
         //删除数据
         return this.update(updateWrapper);
     }
