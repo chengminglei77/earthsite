@@ -24,7 +24,6 @@ public interface IAlarmInfoAdminService extends IService<AdminAlarmInfo> {
 
     IPage<AdminAlarmInfo> findAlarmInfos(QueryRequest request, AdminAlarmInfo adminAlarmInfo);
 
-
     boolean deleteAlarms(String id);//跳转到deleteById，BatchDelete/{actionIds
 
     IPage<AdminAlarmInfo> queryAlarmInfos(QueryRequest request, AdminAlarmInfo adminAlarmInfo);

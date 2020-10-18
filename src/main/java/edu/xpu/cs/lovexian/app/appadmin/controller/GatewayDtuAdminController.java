@@ -45,11 +45,12 @@ public class GatewayDtuAdminController extends BaseController {
     public EarthSiteResponse addOrUpdateGatewayDtu (AdminGatewayDtu adminGatewayDtu){
         System.out.println("=========================进入gatewayDtu添加功能========================");
         String currentUserName = getCurrentUser();
-        if (StringUtils.isEmpty(adminGatewayDtu.getId())) {
-            adminGatewayDtu.setGatewayId(currentUserName);//设置网关标识
+        if (StringUtils.isEmpty(adminGatewayDtu.getDtuId())) {
+            //adminGatewayDtu.setGatewayId(currentUserName);//设置网关标识
+            System.out.println("dtuId的值没传过来，系统默认赋值");
             adminGatewayDtu.setDtuId(currentUserName);//设置dtu标识
-
         }
+
         //保存或更新信息
         boolean actOper = gatewayDtuAdminService.saveOrUpdate(adminGatewayDtu);
         return EarthSiteResponse.SUCCESS().data(actOper);
@@ -65,13 +66,20 @@ public class GatewayDtuAdminController extends BaseController {
     }
 
 
-
     @Log("多表联查，查询dtu的信息")
+    //@ResponseBody
     @GetMapping("gatewayDtu")
-    public EarthSiteResponse getGatewayDtu(QueryRequest request,AdminGatewayDtu adminGatewayDtu){
-        Map<String, Object> dataTable = getDataTable(this.gatewayDtuAdminService.getGatewayDtu(request,adminGatewayDtu));
+    public EarthSiteResponse getGatewayDtu(QueryRequest request, String gateId){
+        Map<String, Object> dataTable = getDataTable(this.gatewayDtuAdminService.getGatewayDtu(request,gateId));
         return EarthSiteResponse.SUCCESS().data(dataTable);
 
     }
+
+    /*@ResponseBody
+    @GetMapping("gatewayDtu/{currPage}/{pageSize}")
+    public List<AdminGatewayDtu> getGatewayDtu(@PathVariable("currPage") int currPage,@PathVariable("pageSize") int pageSize){
+        List<AdminGatewayDtu> gatewayDtu = gatewayDtuAdminService.getGatewayDtu(currPage, pageSize);
+        return gatewayDtu;
+    }*/
 
     }

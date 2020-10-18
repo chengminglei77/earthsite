@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
@@ -44,12 +43,10 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
      */
     @Override
     public boolean deleteSensors(String id) {
-
-       // updateWrapper.lambda().eq(AdminAlarmInfo::getId, id).set(AdminAlarmInfo::getDeleteState, 1);
         //新建条件构造器，用来修改Sensors的状态值
         UpdateWrapper<AdminSensors> updateWrapper = new UpdateWrapper<>();
         //通过条件构造器寻找与给定id值相同的Sensors，将它的状态置为1
-        updateWrapper.lambda().eq(AdminSensors::getId,id).set(AdminSensors::getDeleteState,1);
+        updateWrapper.lambda().eq(AdminSensors::getId,id).set(AdminSensors::getStatus,1);
         //删除数据
         return this.update(updateWrapper);
     }
@@ -73,18 +70,6 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
     @Override
     public IPage<AdminSensors> findSensorsByTypeId(QueryRequest request, AdminSensors adminSensors) {
         QueryWrapper<AdminSensors> queryWrapper = new QueryWrapper<>();
-        if(adminSensors.getStatus()!=null){
-            queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
-        }
-        if(adminSensors.getDeleteState()!=null)
-        {
-            queryWrapper.lambda().like(AdminSensors::getDeleteState,adminSensors.getDeleteState());
-        }
-        else {
-            adminSensors.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志state==" + adminSensors.getDeleteState());
-            queryWrapper.lambda().eq(AdminSensors::getDeleteState, adminSensors.getDeleteState());
-        }
 
         if(StringUtils.isNotBlank(adminSensors.getSensorId()))
         {
@@ -93,6 +78,13 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
         //如果sensors的TypeId值不为空
         if(StringUtils.isNotBlank(adminSensors.getTypeId())){
             queryWrapper.lambda().like(AdminSensors::getTypeId,adminSensors.getTypeId());
+        }
+         if(adminSensors.getStatus()!=null){
+            queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
+        }else{
+            adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
+            System.out.println("查询为删除数据的标志state=="+adminSensors.getStatus());
+            queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
         }
 
         //排除某些字段
@@ -113,10 +105,6 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
 
     @Override
     public boolean restoreSensors(String id) {
-        UpdateWrapper<AdminSensors> updateWrapper = new UpdateWrapper<>();
-        //还原逻辑删除的报警信息
-
-        updateWrapper.lambda().eq(AdminSensors::getId, id).set(AdminSensors::getDeleteState, 0);
-        return this.update(updateWrapper);
+        return false;
     }
 }
