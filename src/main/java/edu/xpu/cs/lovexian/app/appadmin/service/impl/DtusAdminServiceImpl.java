@@ -53,18 +53,18 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
             queryWrapper.lambda().like(AdminDtus::getDtuName,adminDtus.getDtuName());
         }
         //如果dtuType不为空,那么模糊查询:dtuType
-        if(StringUtils.isNotBlank(adminDtus.getDtuType())){
+        /*if(StringUtils.isNotBlank(adminDtus.getDtuType())){
             queryWrapper.lambda().like(AdminDtus::getDtuType,adminDtus.getDtuType());
-        }
+        }*/
 
         if(adminDtus.getStatus()!=null){
             //相当于where status=....
             queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
-        }else{
+        }/*else{
             adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志state=="+adminDtus.getStatus());
             queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
-        }
+        }*/
 
         //排除某些字段
         Page<AdminDtus> page = new Page<>(request.getPageNum(), request.getPageSize());

@@ -15,19 +15,21 @@
         </association>-->
     </resultMap>
 
-    <select id="selectCheckInfos" resultMap="DtuSensor" parameterType="adminDtuSensor">
+    <select id="selectCheckInfos" resultMap="DtuSensor" >
         SELECT
         d.dtu_id ,
         s.sensor_id ,
         s.type_id ,
-        d.dtu_name
+        d.dtu_name,
+        s.status,
+        s.created_at
         FROM
         dtu_sensor ds
        JOIN dtus d ON ds.dtu_id=d.dtu_id
         JOIN sensors s ON ds.sensor_id=s.sensor_id
 
 <where>
-    d.dtu_id=#{adminDtuSensor.dtuId}
+    d.dtu_id=#{dtuId}
 </where>
 
 
