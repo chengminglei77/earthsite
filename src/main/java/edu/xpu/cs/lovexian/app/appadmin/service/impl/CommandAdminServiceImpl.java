@@ -85,7 +85,6 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         if (adminCommandInfo.getSendTime()!=null) {
             queryWrapper.lambda().like(AdminCommandInfo::getSendTime, adminCommandInfo.getSendTime());
         }
-
         if(adminCommandInfo.getDescription()!=null){
             queryWrapper.lambda().eq(AdminCommandInfo::getDescription,adminCommandInfo.getDescription());
         }
@@ -96,8 +95,6 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
             System.out.println("查询为删除数据的标志status==" + adminCommandInfo.getStatus());
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }
-
-
         //排除某些字段
         Page<AdminCommandInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
