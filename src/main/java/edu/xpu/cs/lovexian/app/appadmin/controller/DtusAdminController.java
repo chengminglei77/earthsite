@@ -108,9 +108,9 @@ public class DtusAdminController extends BaseController {
             adminDtus.setCreatedAt(date);//设置dtu的创建时间
             adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//在前端显示该信息
         }
-        if (adminDtus.getStatus() == null){
+        /*if (adminDtus.getStatus() == null){
             adminDtus.setStatus(StatusEnum.ABNORMAL_STATE.getCode());//当未选择DTU状态时，默认DTU状态为离线
-        }
+        }*/
         adminDtus.setUpdatedAt(date);//设置dtu最后更新时间
 
         //保存或更新dtu信息

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.DtusAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -52,20 +53,26 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
         if (StringUtils.isNotBlank(adminDtus.getDtuId())) {
             queryWrapper.lambda().like(AdminDtus::getDtuId, adminDtus.getDtuId());
         }
-
+        if (StringUtils.isNotBlank(adminDtus.getDtuName())) {
+            queryWrapper.lambda().like(AdminDtus::getDtuName, adminDtus.getDtuName());
+        }
 
         if (adminDtus.getStatus() != null) {
             //相当于where status=....
             queryWrapper.lambda().eq(AdminDtus::getStatus, adminDtus.getStatus());
-        }
+        }/*else{
+            adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
+            System.out.println("查询为数据的标志state=="+adminDtus.getStatus());
+            queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
+        }*/
 
         if (adminDtus.getDelState() != null){
             queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState());
-        }else {
+        }/*else{
             adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为删除数据的标志state==" + adminDtus.getDelState());
-            queryWrapper.lambda().eq(AdminDtus::getDelState, adminDtus.getDelState());
-        }
+            System.out.println("查询为数据的标志delstate=="+adminDtus.getDelState());
+            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState());
+        }*/
         Page<AdminDtus> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
 
