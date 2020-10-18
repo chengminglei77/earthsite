@@ -86,6 +86,10 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
             System.out.println("查询为删除数据的标志state=="+adminSensors.getStatus());
             queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
         }
+         if(adminSensors.getDeleteState()!=null)
+         {
+             queryWrapper.lambda().eq(AdminSensors::getDeleteState,adminSensors.getDeleteState());
+         }
 
         //排除某些字段
         Page<AdminSensors> page = new Page<>(request.getPageNum(), request.getPageSize());
