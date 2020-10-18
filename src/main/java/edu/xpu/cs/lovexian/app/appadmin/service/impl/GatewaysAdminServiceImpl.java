@@ -65,6 +65,7 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
     public boolean deleteGateWays(String id) {
         UpdateWrapper<AdminGateways> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda().eq(AdminGateways::getId,id).set(AdminGateways::getDeleteState,1);
+        updateWrapper.lambda().eq(AdminGateways::getId,id).set(AdminGateways::getStatus,1);
         return this.update(updateWrapper);
 
     }
