@@ -59,6 +59,12 @@ public class AlarmInfoAdminController extends BaseController {
             adminAlarmInfo.setAlarmTime(date);//创建的时间
             adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
         }
+        if (adminAlarmInfo.getStatus()==null) {
+            // adminSensors.setSensorId(current);
+            //adminAlarmInfo.setCreatedAt(date);//创建的时间
+            //adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
+            adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());
+        }
 
         //保存或更新dtu信息
         boolean actOper = alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
