@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
@@ -116,5 +117,13 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
     @Override
     public boolean restoreSensors(String id) {
         return false;
+    }
+
+    @Override
+    public boolean restoreById(String id) {
+        UpdateWrapper<AdminSensors> updateWrapper = new UpdateWrapper<>();
+        //还原逻辑删除的报警信息
+        updateWrapper.lambda().eq(AdminSensors::getId, id).set(AdminSensors::getDeleteState, 0);
+        return this.update(updateWrapper);
     }
 }

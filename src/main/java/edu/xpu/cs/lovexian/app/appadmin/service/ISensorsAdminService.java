@@ -37,4 +37,6 @@ public interface ISensorsAdminService extends IService<AdminSensors> {
     boolean completelyDeleteSensors(String id);
 
     public boolean restoreSensors(String id);
+
+    boolean restoreById(String id);
 }
