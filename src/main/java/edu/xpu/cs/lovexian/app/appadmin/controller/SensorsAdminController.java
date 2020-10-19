@@ -2,6 +2,7 @@ package edu.xpu.cs.lovexian.app.appadmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -83,7 +84,7 @@ public class SensorsAdminController extends BaseController {
         Date date = new Date();
         //String current = getCurrentUser();
         //如果当前id不为空
-        if (adminSensors.getStatus()==null) {
+        if (StringUtils.isEmpty(adminSensors.getId())) {
            // adminSensors.setSensorId(current);
             adminSensors.setCreatedAt(date);//创建的时间
             //adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
