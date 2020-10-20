@@ -60,6 +60,12 @@ public class AdminGateways {
     private String elecCharge;
 
     /**
+     * 电池容量
+     */
+    @TableField("bat_capacity")
+    private String batCapacity;
+
+    /**
      * 服务器地址
      */
     @TableField("server_ip")
