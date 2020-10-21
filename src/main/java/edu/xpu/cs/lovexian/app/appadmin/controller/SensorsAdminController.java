@@ -39,7 +39,10 @@ public class SensorsAdminController extends BaseController {
 
     @GetMapping("list")
     public EarthSiteResponse sensorsList(QueryRequest request, AdminSensors adminSensors) {
-        Map<String, Object> dataTable = getDataTable(this.sensorsAdminService.findSensorss(request, adminSensors));
+        QueryRequest queryRequest=new QueryRequest();
+        queryRequest.setPageNum(1);
+        queryRequest.setPageSize(20);
+        Map<String, Object> dataTable = getDataTable(this.sensorsAdminService.findSensorss(queryRequest, adminSensors));
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 

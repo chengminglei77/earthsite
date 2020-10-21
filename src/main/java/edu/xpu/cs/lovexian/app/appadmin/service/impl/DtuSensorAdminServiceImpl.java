@@ -58,5 +58,21 @@ public class DtuSensorAdminServiceImpl extends ServiceImpl<DtuSensorAdminMapper,
         return dtuSensorAdminMapper.selectCheckInfos(page,dtuId);
     }
 
+    @Override
+    public IPage<AdminDtuSensor> selectDtuInfo(QueryRequest request, String sensorId) {
+        Page<AdminDtuSensor> page = new Page<>(request.getPageNum(), request.getPageSize());
+        IPage<AdminDtuSensor> result=dtuSensorAdminMapper.selectDtuInfo(page,sensorId);
+        System.out.println(result);
+        return dtuSensorAdminMapper.selectDtuInfo(page,sensorId);
+    }
+
+    @Override
+    public IPage<AdminDtuSensor> querySensorsInfo(QueryRequest request) {
+        Page<AdminDtuSensor> page = new Page<>(request.getPageNum(), request.getPageSize());
+        IPage<AdminDtuSensor> result=dtuSensorAdminMapper.querySensorsInfo(page);
+        System.out.println(result);
+        return dtuSensorAdminMapper.querySensorsInfo(page);
+    }
+
 
 }
