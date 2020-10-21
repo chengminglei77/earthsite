@@ -100,6 +100,12 @@ public class AdminDtus {
     private String elecCharge;
 
     /**
+     * 电池容量
+     */
+    @TableField("bat_capacity")
+    private String batCapacity;
+
+    /**
      * 速率
      */
     @TableField("rate")

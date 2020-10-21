@@ -50,15 +50,15 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
         if (StringUtils.isNotBlank(adminDtus.getId())) {
-            queryWrapper.lambda().like(AdminDtus::getId, adminDtus.getId());
+            queryWrapper.lambda().like(AdminDtus::getId, adminDtus.getId()).orderByDesc(AdminDtus::getCreatedAt);
         }
         if (StringUtils.isNotBlank(adminDtus.getDtuName())) {
-            queryWrapper.lambda().like(AdminDtus::getDtuName, adminDtus.getDtuName());
+            queryWrapper.lambda().like(AdminDtus::getDtuName, adminDtus.getDtuName()).orderByDesc(AdminDtus::getCreatedAt);
         }
 
         if (adminDtus.getStatus() != null) {
             //相当于where status=....
-            queryWrapper.lambda().eq(AdminDtus::getStatus, adminDtus.getStatus());
+            queryWrapper.lambda().eq(AdminDtus::getStatus, adminDtus.getStatus()).orderByDesc(AdminDtus::getCreatedAt);
         }/*else{
             adminDtus.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为数据的标志state=="+adminDtus.getStatus());
@@ -66,11 +66,11 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
         }*/
 
         if (adminDtus.getDelState() != null){
-            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState());
+            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState()).orderByDesc(AdminDtus::getCreatedAt);
         }else{
             adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为数据的标志delstate=="+adminDtus.getDelState());
-            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState());
+            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState()).orderByDesc(AdminDtus::getCreatedAt);
         }
         Page<AdminDtus> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
@@ -74,15 +73,15 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
 
         if(StringUtils.isNotBlank(adminSensors.getSensorId()))
         {
-         queryWrapper.lambda().like(AdminSensors::getSensorId,adminSensors.getSensorId());
+         queryWrapper.lambda().like(AdminSensors::getSensorId,adminSensors.getSensorId()).orderByDesc(AdminSensors::getCreatedAt);
         }
         //如果sensors的TypeId值不为空
         if(StringUtils.isNotBlank(adminSensors.getTypeId())){
-            queryWrapper.lambda().like(AdminSensors::getTypeId,adminSensors.getTypeId());
+            queryWrapper.lambda().like(AdminSensors::getTypeId,adminSensors.getTypeId()).orderByDesc(AdminSensors::getCreatedAt);
         }
 
          if(adminSensors.getStatus()!=null){
-            queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
+            queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus()).orderByDesc(AdminSensors::getCreatedAt);
         }/*else{
             adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为数据的标志state=="+adminSensors.getStatus());
@@ -95,7 +94,7 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
          }else{
              adminSensors.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
              System.out.println("查询为删除数据的标志Delstate=="+adminSensors.getDeleteState());
-             queryWrapper.lambda().eq(AdminSensors::getDeleteState,adminSensors.getDeleteState());
+             queryWrapper.lambda().eq(AdminSensors::getDeleteState,adminSensors.getDeleteState()).orderByDesc(AdminSensors::getCreatedAt);
          }
 
         //排除某些字段

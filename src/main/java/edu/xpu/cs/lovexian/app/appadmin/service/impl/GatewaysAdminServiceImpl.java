@@ -42,21 +42,21 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
         QueryWrapper<AdminGateways> queryWrapper = new QueryWrapper<>();
         //模糊查询
         if (StringUtils.isNotBlank(adminGateways.getGateId())) {
-            queryWrapper.lambda().like(AdminGateways::getGateId, adminGateways.getGateId());
+            queryWrapper.lambda().like(AdminGateways::getGateId, adminGateways.getGateId()).orderByDesc(AdminGateways::getCreatedAt);
         }
 
 
         if (adminGateways.getStatus() != null) {
             //相当于where status=....
-            queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus());
+            queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus()).orderByDesc(AdminGateways::getCreatedAt);
         }
 
         if (adminGateways.getDeleteState() != null){
-            queryWrapper.lambda().eq(AdminGateways::getDeleteState,adminGateways.getDeleteState());
+            queryWrapper.lambda().eq(AdminGateways::getDeleteState,adminGateways.getDeleteState()).orderByDesc(AdminGateways::getCreatedAt);
         }else {
             adminGateways.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志deleteState==" + adminGateways.getDeleteState());
-            queryWrapper.lambda().eq(AdminGateways::getDeleteState, adminGateways.getDeleteState());
+            queryWrapper.lambda().eq(AdminGateways::getDeleteState, adminGateways.getDeleteState()).orderByDesc(AdminGateways::getCreatedAt);
         }
         Page<AdminGateways> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
