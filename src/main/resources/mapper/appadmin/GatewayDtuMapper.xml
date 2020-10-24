@@ -49,5 +49,13 @@
         ORDER BY d.created_at DESC
 
     </select>
+    <select id="selectDtusNotInGatewayDtu" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu">
+        select
+            dtus. *
+        from
+            dtus
+        where
+            dtu_id not in (select dtu_id from gateway_dtu);
+    </select>
 
 </mapper>

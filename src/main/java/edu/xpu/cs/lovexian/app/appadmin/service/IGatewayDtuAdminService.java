@@ -29,6 +29,8 @@ public interface IGatewayDtuAdminService extends IService<AdminGatewayDtu> {
 
     IPage<AdminGatewayDtu> getGatewayDtu(QueryRequest request,String gateId);
 
+    IPage<AdminGatewayDtu> findDtusNotInGatewayDtu(QueryRequest queryRequest,String dtuId);
+
 
     //List<AdminGatewayDtu> getGatewayDtu(int currPage, int pageSize);
 

@@ -72,5 +72,11 @@ public class GatewayDtuAdminServiceImpl extends ServiceImpl<GatewayDtuAdminMappe
         return gatewayDtuAdminMapper.selectGatewayDtu(page,gateId);
         }
 
+    @Override
+    public IPage<AdminGatewayDtu> findDtusNotInGatewayDtu(QueryRequest request, String dtuId) {
+        Page<AdminGatewayDtu> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return gatewayDtuAdminMapper.selectDtusNotInGatewayDtu(page,dtuId);
     }
+
+}
 

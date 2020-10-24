@@ -81,5 +81,14 @@ public class GatewayDtuAdminController extends BaseController {
         List<AdminGatewayDtu> gatewayDtu = gatewayDtuAdminService.getGatewayDtu(currPage, pageSize);
         return gatewayDtu;
     }*/
-
+    @Log("关联DTU")
+    @GetMapping("findDtusNotInGatewayDtu")
+    public EarthSiteResponse findDtusNotInGatewayDtu(QueryRequest request, String dtuId){
+        QueryRequest queryRequest = new QueryRequest();
+        queryRequest.setPageNum(1);
+        queryRequest.setPageSize(100);
+        IPage<AdminGatewayDtu> dtusNotInGatewayDtu = gatewayDtuAdminService.findDtusNotInGatewayDtu(queryRequest,dtuId);
+        Map<String, Object> dataTable = getDataTable(dtusNotInGatewayDtu);
+        return EarthSiteResponse.SUCCESS().data(dataTable);
+    }
     }
