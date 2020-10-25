@@ -73,15 +73,15 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
 
         if(StringUtils.isNotBlank(adminSensors.getSensorId()))
         {
-         queryWrapper.lambda().like(AdminSensors::getSensorId,adminSensors.getSensorId());
+         queryWrapper.lambda().like(AdminSensors::getSensorId,adminSensors.getSensorId()).orderByDesc(AdminSensors::getCreatedAt);
         }
         //如果sensors的TypeId值不为空
         if(StringUtils.isNotBlank(adminSensors.getTypeId())){
-            queryWrapper.lambda().like(AdminSensors::getTypeId,adminSensors.getTypeId());
+            queryWrapper.lambda().like(AdminSensors::getTypeId,adminSensors.getTypeId()).orderByDesc(AdminSensors::getCreatedAt);
         }
 
          if(adminSensors.getStatus()!=null){
-            queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus());
+            queryWrapper.lambda().eq(AdminSensors::getStatus,adminSensors.getStatus()).orderByDesc(AdminSensors::getCreatedAt);
         }/*else{
             adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为数据的标志state=="+adminSensors.getStatus());
@@ -94,7 +94,7 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
          }else{
              adminSensors.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
              System.out.println("查询为删除数据的标志Delstate=="+adminSensors.getDeleteState());
-             queryWrapper.lambda().eq(AdminSensors::getDeleteState,adminSensors.getDeleteState());
+             queryWrapper.lambda().eq(AdminSensors::getDeleteState,adminSensors.getDeleteState()).orderByDesc(AdminSensors::getCreatedAt);
          }
 
         //排除某些字段
@@ -116,5 +116,13 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
     @Override
     public boolean restoreSensors(String id) {
         return false;
+    }
+
+    @Override
+    public boolean restoreById(String id) {
+        UpdateWrapper<AdminSensors> updateWrapper = new UpdateWrapper<>();
+        //还原逻辑删除的报警信息
+        updateWrapper.lambda().eq(AdminSensors::getId, id).set(AdminSensors::getDeleteState, 0);
+        return this.update(updateWrapper);
     }
 }

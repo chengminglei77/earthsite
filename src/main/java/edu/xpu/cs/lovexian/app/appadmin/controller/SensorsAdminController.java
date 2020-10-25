@@ -2,6 +2,7 @@ package edu.xpu.cs.lovexian.app.appadmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -38,7 +39,10 @@ public class SensorsAdminController extends BaseController {
 
     @GetMapping("list")
     public EarthSiteResponse sensorsList(QueryRequest request, AdminSensors adminSensors) {
-        Map<String, Object> dataTable = getDataTable(this.sensorsAdminService.findSensorss(request, adminSensors));
+        QueryRequest queryRequest=new QueryRequest();
+        queryRequest.setPageNum(1);
+        queryRequest.setPageSize(20);
+        Map<String, Object> dataTable = getDataTable(this.sensorsAdminService.findSensorss(queryRequest, adminSensors));
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 
@@ -83,7 +87,7 @@ public class SensorsAdminController extends BaseController {
         Date date = new Date();
         //String current = getCurrentUser();
         //如果当前id不为空
-        if (adminSensors.getStatus()==null) {
+        if (StringUtils.isEmpty(adminSensors.getId())) {
            // adminSensors.setSensorId(current);
             adminSensors.setCreatedAt(date);//创建的时间
             //adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
@@ -112,7 +116,7 @@ public class SensorsAdminController extends BaseController {
         }
         return EarthSiteResponse.SUCCESS().message("批量删除用户成功");
     }
-   /* @Log("sensors管理：彻底删除")
+    @Log("sensors管理：彻底删除")
     @DeleteMapping("completelyDelete")
     public  EarthSiteResponse completelyDelete(String id)
     {
@@ -121,6 +125,12 @@ public class SensorsAdminController extends BaseController {
     }
         return EarthSiteResponse.FAIL().message("删除失败");
 
-    }*/
-
+    }
+   @PostMapping("restoreById")
+   public EarthSiteResponse restoreById(String id) {
+       if(sensorsAdminService.restoreById(id)){
+           return EarthSiteResponse.SUCCESS().message("还原成功");
+       }
+       return EarthSiteResponse.FAIL().message("还原失败");
+   }
 }

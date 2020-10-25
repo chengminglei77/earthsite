@@ -89,4 +89,10 @@ public class AdminSensors {
      */
     @TableField("delete_state")
     private Integer deleteState;
+
+    /**
+     * 传感器的采样频率
+     */
+    @TableField("sensor_frequency")
+    private String sensorFrequency;
 }

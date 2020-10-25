@@ -28,4 +28,8 @@ public interface IDtuSensorAdminService extends IService<AdminDtuSensor> {
     IPage<AdminDtuSensor> findSensorsByTypeId(QueryRequest request, AdminDtuSensor adminDtuSensor);
 
     IPage<AdminDtuSensor> findAgentChecks(QueryRequest request, String dtuId);
+
+    IPage<AdminDtuSensor> selectDtuInfo(QueryRequest request, String sensorId);
+//查询数据库表中未关联的Sensors信息
+    IPage<AdminDtuSensor> querySensorsInfo(QueryRequest request);
 }
