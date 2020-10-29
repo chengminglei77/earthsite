@@ -47,11 +47,6 @@ public class AdminCommandInfo {
     @TableField("receive_time")
     private Date receiveTime;
 
-    /**
-     * 计数
-     */
-    @TableField("count")
-    private Integer count;
 
     /**
      * 描述信息
@@ -59,12 +54,7 @@ public class AdminCommandInfo {
     @TableField("description")
     private String description;
 
+    private transient String sendTimeFrom;
 
-    /**
-     * 删除状态
-     */
-    @TableField("del_state")
-    private Integer delState;
-
-
+    private transient String sendTimeTo;
 }

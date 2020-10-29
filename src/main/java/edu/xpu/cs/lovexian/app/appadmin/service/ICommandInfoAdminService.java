@@ -24,14 +24,8 @@ public interface ICommandInfoAdminService extends IService<AdminCommandInfo> {
 
     IPage<AdminCommandInfo> findCommandInfos(QueryRequest request, AdminCommandInfo adminCommandInfo);
 
-
-    boolean deleteCommands(String id);//跳转到deleteById，BatchDelete/{actionIds
-
     IPage<AdminCommandInfo> queryCommandInfos(QueryRequest request, AdminCommandInfo adminCommandInfo);
 
     public IPage<AdminCommandInfo> findCommandInfosByTypeId(QueryRequest request, AdminCommandInfo adminCommandInfo);
 
-    public boolean completelyDeleteCommandInfo(String id);
-
-    public boolean restoreCommands(String id);
 }

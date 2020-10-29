@@ -35,7 +35,7 @@
 
     </select>
 
-    <select id="selectDtuInfo" resultMap="DtuSensor" >
+    <select id="selDtuInfo" resultMap="DtuSensor" >
         SELECT
         d.dtu_id ,
         s.sensor_id ,
