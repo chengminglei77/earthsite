@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.DeviceStatisticsAdminMapper">
+    <resultMap id="deviceStatistics" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDeviceStatistics">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="eq_duration" jdbcType="VARCHAR" property="eqDuration"/>
+        <result column="record_nms" jdbcType="INTEGER" property="recordNms"/>
+        <result column="packet_size" jdbcType="INTEGER" property="packetSize"/>
+        <result column="breakdown_nms" jdbcType="TIMESTAMP" property="breakdownNms"/>
+        <result column="gateway_records" jdbcType="VARCHAR" property="gatewayRecords"/>
+        <result column="info_total" jdbcType="TIMESTAMP" property="infoTotal"/>
+        <result column="setting_id" jdbcType="VARCHAR" property="settingId"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="updated_at" jdbcType="VARCHAR" property="updatedAt"/>
+    </resultMap>
+</mapper>
