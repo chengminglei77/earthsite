@@ -87,9 +87,9 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         if(adminCommandInfo.getSendTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getSendTimeFrom()) &&adminCommandInfo.getSendTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getSendTimeTo())){
             queryWrapper.lambda().between(AdminCommandInfo::getSendTime,adminCommandInfo.getSendTimeFrom(),adminCommandInfo.getSendTimeTo());
         }
-        /*if (adminCommandInfo.getCommand() != null) {
-            queryWrapper.lambda().eq(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
-        }*/
+        if (adminCommandInfo.getStatus() != null) {
+            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
+        }
         /*else {
             adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志status==" + adminCommandInfo.getStatus());

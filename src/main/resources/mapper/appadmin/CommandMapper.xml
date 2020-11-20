@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.CommandInfoAdminMapper">
+    <resultMap id="commandInfo" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="cmd_status" jdbcType="INTEGER" property="status"/>
+        <result column="send_time" jdbcType="INTEGER" property="sendTime"/>
+        <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+    </resultMap>
+</mapper>
