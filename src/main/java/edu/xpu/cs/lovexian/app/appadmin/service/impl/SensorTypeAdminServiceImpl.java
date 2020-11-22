@@ -72,7 +72,7 @@ public class SensorTypeAdminServiceImpl extends ServiceImpl<SensorTypeAdminMappe
         {
             queryWrapper.lambda().like(AdminSensorType::getSensorName,adminSensorType.getSensorName());
         }
-        else if(StringUtils.isNotBlank(adminSensorType.getSensorModel()))
+         if(StringUtils.isNotBlank(adminSensorType.getSensorModel()))
         {
             queryWrapper.lambda().like(AdminSensorType::getSensorModel,adminSensorType.getSensorModel());
         }
