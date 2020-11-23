@@ -32,11 +32,11 @@ public class DeviceStatisticsAdminServiceImpl  extends ServiceImpl<DeviceStatist
         QueryWrapper<AdminDeviceStatistics> queryWrapper = new QueryWrapper<>();
         if(adminDeviceStatistics.getType()!=null)
         {
-            queryWrapper.lambda().eq(AdminDeviceStatistics::getType, adminDeviceStatistics.getType());
+            queryWrapper.lambda().eq(AdminDeviceStatistics::getType, adminDeviceStatistics.getType()).orderByDesc(AdminDeviceStatistics::getUpdatedAt);
         }
         if(adminDeviceStatistics.getSettingId()!=null)
         {
-            queryWrapper.lambda().eq(AdminDeviceStatistics::getSettingId,adminDeviceStatistics.getSettingId());
+            queryWrapper.lambda().eq(AdminDeviceStatistics::getSettingId,adminDeviceStatistics.getSettingId()).orderByDesc(AdminDeviceStatistics::getUpdatedAt);
         }
         Page<AdminDeviceStatistics> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);

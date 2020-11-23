@@ -32,7 +32,6 @@
     d.dtu_id=#{dtuId}
 </where>
 
-
     </select>
 
     <select id="selDtuInfo" resultMap="DtuSensor" >
@@ -47,13 +46,12 @@
         dtu_sensor ds
         JOIN dtus d ON ds.dtu_id=d.dtu_id
         JOIN sensors s ON ds.sensor_id=s.sensor_id
-
         <where>
             s.sensor_id=#{sensorId}
         </where>
-
-
     </select>
+
+
 
     <select id="selectDtuInfo" resultMap="DtuSensor" >
         SELECT
@@ -67,13 +65,11 @@
         dtu_sensor ds
         JOIN dtus d ON ds.dtu_id=d.dtu_id
         JOIN sensors s ON ds.sensor_id=s.sensor_id
-
         <where>
             s.sensor_id=#{sensorId}
         </where>
-
-
     </select>
+
 
     <select id="querySensorsInfo" resultMap="DtuSensor" >
      SELECT
@@ -82,10 +78,7 @@
         FROM
       sensors s
    WHERE    s.sensor_id NOT IN (SELECT dtu_sensor.sensor_id
-FROM dtu_sensor
-   )
-
-
+FROM dtu_sensor)
     </select>
 
 
