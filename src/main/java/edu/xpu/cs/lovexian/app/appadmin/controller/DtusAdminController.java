@@ -45,7 +45,6 @@ public class DtusAdminController extends BaseController {
     @Log("dtu管理:显示未删除的dtu的信息(status为0的信息)")
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminDtus adminDtus) {
-        System.out.println(adminDtus);
         IPage<AdminDtus> dtuInfos = dtusAdminService.findDtusByTypeId(request, adminDtus);
         System.out.println(dtuInfos);
         Map<String, Object> dataTable = getDataTable(dtuInfos);
@@ -107,6 +106,7 @@ public class DtusAdminController extends BaseController {
             //adminDtus.setDtuName(currentUserName);//设置dtu的名称为当前用户名
             adminDtus.setCreatedAt(date);//设置dtu的创建时间
             adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//在前端显示该信息
+            adminDtus.setElcVolume("1000mA");//给电池容量设置默认值
         }
         /*if (adminDtus.getStatus() == null){
             adminDtus.setStatus(StatusEnum.ABNORMAL_STATE.getCode());//当未选择DTU状态时，默认DTU状态为离线
