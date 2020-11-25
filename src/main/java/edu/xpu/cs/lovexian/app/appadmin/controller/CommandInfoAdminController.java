@@ -3,6 +3,7 @@ package edu.xpu.cs.lovexian.app.appadmin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import edu.xpu.cs.lovexian.app.appadmin.service.ICommandInfoAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,7 +48,25 @@ public class CommandInfoAdminController extends BaseController {
         Map<String, Object> dataTable = getDataTable(commandInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
+    @PostMapping("saveOrUpdate")
+    public EarthSiteResponse addOrUpdateCommandInfo(AdminCommandInfo adminCommandInfo) {
 
+       /* Date date = new Date();
+        if (StringUtils.isEmpty(adminCommandInfo.getId())) {
+            //adminCommandInfo.setSendTime(date);//创建的时间
+            adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//选择状态
+        }*/
+        if (adminCommandInfo.getCommand()==null) {
+            // adminSensors.setSensorId(current);
+            //adminAlarmInfo.setCreatedAt(date);//创建的时间
+            //adminSensors.setStatus(StatusEnum.NORMAL_STATE.getCode());//设置状态
+            adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());
+        }
+
+        //保存或更新dtu信息
+        boolean actOper = commandInfoAdminService.saveOrUpdate(adminCommandInfo);
+        return EarthSiteResponse.SUCCESS().data(actOper);
+    }
     /**
      * 搜索(查询)dtu相关信息
      *

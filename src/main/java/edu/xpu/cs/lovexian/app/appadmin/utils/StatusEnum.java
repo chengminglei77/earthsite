@@ -15,7 +15,6 @@ public enum StatusEnum {
     NOT_ENABLE(2,"未启用")
     ;
 
-
     private Integer code;
     private String msg;
 
@@ -24,3 +23,4 @@ public enum StatusEnum {
         this.msg = msg;
     }
 }
+
