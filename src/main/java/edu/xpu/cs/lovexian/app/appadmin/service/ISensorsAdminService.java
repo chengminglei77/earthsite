@@ -39,4 +39,8 @@ public interface ISensorsAdminService extends IService<AdminSensors> {
     public boolean restoreSensors(String id);
 
     boolean restoreById(String id);
+
+    //查询传感器数据的数据终端设备地址
+    String querySensorAdress(String message);
+
 }
