@@ -28,7 +28,7 @@ public class AdminCommandInfo {
      * 命令信息
      */
     @TableField("command")
-    private String command;
+    private Integer command;
 
     /**
      * 处理状态
@@ -57,4 +57,5 @@ public class AdminCommandInfo {
     private transient String sendTimeFrom;
 
     private transient String sendTimeTo;
+
 }

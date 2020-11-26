@@ -35,10 +35,12 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
       /*  if (StringUtils.isNotBlank(adminCommandInfo.getCommand())) {
             queryWrapper.lambda().like(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
         }*/
-
-        /*if (adminCommandInfo.getCommand() != null) {
+        if (adminCommandInfo.getStatus() != null) {
+            queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
+        }
+        if (adminCommandInfo.getCommand() != null) {
             queryWrapper.lambda().eq(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
-        }*/
+        }
         /*else {
             adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志status==" + adminCommandInfo.getStatus());
@@ -90,6 +92,10 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         if (adminCommandInfo.getStatus() != null) {
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }
+        if (adminCommandInfo.getCommand() != null) {
+            queryWrapper.lambda().eq(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
+        }
+
         /*else {
             adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志status==" + adminCommandInfo.getStatus());
