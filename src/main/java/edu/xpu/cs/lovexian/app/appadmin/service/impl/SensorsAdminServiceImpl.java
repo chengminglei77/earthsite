@@ -141,31 +141,36 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
                 String s = message.substring(12, 14);
                 if(s.equals("01"))
                     return "失败";
-                else if(s.equals("02"))
+                if(s.equals("02"))
                     return "CRC校验失败";
-                else if(s.equals("00"))
+                if(s.equals("00"))
                 {
                     String s1=message.substring(14,16);
                     return  s1;
                 }
                 else return "null";
             }
-            else if(h.equals("A8"))
+            if(h.equals("A8"))
             {
-                String s = message.substring(12, 18);
-                return s;
+                String s = message.substring(12, 14);
+                String s1=message.substring(14,18);
+                String sub = new BigInteger(s1, 16).toString(10);
+                return s+sub;
             }
-            else if(h.equals("A9"))
+             if(h.equals("A9"))
             {
                 String s = message.substring(12, 14);
                 if(s.equals("01"))
                  return "失败";
-                else if(s.equals("02"))
+                if(s.equals("02"))
                     return "CRC校验失败";
-                else if(s.equals("00"))
+                if(s.equals("00"))
                 {
-                    String s1=message.substring(14,20);
-                    return  s1;
+
+                    String s1=message.substring(14,16);
+                    String s2=message.substring(16,20);
+                    String sub = new BigInteger(s2, 16).toString(10);
+                    return  s1+sub;
                 }
                 else return "null";
             }
