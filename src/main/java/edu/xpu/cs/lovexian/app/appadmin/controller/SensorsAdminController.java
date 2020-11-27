@@ -68,7 +68,7 @@ public class SensorsAdminController extends BaseController {
         //根据要求调用Service层的模糊查询的方法
         IPage<AdminSensors> sensorsInfos = sensorsAdminService.querySensorsInfo(request, adminSensors);
         //将数据转化为集合
-        Map<String, Object> dataTable = getDataTable(sensorsInfos);
+                Map<String, Object> dataTable = getDataTable(sensorsInfos);
         //将数据填充到EarthSiteResponse并且返回
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
@@ -83,6 +83,7 @@ public class SensorsAdminController extends BaseController {
     @Log("sensors管理:保存或更新相关信息")
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateSensors (AdminSensors adminSensors){
+        log.info("保存或更新相关信息");
         //System.out.println("=========================进入Sensors添加功能========================");
         Date date = new Date();
         //String current = getCurrentUser();
@@ -132,5 +133,12 @@ public class SensorsAdminController extends BaseController {
            return EarthSiteResponse.SUCCESS().message("还原成功");
        }
        return EarthSiteResponse.FAIL().message("还原失败");
+   }
+   @Log("sensors管理：查询传感器数据的数据终端设备地址")
+   @GetMapping("querySensorAdress")
+    public  EarthSiteResponse querySensorAdress(String message)
+   {
+       String s = sensorsAdminService.querySensorAdress(message);
+       return  EarthSiteResponse.SUCCESS().data(s);
    }
 }

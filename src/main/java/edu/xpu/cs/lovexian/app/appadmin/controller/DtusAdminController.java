@@ -107,6 +107,7 @@ public class DtusAdminController extends BaseController {
             //adminDtus.setDtuName(currentUserName);//设置dtu的名称为当前用户名
             adminDtus.setCreatedAt(date);//设置dtu的创建时间
             adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//在前端显示该信息
+            adminDtus.setElcVolume("1000mA");
         }
         /*if (adminDtus.getStatus() == null){
             adminDtus.setStatus(StatusEnum.ABNORMAL_STATE.getCode());//当未选择DTU状态时，默认DTU状态为离线

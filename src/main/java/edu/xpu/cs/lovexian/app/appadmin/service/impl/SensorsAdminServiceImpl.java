@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+import java.util.PrimitiveIterator;
+
 /**
  *  Service实现
  *
@@ -124,5 +127,85 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
         //还原逻辑删除的报警信息
         updateWrapper.lambda().eq(AdminSensors::getId, id).set(AdminSensors::getDeleteState, 0);
         return this.update(updateWrapper);
+    }
+//查询传感器数据(地址)指令
+    @Override
+    public String querySensorAdress(String message) {
+        //String message="AA550A0700010255AA";
+        //StringBuilder sb = new StringBuilder();
+        int i;
+        if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            String h = message.substring(6, 8);
+            if (h.equals("A7"))
+            {
+                String s = message.substring(12, 14);
+                if(s.equals("01"))
+                    return "失败";
+                if(s.equals("02"))
+                    return "CRC校验失败";
+                if(s.equals("00"))
+                {
+                    String s1=message.substring(14,16);
+                    return  s1;
+                }
+                else return "null";
+            }
+            if(h.equals("A8"))
+            {
+                String s = message.substring(12, 14);
+                String s1=message.substring(14,18);
+                String sub = new BigInteger(s1, 16).toString(10);
+                return s+sub;
+            }
+             if(h.equals("A9"))
+            {
+                String s = message.substring(12, 14);
+                if(s.equals("01"))
+                 return "失败";
+                if(s.equals("02"))
+                    return "CRC校验失败";
+                if(s.equals("00"))
+                {
+
+                    String s1=message.substring(14,16);
+                    String s2=message.substring(16,20);
+                    String sub = new BigInteger(s2, 16).toString(10);
+                    return  s1+sub;
+                }
+                else return "null";
+            }
+
+            if (h.equals("A4")) {
+                String s = message.substring(12, 18);
+                return s;
+            }
+            /**
+             * 获取传感器上报数据时间
+             */
+            if (h.equals("A5")) {
+                String CRC = message.substring(12 ,14);
+                if (CRC.equals("00")) {
+                    String s = message.substring(14, 20);
+                    return s;
+                    //return "成功";
+                }
+                if (CRC.equals("01")) {
+                    return "失败";
+                }
+                if (CRC.equals("02")) {
+                    return "CRC校验失败";
+                }
+
+            }
+            /**
+             *上报传感器数据指令
+             */
+            if (h.equals("A6")) {
+                String s = message.substring(12, 24);
+                return s;
+            }
+            else return  "null";
+        }
+        else return  "null";
     }
 }
