@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * @author czy
  * @create 2020-11-27-9:56
@@ -36,7 +34,7 @@ public class AdminSensorsData {
     传感器类型
     */
     @TableField("Sensor_Type")
-    private int sensorType;
+    private String sensorType;
 
     /*
    传感器地址
