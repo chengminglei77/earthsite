@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * @author czy
  * @create 2020-11-27-9:56
@@ -47,13 +45,13 @@ public class AdminSensorsData {
    当前上报数据的传感器个数
    */
     @TableField("Sensor_Num")
-    private String sensorNum;
+    private int sensorNum;
 
     /*
    传感器上报数据时间
    */
     @TableField("Time")
-    private Date time;
+    private String time;
 
     /*
    传感器数据长度

@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.PrimitiveIterator;
 
 /**
  *  Service实现
@@ -195,7 +194,6 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
                 if (CRC.equals("02")) {
                     return "CRC校验失败";
                 }
-
             }
             /**
              *上报传感器数据指令
@@ -204,6 +202,17 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
                 String s = message.substring(12, 24);
                 return s;
             }
+            /**
+             *上报数据的传感器类型和传感器地址
+             */
+           /* if (h.equals("A1")){
+                  String Device_ID = message.substring(12, 14);
+                  String Sensor_Serial_Num = message.substring(14, 16);
+                  String Sensor_Type = message.substring(16, 18);
+                  String Sensor_Addr = message.substring(18, 22);
+                  return Device_ID;
+            }*/
+
             else return  "null";
         }
         else return  "null";
