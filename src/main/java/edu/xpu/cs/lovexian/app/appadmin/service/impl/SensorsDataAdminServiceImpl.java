@@ -1,18 +1,14 @@
 package edu.xpu.cs.lovexian.app.appadmin.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
-import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
-import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Book;
 import java.math.BigInteger;
 
 /**
@@ -25,6 +21,75 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
     @Autowired
     private SensorsDataAdminMapper sensorsDataAdminMapper;
 
+    @Override
+    public String setSensorAddrAndType(String message){
+        if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            String h = message.substring(6, 8);
+            if (h.equals("A1")){
+                AdminSensorsData data = new AdminSensorsData();
+                String Device_ID = message.substring(12, 14);
+                data.setDeviceId(Device_ID);
+                String Sensor_Serial_Num = message.substring(14, 16);
+                data.setSensorSerialNum(Sensor_Serial_Num);
+                String Sensor_Type = message.substring(16, 18);
+                data.setSensorType(Sensor_Type);
+                String Sensor_Addr = message.substring(18, 22);
+                data.setSensorAddr(Sensor_Addr);
+                sensorsDataAdminMapper.insert(data);
+                return "成功";
+            }else return "错误";
+        }else return "错误";
+    }
+    @Override
+    public String reportSensorAddrAndTypeAndNum(String message){
+        if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            String h = message.substring(6, 8);
+            if (h.equals("A2")){
+                String CRC = message.substring(12, 14);
+                if (CRC.equals("01"))
+                    return "失败";
+                if (CRC.equals("02"))
+                    return "CRC校验失败";
+                if(CRC.equals("00")) {
+                    AdminSensorsData data = new AdminSensorsData();
+                    String Device_ID = message.substring(14, 16);
+                    data.setDeviceId(Device_ID);
+                    String Sensor_Num = message.substring(16, 18);
+                    Integer Num = Integer.valueOf(Sensor_Num, 16);
+                    System.out.println(Num);
+                    data.setSensorNum(Num);
+                    for (int N=0;N<Num;N++) {
+                        String Sensor_Type = message.substring(18+N*6, 20+N*6);
+                        data.setSensorType(Sensor_Type);
+                        String Sensor_Addr = message.substring(20+N*6, 24+N*6);
+                        data.setSensorAddr(Sensor_Addr);
+                    }
+                    sensorsDataAdminMapper.insert(data);
+                    return "成功";
+                }else return "错误";
+            }else return "错误";
+        }else return "错误";
+    }
+    @Override
+    public String deleteSensor(String message){
+        if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            String h = message.substring(6, 8);
+            if (h.equals("A3")){
+                String CRC = message.substring(12, 14);
+                if (CRC.equals("01"))
+                    return "失败";
+                if (CRC.equals("02"))
+                    return "CRC校验失败";
+                if(CRC.equals("00")) {
+                    AdminSensorsData data = new AdminSensorsData();
+                    String Sensor_Addr = message.substring(14, 16);
+                    data.setSensorAddr(Sensor_Addr);
+                    sensorsDataAdminMapper.insert(data);
+                    return "成功";
+                }else return "错误";
+            }else return "错误";
+        }else return "错误";
+    }
     @Override
     public String querySensorAdress(String message) {
         //String message="AA550A0700010255AA";
@@ -74,5 +139,10 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                 } else return "错误";
             } else return "错误";
         }else return "错误";
+    }
+
+    public static void main(String[] args) {
+        SensorsDataAdminServiceImpl se = new SensorsDataAdminServiceImpl();
+        se.querySensorAdress("AA5500A2000600AA0201AACC55AA");
     }
 }

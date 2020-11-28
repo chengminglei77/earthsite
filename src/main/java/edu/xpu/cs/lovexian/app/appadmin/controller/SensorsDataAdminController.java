@@ -1,6 +1,5 @@
 package edu.xpu.cs.lovexian.app.appadmin.controller;
 
-import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
 import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
@@ -19,6 +18,24 @@ public class SensorsDataAdminController extends BaseController {
     @Log("sensors管理：查询传感器数据的数据终端设备地址")
     @GetMapping("querySensorAdress")
     public EarthSiteResponse querySensorAdress(String message) {
+        String s = sensorsDataAdminService.querySensorAdress(message);
+        return EarthSiteResponse.SUCCESS().data(s);
+    }
+    @Log("sensors管理：设置上报数据的传感器类型和传感器地址")
+    @GetMapping("setSensorAddrAndType")
+    public EarthSiteResponse setSensorAddrAndType(String message) {
+        String s = sensorsDataAdminService.querySensorAdress(message);
+        return EarthSiteResponse.SUCCESS().data(s);
+    }
+    @Log("sensors管理：获取当前上报数据的传感器类型和传感器地址以及传感器个数")
+    @GetMapping("reportSensorAddrAndTypeAndNum")
+    public EarthSiteResponse reportSensorAddrAndTypeAndNum(String message) {
+        String s = sensorsDataAdminService.querySensorAdress(message);
+        return EarthSiteResponse.SUCCESS().data(s);
+    }
+    @Log("sensors管理：删除某个上报数据的传感器")
+    @GetMapping("deleteSensor")
+    public EarthSiteResponse deleteSensor(String message) {
         String s = sensorsDataAdminService.querySensorAdress(message);
         return EarthSiteResponse.SUCCESS().data(s);
     }

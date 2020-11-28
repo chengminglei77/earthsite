@@ -48,7 +48,7 @@ public class AdminSensorsData {
    当前上报数据的传感器个数
    */
     @TableField("Sensor_Num")
-    private String sensorNum;
+    private int sensorNum;
 
     /*
    传感器上报数据时间
