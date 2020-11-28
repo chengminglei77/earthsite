@@ -6,6 +6,8 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,6 +20,7 @@ import java.util.Date;
  * @author czy
  * @create 2020-11-27-10:20
  */
+@Slf4j
 @Service("sensorsDataAdminService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMapper, AdminSensorsData> implements ISensorsDataAdminService {
@@ -223,7 +226,8 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                 {
                     AdminDtus adminDtus=new AdminDtus();
                     adminDtus.setDtuAddress(deviceId);
-                    System.out.println("数据终端设备地址为"+deviceId);
+                    //System.out.println("数据终端设备地址为"+deviceId);
+                    log.info("数据终端设备地址为"+deviceId);
                 }
             }
             if (h.equals("A8")) {
@@ -236,7 +240,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     throw new Exception("CRC校验失败");
                 // System.out.println(" CRC校验失败");
                 if (s.equals("00"))
-                    System.out.println("数据终端设备地址为"+deviceId);
+                   log.info("数据终端设备地址为"+deviceId);
             }
             if (h.equals("A9")) {
                 String s = message.substring(12, 14);
