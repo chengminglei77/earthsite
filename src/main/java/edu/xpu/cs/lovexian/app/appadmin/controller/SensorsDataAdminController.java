@@ -16,10 +16,10 @@ public class SensorsDataAdminController extends BaseController {
     @Autowired
     private ISensorsDataAdminService sensorsDataAdminService;
 
-    @Log("sensors管理：查询传感器数据的数据终端设备地址")
+  /*  @Log("sensors管理：查询传感器数据的数据终端设备地址")
     @GetMapping("querySensorAdress")
     public EarthSiteResponse querySensorAdress(String message) {
         String s = sensorsDataAdminService.querySensorAdress(message);
         return EarthSiteResponse.SUCCESS().data(s);
-    }
+    }*/
 }

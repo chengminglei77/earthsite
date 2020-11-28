@@ -95,4 +95,14 @@ public class AdminSensors {
      */
     @TableField("sensor_frequency")
     private String sensorFrequency;
+    /*
+    传感器的编号
+     */
+    @TableField("Sensor_Serial_Num")
+    private  String sensorSerialNum;
+    /*
+    传感器的地址
+     */
+    @TableField("Sensor_Address")
+    private  String sensorAddress;
 }

@@ -38,6 +38,23 @@ public class AdminDtuSensor implements Serializable {
     @TableId(value = "sensor_id", type = IdType.ID_WORKER_STR)
     private String sensorId;
 
+    /*
+    传感器个数
+     */
+    @TableField("Sensor_Number")
+    private  String sensorNumber;
+
+    /*
+    传感器上传的时间
+     */
+    @TableField("time")
+    private Date time;
+
+    /*
+    传感器数据长度
+     */
+    @TableField("Sensor_Data")
+    private String SensorData;
 
     @TableField(exist = false)
     private String typeId;

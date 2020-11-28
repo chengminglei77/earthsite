@@ -31,7 +31,6 @@ public class AdminSensorsData {
    */
     @TableField("Sensor_Serial_Num")
     private String sensorSerialNum;
-
     /*
     传感器类型
     */
