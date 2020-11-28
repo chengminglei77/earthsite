@@ -54,7 +54,7 @@ public class AdminSensorsData {
    传感器上报数据时间
    */
     @TableField("Time")
-    private Date time;
+    private String time;
 
     /*
    传感器数据长度

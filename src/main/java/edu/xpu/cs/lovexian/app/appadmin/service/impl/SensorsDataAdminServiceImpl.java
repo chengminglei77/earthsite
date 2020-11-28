@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * @author czy
@@ -91,6 +92,104 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
             }else return "错误";
         }else return "错误";
     }
+
+    @Override
+    public String setSensorReportTime(String message) {
+        if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            String h = message.substring(6, 8);
+            /**
+             * (4)	设置传感器上报数据时间：0xA4
+             */
+            if (h.equals("A4")){
+                String CRC = message.substring(12,14);
+                if (CRC.equals("00")){
+                    String deviceId = message.substring(14,16);
+                    /*AdminSensorsData data = new AdminSensorsData();
+                    data.setDeviceId(deviceId);
+                    sensorsDataAdminMapper.insert(data);*/
+                    return "成功";
+                }else {
+                    if (CRC.equals("01")){
+                        return "失败";
+                    }else {
+                        return "CRC校验失败";
+                    }
+                }
+            }
+        }
+        return "错误";
+    }
+
+    @Override
+    public String getSensorReportTime(String message) {
+        if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            String h = message.substring(6, 8);
+            /**
+             * (5)	获取传感器上报数据时间：0xA5
+             */
+            if (h.equals("A5")){
+                Date date = new Date();
+                String ACK = message.substring(12,14);
+                if (ACK.equals("00")){
+                    AdminSensorsData data = new AdminSensorsData();
+                    String time = "";
+                    String deviceId = message.substring(14,16);
+                    String str = message.substring(16,20);
+                    String sub = new BigInteger(str, 16).toString(10);
+                    time = sub;
+                    data.setTime(time);
+                    sensorsDataAdminMapper.insert(data);
+                    return "成功";
+                }else {
+                    if (ACK.equals("01")){
+                        return "失败";
+                    }else {
+                        if (ACK.equals("02")){
+                            return "校验失败";
+                        }
+                    }
+                }
+            }
+        }
+        return "错误";
+    }
+
+    @Override
+    public String Reportsensordatacommand(String message) {
+        if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            /**
+             * (6)	上报传感器数据指令：0xA6
+             */
+            String h = message.substring(6, 8);
+            if (h.equals("A6")) {
+                String deviceId = message.substring(12, 14);
+                String sensorType = message.substring(14, 16);
+                String sensorAddr = message.substring(16, 20);
+                AdminSensorsData data = new AdminSensorsData();
+                if (sensorType.equals("01")) {
+                    sensorType = "湿度传感器";
+                } else {
+                    if (sensorType.equals("02")) {
+                        sensorType = "风速传感器";
+                    } else {
+                        if (sensorType.equals("03")) {
+                            sensorType = "水盐传感器";
+                        }
+                    }
+                }
+                data.setSensorType(sensorType);
+                String sensorDataLen = message.substring(20,22);
+                int len = Integer.valueOf(message.substring(20,22));
+                data.setSensorDataLen(sensorDataLen);
+                String sensorData = message.substring(22,22+2*len);
+                data.setSensorData(sensorData);
+                sensorsDataAdminMapper.insert(data);
+                return "成功";
+            }
+        }
+        return "错误";
+    }
+
     @Override
     public String querySensorAdress(String message) {
         //String message="AA550A0700010255AA";

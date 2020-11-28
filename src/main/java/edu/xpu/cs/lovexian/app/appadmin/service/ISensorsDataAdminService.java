@@ -17,4 +17,8 @@ public interface ISensorsDataAdminService extends IService<AdminSensorsData> {
     public String reportSensorAddrAndTypeAndNum(String message);
 
     public String deleteSensor(String message);
+
+    String setSensorReportTime(String message);
+    String getSensorReportTime(String message);
+    String Reportsensordatacommand(String message);
 }

@@ -39,4 +39,25 @@ public class SensorsDataAdminController extends BaseController {
         String s = sensorsDataAdminService.querySensorAdress(message);
         return EarthSiteResponse.SUCCESS().data(s);
     }
+
+    @Log("sensors管理：设置传感器上报数据时间：0xA4")
+    @GetMapping("deleteSensor")
+    public EarthSiteResponse setSensorReportTime(String message) {
+        String s = sensorsDataAdminService.setSensorReportTime(message);
+        return EarthSiteResponse.SUCCESS().data(s);
+    }
+
+    @Log("sensors管理：获取传感器上报数据时间：0xA5")
+    @GetMapping("deleteSensor")
+    public EarthSiteResponse getSensorReportTime(String message) {
+        String s = sensorsDataAdminService.getSensorReportTime(message);
+        return EarthSiteResponse.SUCCESS().data(s);
+    }
+
+    @Log("sensors管理：上报传感器数据指令：0xA6")
+    @GetMapping("deleteSensor")
+    public EarthSiteResponse Reportsensordatacommand(String message) {
+        String s = sensorsDataAdminService.Reportsensordatacommand(message);
+        return EarthSiteResponse.SUCCESS().data(s);
+    }
 }
