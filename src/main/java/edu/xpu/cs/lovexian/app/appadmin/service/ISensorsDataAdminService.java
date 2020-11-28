@@ -20,5 +20,5 @@ public interface ISensorsDataAdminService extends IService<AdminSensorsData> {
 
     String setSensorReportTime(String message);
     String getSensorReportTime(String message);
-    String Reportsensordatacommand(String message);
+    String ReportSensorDataCommand(String message);
 }

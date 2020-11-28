@@ -165,8 +165,9 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         return "错误";
     }
 
+
     @Override
-    public String Reportsensordatacommand(String message) {
+    public String ReportSensorDataCommand(String message) {
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             /**
              * (6)	上报传感器数据指令：0xA6
