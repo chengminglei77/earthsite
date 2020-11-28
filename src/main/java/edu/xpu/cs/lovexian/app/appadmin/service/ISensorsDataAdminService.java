@@ -10,7 +10,7 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
  */
 @DS("slave")
 public interface ISensorsDataAdminService extends IService<AdminSensorsData> {
-    String querySensorAdress(String message);
+    void querySensorAdress(String message) throws Exception;
 
     public String setSensorAddrAndType(String message);
 

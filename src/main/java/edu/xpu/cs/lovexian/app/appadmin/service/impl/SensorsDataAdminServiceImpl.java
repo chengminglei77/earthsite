@@ -1,6 +1,8 @@
 package edu.xpu.cs.lovexian.app.appadmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
@@ -203,58 +205,59 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
     }
 
     @Override
-    public String querySensorAdress(String message) {
+    public void querySensorAdress(String message) throws Exception{
         //String message="AA550A0700010255AA";
         //StringBuilder sb = new StringBuilder();
-        int i;
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             if (h.equals("A7")) {
                 String s = message.substring(12, 14);
+                String deviceId = message.substring(14, 16);
                 if (s.equals("01"))
-                    return "失败";
+                    throw new Exception("失败");
+                //System.out.println("失败");
                 if (s.equals("02"))
-                    return "CRC校验失败";
-                if (s.equals("00")) {
-                    AdminSensorsData data = new AdminSensorsData();
-                    data.setDeviceId(s);
-                    sensorsDataAdminMapper.insert(data);
-                    return "成功";
-                    //bookList.add(book);
-                } else return "null";
+                    throw new Exception("CRC校验失败");
+                //System.out.println(" CRC校验失败");
+                if (s.equals("00"))
+                {
+                    AdminDtus adminDtus=new AdminDtus();
+                    adminDtus.setDtuAddress(deviceId);
+                    System.out.println("数据终端设备地址为"+deviceId);
+                }
             }
             if (h.equals("A8")) {
-                AdminSensorsData data = new AdminSensorsData();
                 String s = message.substring(12, 14);
-                data.setDeviceId(s);
-                String s1 = message.substring(14, 18);
-                String sub = new BigInteger(s1, 16).toString(10);
-                data.setBatteryLevel(sub);
-                sensorsDataAdminMapper.insert(data);
-                return "成功";
+                String deviceId = message.substring(14, 16);
+                if (s.equals("01"))
+                    throw new Exception("失败");
+                //System.out.println("失败");
+                if (s.equals("02"))
+                    throw new Exception("CRC校验失败");
+                // System.out.println(" CRC校验失败");
+                if (s.equals("00"))
+                    System.out.println("数据终端设备地址为"+deviceId);
             }
             if (h.equals("A9")) {
                 String s = message.substring(12, 14);
                 if (s.equals("01"))
-                    return "失败";
+                    throw new Exception("失败");
+                //System.out.println("失败");
                 if (s.equals("02"))
-                    return "CRC校验失败";
+                    throw new Exception("CRC校验失败");
+                //System.out.println(" CRC校验失败");
                 if (s.equals("00")) {
-                    AdminSensorsData data = new AdminSensorsData();
+                    //数据终端设备地址
                     String s1 = message.substring(14, 16);
-                    data.setDeviceId(s1);
+                    //电池电量
                     String s2 = message.substring(16, 20);
                     String sub = new BigInteger(s2, 16).toString(10);
-                    data.setBatteryLevel(sub);
-                    sensorsDataAdminMapper.insert(data);
-                    return "成功";
-                } else return "错误";
-            } else return "错误";
-        }else return "错误";
-    }
-
-    public static void main(String[] args) {
-        SensorsDataAdminServiceImpl se = new SensorsDataAdminServiceImpl();
-        se.querySensorAdress("AA5500A2000600AA0201AACC55AA");
+                    AdminDtus adminDtus=new AdminDtus();
+                    adminDtus.setDtuAddress(s1);
+                    UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(adminDtus);
+                    updateWrapper.set("elec_charge",sub);
+                }
+            }
+        }
     }
 }
