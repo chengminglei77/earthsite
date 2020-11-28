@@ -24,19 +24,19 @@ public class SensorsDataAdminController extends BaseController {
     @Log("sensors管理：设置上报数据的传感器类型和传感器地址")
     @GetMapping("setSensorAddrAndType")
     public EarthSiteResponse setSensorAddrAndType(String message) {
-        String s = sensorsDataAdminService.querySensorAdress(message);
+        String s = sensorsDataAdminService.setSensorAddrAndType(message);
         return EarthSiteResponse.SUCCESS().data(s);
     }
     @Log("sensors管理：获取当前上报数据的传感器类型和传感器地址以及传感器个数")
     @GetMapping("reportSensorAddrAndTypeAndNum")
     public EarthSiteResponse reportSensorAddrAndTypeAndNum(String message) {
-        String s = sensorsDataAdminService.querySensorAdress(message);
+        String s = sensorsDataAdminService.reportSensorAddrAndTypeAndNum(message);
         return EarthSiteResponse.SUCCESS().data(s);
     }
     @Log("sensors管理：删除某个上报数据的传感器")
     @GetMapping("deleteSensor")
     public EarthSiteResponse deleteSensor(String message) {
-        String s = sensorsDataAdminService.querySensorAdress(message);
+        String s = sensorsDataAdminService.deleteSensor(message);
         return EarthSiteResponse.SUCCESS().data(s);
     }
 
