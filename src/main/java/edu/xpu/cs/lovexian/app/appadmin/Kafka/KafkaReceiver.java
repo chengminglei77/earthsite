@@ -40,22 +40,24 @@ public class KafkaReceiver {
                        //TODO
                     case "A7":
                         sensorsDataAdminService.querySensorAdress(message.toString());
-                       // System.out.println("此处调用方法A7");break;
+                       // System.out.println("此处调用方法A7");
+                        break;
                        //TODO
                     case "A8":
                         sensorsDataAdminService.querySensorAdress(message.toString());
-                        //System.out.println("此处调用方法A8");break;
+                        //System.out.println("此处调用方法A8");
+                        break;
                        //TODO
                     case "A9":
                         sensorsDataAdminService.querySensorAdress(message.toString());
-                        //System.out.println("此处调用方法A9");break;
+                        //System.out.println("此处调用方法A9")
+                        break;
                         //TODO
                     default:
                         System.out.println("传入数据不合法");
                 }
             }catch (Exception e){
-                System.out.println("传入数据可能出现异常");
-                e.printStackTrace();
+                e.getMessage();
             }
         }
     }

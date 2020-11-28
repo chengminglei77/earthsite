@@ -42,7 +42,7 @@ public class AdminDtuSensor implements Serializable {
     传感器个数
      */
     @TableField("Sensor_Number")
-    private  String sensorNumber;
+    private  int sensorNumber;
 
     /*
     传感器上传的时间
