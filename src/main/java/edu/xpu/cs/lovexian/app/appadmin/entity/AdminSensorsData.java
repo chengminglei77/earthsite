@@ -36,7 +36,7 @@ public class AdminSensorsData {
     传感器类型
     */
     @TableField("Sensor_Type")
-    private String sensorType;
+    private int sensorType;
 
     /*
    传感器地址

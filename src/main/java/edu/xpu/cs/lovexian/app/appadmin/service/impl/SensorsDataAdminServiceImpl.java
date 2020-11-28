@@ -61,7 +61,8 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     data.setSensorNum(Num);
                     for (int N=0;N<Num;N++) {
                         String Sensor_Type = message.substring(18+N*6, 20+N*6);
-                        data.setSensorType(Sensor_Type);
+                        Integer Typ = Integer.valueOf(Sensor_Type, 16);
+                        data.setSensorType(Typ);
                         String Sensor_Addr = message.substring(20+N*6, 24+N*6);
                         data.setSensorAddr(Sensor_Addr);
                     }
