@@ -41,6 +41,7 @@ public class AdminDtus {
      */
     @TableField("dtu_name")
     private String dtuName;
+
     /**
      * 经度
      */
@@ -91,7 +92,6 @@ public class AdminDtus {
      */
     @TableField("status")
     private Integer status;
-
 
     /**
      * 信号强度

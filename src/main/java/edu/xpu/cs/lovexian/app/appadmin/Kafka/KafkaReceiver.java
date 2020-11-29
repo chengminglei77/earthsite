@@ -11,7 +11,7 @@ import java.util.Optional;
 public class KafkaReceiver {
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
-    @KafkaListener(topics = {"test001_topic"})
+    @KafkaListener(topics = {"test02"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
@@ -57,7 +57,7 @@ public class KafkaReceiver {
                         System.out.println("传入数据不合法");
                 }
             }catch (Exception e){
-                e.getMessage();
+                System.out.println("异常为:"+e.getMessage());
             }
         }
     }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
+import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,8 @@ import java.util.Date;
 public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMapper, AdminSensorsData> implements ISensorsDataAdminService {
     @Autowired
     private SensorsDataAdminMapper sensorsDataAdminMapper;
-
+    @Autowired
+    private IDtusAdminService iDtusAdminService;
     @Override
     public String setSensorAddrAndType(String message){
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
@@ -206,7 +208,6 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         }
         return "错误";
     }
-
     @Override
     public void querySensorAdress(String message) throws Exception{
         //String message="AA550A0700010255AA";
@@ -217,7 +218,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                 String s = message.substring(12, 14);
                 String deviceId = message.substring(14, 16);
                 if (s.equals("01"))
-                    throw new Exception("失败");
+                    throw new Exception("确认帧错误，失败");
                 //System.out.println("失败");
                 if (s.equals("02"))
                     throw new Exception("CRC校验失败");
@@ -227,25 +228,25 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     AdminDtus adminDtus=new AdminDtus();
                     adminDtus.setDtuAddress(deviceId);
                     //System.out.println("数据终端设备地址为"+deviceId);
-                    log.info("数据终端设备地址为"+deviceId);
+                    log.info("指令解析成功，数据终端设备地址为"+deviceId);
                 }
             }
             if (h.equals("A8")) {
                 String s = message.substring(12, 14);
                 String deviceId = message.substring(14, 16);
                 if (s.equals("01"))
-                    throw new Exception("失败");
+                    throw new Exception("确认帧错误，失败");
                 //System.out.println("失败");
                 if (s.equals("02"))
                     throw new Exception("CRC校验失败");
                 // System.out.println(" CRC校验失败");
                 if (s.equals("00"))
-                   log.info("数据终端设备地址为"+deviceId);
+                   log.info("指令解析成功，数据终端设备地址为"+deviceId);
             }
             if (h.equals("A9")) {
                 String s = message.substring(12, 14);
                 if (s.equals("01"))
-                    throw new Exception("失败");
+                    throw new Exception("确认帧错误，失败");
                 //System.out.println("失败");
                 if (s.equals("02"))
                     throw new Exception("CRC校验失败");
@@ -253,13 +254,16 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                 if (s.equals("00")) {
                     //数据终端设备地址
                     String s1 = message.substring(14, 16);
+                   log.info("指令解析成功，数据终端设备地址为"+s1);
                     //电池电量
                     String s2 = message.substring(16, 20);
                     String sub = new BigInteger(s2, 16).toString(10);
                     AdminDtus adminDtus=new AdminDtus();
                     adminDtus.setDtuAddress(s1);
+                   log.info("指令解析成功，电量为"+sub+"mA");
                     UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(adminDtus);
                     updateWrapper.set("elec_charge",sub);
+                    iDtusAdminService.update(updateWrapper);
                 }
             }
         }
