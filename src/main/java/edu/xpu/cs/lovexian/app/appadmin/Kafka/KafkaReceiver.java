@@ -11,7 +11,7 @@ import java.util.Optional;
 public class KafkaReceiver {
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
-    @KafkaListener(topics = {"test02"})
+    @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
@@ -36,7 +36,7 @@ public class KafkaReceiver {
                         System.out.println("此处调用方法A5");break;
                        //TODO
                     case "A6":
-                        System.out.println("此处调用方法A6");break;
+                        sensorsDataAdminService.ReportSensorDataCommand(message.toString());
                        //TODO
                     case "A7":
                         sensorsDataAdminService.querySensorAdress(message.toString());

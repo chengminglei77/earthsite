@@ -2,6 +2,7 @@ package edu.xpu.cs.lovexian.app.appadmin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
@@ -29,6 +30,8 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
     private SensorsDataAdminMapper sensorsDataAdminMapper;
     @Autowired
     private IDtusAdminService iDtusAdminService;
+    @Autowired
+    private InfluxDBContoller influxDBContoller;
     @Override
     public String setSensorAddrAndType(String message){
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
@@ -112,7 +115,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
     }
 
     @Override
-    public String setSensorReportTime(String message) {
+    public void setSensorReportTime(String message) {
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             /**
@@ -125,21 +128,20 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     /*AdminSensorsData data = new AdminSensorsData();
                     data.setDeviceId(deviceId);
                     sensorsDataAdminMapper.insert(data);*/
-                    return "成功";
+                    System.out.println("成功");
                 }else {
                     if (CRC.equals("01")){
-                        return "失败";
+                        System.out.println("失败");
                     }else {
-                        return "CRC校验失败";
+                        System.out.println("CRC校验失败");
                     }
                 }
             }
         }
-        return "错误";
     }
 
     @Override
-    public String getSensorReportTime(String message) {
+    public void getSensorReportTime(String message) {
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             /**
@@ -157,24 +159,22 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     time = sub;
                     data.setTime(time);
                     sensorsDataAdminMapper.insert(data);
-                    return "成功";
                 }else {
                     if (ACK.equals("01")){
-                        return "失败";
+                        System.out.println( "失败");
                     }else {
                         if (ACK.equals("02")){
-                            return "校验失败";
+                            System.out.println("校验失败");
                         }
                     }
                 }
             }
         }
-        return "错误";
     }
 
 
     @Override
-    public String ReportSensorDataCommand(String message) {
+    public void ReportSensorDataCommand(String message) {
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             /**
              * (6)	上报传感器数据指令：0xA6
@@ -182,31 +182,25 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
             String h = message.substring(6, 8);
             if (h.equals("A6")) {
                 String deviceId = message.substring(12, 14);
-                String sensorType = message.substring(14, 16);
-                String sensorAddr = message.substring(16, 20);
+                String sensorsType = message.substring(14, 16);
+                String sensorsAddr = message.substring(16, 20);
                 AdminSensorsData data = new AdminSensorsData();
-                if (sensorType.equals("01")) {
-                    sensorType = "湿度传感器";
-                } else {
-                    if (sensorType.equals("02")) {
-                        sensorType = "风速传感器";
-                    } else {
-                        if (sensorType.equals("03")) {
-                            sensorType = "水盐传感器";
-                        }
-                    }
+                if (sensorsType.equals("01")) {
+                    sensorsType = "湿度传感器";
                 }
-                data.setSensorType(sensorType);
+                if (sensorsType.equals("02")) {
+                        sensorsType = "风速传感器";
+                }
+                if (sensorsType.equals("03")) {
+                    sensorsType = "水盐传感器";
+                }
                 String sensorDataLen = message.substring(20,22);
                 int len = Integer.valueOf(message.substring(20,22));
-                data.setSensorDataLen(sensorDataLen);
-                String sensorData = message.substring(22,22+2*len);
-                data.setSensorData(sensorData);
-                sensorsDataAdminMapper.insert(data);
-                return "成功";
+                String s = message.substring(22,22+2*len);
+                float sensorData = Float.parseFloat(s);
+                influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorData);
             }
         }
-        return "错误";
     }
     @Override
     public void querySensorAdress(String message) throws Exception{
