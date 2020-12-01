@@ -1,5 +1,6 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
+import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import java.util.Optional;
 public class KafkaReceiver {
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
+    @Autowired
+    InfluxDBContoller influxDBContoller;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
@@ -37,7 +40,8 @@ public class KafkaReceiver {
                        //TODO
                     case "A6":
                         sensorsDataAdminService.ReportSensorDataCommand(message.toString());
-                       //TODO
+                        //influxDBContoller.insertOneToInflux("2020测试","风速传感器",25);
+                        //TODO
                     case "A7":
                         sensorsDataAdminService.querySensorAdress(message.toString());
                        // System.out.println("此处调用方法A7");

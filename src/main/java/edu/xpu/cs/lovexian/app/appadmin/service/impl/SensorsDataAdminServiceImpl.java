@@ -175,16 +175,15 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
 
     @Override
     public void ReportSensorDataCommand(String message) {
-        if (message.startsWith("AA55") && message.endsWith("55AA")) {
-            /**
+       /* if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            *//**
              * (6)	上报传感器数据指令：0xA6
-             */
+             *//*
             String h = message.substring(6, 8);
             if (h.equals("A6")) {
                 String deviceId = message.substring(12, 14);
                 String sensorsType = message.substring(14, 16);
                 String sensorsAddr = message.substring(16, 20);
-                AdminSensorsData data = new AdminSensorsData();
                 if (sensorsType.equals("01")) {
                     sensorsType = "湿度传感器";
                 }
@@ -197,10 +196,26 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                 String sensorDataLen = message.substring(20,22);
                 int len = Integer.valueOf(message.substring(20,22));
                 String s = message.substring(22,22+2*len);
-                float sensorData = Float.parseFloat(s);
-                influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorData);
+                float sensorsData = Float.parseFloat(s);
             }
+        }*/
+        String deviceId = message.substring(12, 14);
+        String sensorsType = message.substring(14, 16);
+        String sensorsAddr = message.substring(16, 20);
+        if (sensorsType.equals("01")) {
+            sensorsType = "湿度传感器";
         }
+        if (sensorsType.equals("02")) {
+            sensorsType = "风速传感器";
+        }
+        if (sensorsType.equals("03")) {
+            sensorsType = "水盐传感器";
+        }
+        String sensorDataLen = message.substring(20,22);
+        int len = Integer.valueOf(message.substring(20,22));
+        String s = message.substring(22,22+2*len);
+        float sensorsData = Float.parseFloat(s);
+        influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorsData);
     }
     @Override
     public void querySensorAdress(String message) throws Exception{

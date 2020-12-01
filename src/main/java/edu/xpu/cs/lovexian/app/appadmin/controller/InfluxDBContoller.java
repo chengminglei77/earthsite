@@ -22,13 +22,13 @@ public class InfluxDBContoller {
     InfluxDbConnection influxDBConnection;
 
     @PostMapping("/insertOneToInfluxDB")
-    public void insertOneToInflux(String sensorsAddr,String sensorsType,float sensorData) {
+    public void insertOneToInflux(String sensorsAddr,String sensorsType,float sensorsData) {
         Map<String, String> tagsMap = new HashMap<>();
         Map<String, Object> fieldsMap = new HashMap<>();
         tagsMap.put("sensors_id",sensorsAddr);
         tagsMap.put("sensors_type",sensorsType);
-        fieldsMap.put("sensors_data",sensorData);
-        influxDBConnection.insert("sensorType", tagsMap, fieldsMap);
+        fieldsMap.put("sensors_data",sensorsData);
+        influxDBConnection.insert("sensors_data", tagsMap, fieldsMap);
     }
 
 
