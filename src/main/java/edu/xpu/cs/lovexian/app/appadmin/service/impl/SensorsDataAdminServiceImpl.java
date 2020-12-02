@@ -64,6 +64,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     data.setSensorNum(Num);
                     for (int N=0;N<Num;N++) {
                         String Sensor_Type = message.substring(18+N*6, 20+N*6);
+                        //String SType;
                         if (Sensor_Type.equals("01")) {
                             Sensor_Type = "湿度传感器";
                         } else {
@@ -76,6 +77,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                             }
                         }
                         data.setSensorType(Sensor_Type);
+
                         String Sensor_Addr = message.substring(20+N*6, 24+N*6);
                         data.setSensorAddr(Sensor_Addr);
                     }

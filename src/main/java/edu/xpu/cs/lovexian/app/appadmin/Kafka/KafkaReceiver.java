@@ -21,13 +21,13 @@ public class KafkaReceiver {
                 command = message.toString().substring(6,8);
                 switch (command){
                     case "A1":
-                        System.out.println("此处调用方法A1");break;
+                        sensorsDataAdminService.setSensorAddrAndType(message.toString());break;
                         //TODO
                     case "A2":
-                        System.out.println("此处调用方法A2");break;
+                        sensorsDataAdminService.reportSensorAddrAndTypeAndNum(message.toString());break;
                         //TODO
                     case "A3":
-                        System.out.println("此处调用方法A3");break;
+                        sensorsDataAdminService.deleteSensor(message.toString());break;
                         //TODO
                     case "A4":
                         System.out.println("此处调用方法A4");break;
