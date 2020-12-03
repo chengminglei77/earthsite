@@ -41,6 +41,7 @@ public class AdminCommandInfo {
      */
     @TableField("send_time")
     private Date sendTime;
+
     /**
      * 接收时间
      */
@@ -53,6 +54,12 @@ public class AdminCommandInfo {
      */
     @TableField("description")
     private String description;
+
+    /**
+     * 设备ID
+     */
+    @TableField("device_id")
+    private String deviceID;
 
     private transient String sendTimeFrom;
 
