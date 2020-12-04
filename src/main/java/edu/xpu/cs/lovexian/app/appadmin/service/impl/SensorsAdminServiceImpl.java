@@ -11,6 +11,7 @@ import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
+import edu.xpu.cs.lovexian.common.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
