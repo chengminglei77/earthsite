@@ -106,4 +106,10 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         return this.page(page, queryWrapper);
     }
 
+    @Override
+    public AdminCommandInfo findCommand(AdminCommandInfo adminCommandInfo){
+        AdminCommandInfo coms= commandInfoAdminMapper.selCommandInfo(adminCommandInfo.getDeviceID());
+        System.out.println(coms.getCommand());
+        return coms;
+    }
 }

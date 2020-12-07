@@ -18,6 +18,6 @@ import org.springframework.stereotype.Component;
 @DS("slave")
 public interface CommandInfoAdminMapper extends BaseMapper<AdminCommandInfo> {
     IPage<AdminCommandInfo> selectAll(Page page, @Param("adminCommandInfo") AdminCommandInfo adminCommandInfo);
-
+    AdminCommandInfo selCommandInfo(String deviceID);
     IPage<AdminCommandInfo> queryCommandInfo(Page page, @Param("adminCommandInfo") AdminCommandInfo adminCommandInfo);
 }

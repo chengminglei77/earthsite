@@ -26,6 +26,7 @@ public interface ICommandInfoAdminService extends IService<AdminCommandInfo> {
 
     IPage<AdminCommandInfo> queryCommandInfos(QueryRequest request, AdminCommandInfo adminCommandInfo);
 
-    public IPage<AdminCommandInfo> findCommandInfosByTypeId(QueryRequest request, AdminCommandInfo adminCommandInfo);
+    IPage<AdminCommandInfo> findCommandInfosByTypeId(QueryRequest request, AdminCommandInfo adminCommandInfo);
 
+    AdminCommandInfo findCommand(AdminCommandInfo adminCommandInfo);
 }

@@ -8,7 +8,6 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,37 +31,39 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
     private IDtusAdminService iDtusAdminService;
     @Autowired
     private InfluxDBContoller influxDBContoller;
+
     @Override
-    public String setSensorAddrAndType(String message){
+    public void setSensorAddrAndType(String message) {
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
-            if (h.equals("A1")){
+            if (h.equals("A1")) {
                 String ACK = message.substring(12, 14);
                 if (ACK.equals("01"))
-                    return "失败";
+                    System.out.println("失败");
                 if (ACK.equals("02"))
-                    return "CRC校验失败";
-                if(ACK.equals("00")) {
+                    System.out.println("CRC失败");
+                if (ACK.equals("00")) {
                     AdminSensorsData data = new AdminSensorsData();
                     String Device_ID = message.substring(14, 16);
                     data.setDeviceId(Device_ID);
                     sensorsDataAdminMapper.insert(data);
-                    return "成功";
-                }else return "错误";
-            }else return "错误";
-        }else return "错误";
+                    System.out.println("成功");
+                }
+            }
+        }
     }
+
     @Override
-    public String reportSensorAddrAndTypeAndNum(String message){
+    public void reportSensorAddrAndTypeAndNum(String message) {
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
-            if (h.equals("A2")){
+            if (h.equals("A2")) {
                 String ACK = message.substring(12, 14);
                 if (ACK.equals("01"))
-                    return "失败";
+                    System.out.println("失败");
                 if (ACK.equals("02"))
-                    return "CRC校验失败";
-                if(ACK.equals("00")) {
+                    System.out.println("CRC失败");
+                if (ACK.equals("00")) {
                     AdminSensorsData data = new AdminSensorsData();
                     String Device_ID = message.substring(14, 16);
                     data.setDeviceId(Device_ID);
@@ -70,8 +71,8 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     Integer Num = Integer.valueOf(Sensor_Num, 16);
                     //System.out.println(Num);
                     data.setSensorNum(Num);
-                    for (int N=0;N<Num;N++) {
-                        String Sensor_Type = message.substring(18+N*6, 20+N*6);
+                    for (int N = 0; N < Num; N++) {
+                        String Sensor_Type = message.substring(18 + N * 6, 20 + N * 6);
                         //String SType;
                         if (Sensor_Type.equals("01")) {
                             Sensor_Type = "湿度传感器";
@@ -86,34 +87,37 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                         }
                         data.setSensorType(Sensor_Type);
 
-                        String Sensor_Addr = message.substring(20+N*6, 24+N*6);
+                        String Sensor_Addr = message.substring(20 + N * 6, 24 + N * 6);
                         data.setSensorAddr(Sensor_Addr);
                     }
                     sensorsDataAdminMapper.insert(data);
-                    return "成功";
-                }else return "错误";
-            }else return "错误";
-        }else return "错误";
+                    System.out.println("成功");
+                }
+            }
+        }
     }
+
     @Override
-    public String deleteSensor(String message){
+    public void deleteSensor(String message) {
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
-            if (h.equals("A3")){
+            if (h.equals("A3")) {
                 String ACK = message.substring(12, 14);
-                if (ACK.equals("01"))
-                    return "失败";
-                if (ACK.equals("02"))
-                    return "CRC校验失败";
-                if(ACK.equals("00")) {
+                if (ACK.equals("00")) {
                     AdminSensorsData data = new AdminSensorsData();
                     String Device_ID = message.substring(14, 16);
                     data.setDeviceId(Device_ID);
                     sensorsDataAdminMapper.insert(data);
-                    return "成功";
-                }else return "错误";
-            }else return "错误";
-        }else return "错误";
+                    System.out.println("成功");
+                } else {
+                    if (ACK.equals("01")) {
+                        System.out.println("失败");
+                    } else {
+                        System.out.println("CRC失败");
+                    }
+                }
+            }
+        }
     }
 
     @Override
