@@ -28,7 +28,7 @@ public class AdminCommandInfo {
      * 命令信息
      */
     @TableField("command")
-    private Integer command;
+    private String  command;
 
     /**
      * 处理状态
@@ -41,6 +41,7 @@ public class AdminCommandInfo {
      */
     @TableField("send_time")
     private Date sendTime;
+
     /**
      * 接收时间
      */
@@ -54,8 +55,22 @@ public class AdminCommandInfo {
     @TableField("description")
     private String description;
 
+    /**
+     * 设备ID
+     */
+    @TableField("device_id")
+    private String deviceID;
+
+    /**
+     * TYPE
+     */
+    @TableField("type")
+    private String type;
+
     private transient String sendTimeFrom;
 
     private transient String sendTimeTo;
+
+
 
 }

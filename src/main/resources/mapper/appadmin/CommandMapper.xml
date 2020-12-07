@@ -3,9 +3,24 @@
 <mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.CommandInfoAdminMapper">
     <resultMap id="commandInfo" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo">
         <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="command" jdbcType="VARCHAR" property="command"/>
         <result column="cmd_status" jdbcType="INTEGER" property="status"/>
-        <result column="send_time" jdbcType="INTEGER" property="sendTime"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
         <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceID"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
     </resultMap>
+
+    <select id="selCommandInfo" resultMap="commandInfo" parameterType="string">
+        SELECT c.*
+        FROM cmd_history c
+        <where>
+            device_id= #{deviceID}
+            ORDER BY receive_time DESC
+            LIMIT 1
+        </where>
+    </select>
 </mapper>
+
+

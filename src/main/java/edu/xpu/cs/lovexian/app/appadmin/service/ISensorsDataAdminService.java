@@ -12,11 +12,11 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
 public interface ISensorsDataAdminService extends IService<AdminSensorsData> {
     void querySensorAdress(String message) throws Exception;
 
-    public String setSensorAddrAndType(String message);
+    void  setSensorAddrAndType(String message);
 
-    public String reportSensorAddrAndTypeAndNum(String message);
+    void  reportSensorAddrAndTypeAndNum(String message);
 
-    public String deleteSensor(String message);
+    void  deleteSensor(String message);
 
     void setSensorReportTime(String message);
     void getSensorReportTime(String message);
