@@ -183,4 +183,35 @@ public class InstructionUtil {
             return batteryLevel;
         }
     }
+
+    /**
+     * String明文(16进制)转ASCII码hex字符串
+     * @param str
+     * @return
+     */
+    public static String stringToHex(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            // 这里的第二个参数16表示十六进制
+            sb.append(Integer.toString(c, 16));
+            // 或用toHexString方法直接转成16进制
+            // sb.append(Integer.toHexString(c));
+        }
+        return sb.toString();
+    }
+    /**
+     * String明文(16进制)转ASCII码hex字符串
+     * @param hex
+     * @return
+     */
+    public static String hexToString(String hex) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < hex.length() - 1; i += 2) {
+            String h = hex.substring(i, (i + 2));
+            int decimal = Integer.parseInt(h, 16);
+            sb.append((char) decimal);
+        }
+        return sb.toString();
+    }
 }
