@@ -1,6 +1,8 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ public class KafkaReceiver {
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
     InfluxDBContoller influxDBContoller;
+    CollectDataAdminMapper collectDataAdminMapper;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
@@ -43,8 +46,18 @@ public class KafkaReceiver {
                         System.out.println("此处调用方法A5");break;
                        //TODO
                     case "A6":
-                        System.out.println("此处调用方法A6");break;
-                       //TODO
+                        //System.out.println(message);
+                        sensorsDataAdminService.ReportSensorDataCommand(message.toString());
+                        String[] sensorType = InstructionUtil.getSensorType(Message);
+                        String sensorId = InstructionUtil.getDeviceId(Message);
+                        AdminCollectData data = new AdminCollectData();
+                        data.setSensorType(sensorType[0]);
+                        data.setSensorId(sensorId);
+                        collectDataAdminMapper.insert(data);
+                        break;
+                    //data.setSensorValue(sensorValue);
+                    //collectDataAdminMapper.insert(data);
+                    //influxDBContoller.insertOneToInflux("2020测试","风速传感器",25);
                     case "A7":
                     {
                         String ack = InstructionUtil.getAck(Message);
