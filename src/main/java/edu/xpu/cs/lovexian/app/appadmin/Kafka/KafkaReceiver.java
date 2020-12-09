@@ -1,20 +1,22 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
+import edu.xpu.cs.lovexian.app.appadmin.controller.Test;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
-@Slf4j
+
 @Component
 public class KafkaReceiver {
+    public static Logger log = Logger.getLogger(Test.class);
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
-    @Autowired
     InfluxDBContoller influxDBContoller;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
@@ -42,9 +44,8 @@ public class KafkaReceiver {
                         System.out.println("此处调用方法A5");break;
                        //TODO
                     case "A6":
-                        sensorsDataAdminService.ReportSensorDataCommand(message.toString());
-                        //influxDBContoller.insertOneToInflux("2020测试","风速传感器",25);
-                        //TODO
+                        System.out.println("此处调用方法A6");break;
+                       //TODO
                     case "A7":
                     {
                         String ack = InstructionUtil.getAck(Message);
@@ -78,11 +79,11 @@ public class KafkaReceiver {
                             log.info("数据终端设备的充电状态为："+change);
                     }
                     default:
-                        System.out.println("传入数据不合法");
+                        log.error("传入数据不合法");
                 }
             }catch (Exception e){
                 e.printStackTrace();
-                System.out.println("异常为:"+e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
