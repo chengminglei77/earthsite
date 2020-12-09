@@ -77,6 +77,16 @@ spring:
     cache: false
     settings:
       template_update_delay: 0
+
+  influx:
+    url: http://39.105.171.192:8086
+    userName: xpuadmin
+    password: 123456
+    database: earthsize
+    retention_policy: default
+    retention_policy_time: 30d
+    actions: 10000
+    bufferLimit: 20000
   kafka:
     bootstrap-servers: 39.105.171.192:9092
     consumer:
