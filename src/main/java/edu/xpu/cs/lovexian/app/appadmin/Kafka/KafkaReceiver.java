@@ -1,7 +1,6 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
-import edu.xpu.cs.lovexian.app.appadmin.controller.Test;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,7 @@ import java.util.Optional;
 
 @Component
 public class KafkaReceiver {
-    public static Logger log = Logger.getLogger(Test.class);
+    public static Logger log = Logger.getLogger(KafkaReceiver.class);
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
     InfluxDBContoller influxDBContoller;
