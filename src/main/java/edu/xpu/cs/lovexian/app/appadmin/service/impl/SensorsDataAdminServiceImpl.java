@@ -3,11 +3,16 @@ package edu.xpu.cs.lovexian.app.appadmin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.DtuSensorAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,39 +36,41 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
     private IDtusAdminService iDtusAdminService;
     @Autowired
     private InfluxDBContoller influxDBContoller;
-
+    @Autowired
+    private DtuSensorAdminMapper dtuSensorAdminMapper;
+    @Autowired
+    CollectDataAdminMapper collectDataAdminMapper;
     @Override
-    public void setSensorAddrAndType(String message) {
+    public String setSensorAddrAndType(String message){
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
-            if (h.equals("A1")) {
+            if (h.equals("A1")){
                 String ACK = message.substring(12, 14);
                 if (ACK.equals("01"))
-                    System.out.println("失败");
+                    return "失败";
                 if (ACK.equals("02"))
-                    System.out.println("CRC失败");
-                if (ACK.equals("00")) {
+                    return "CRC校验失败";
+                if(ACK.equals("00")) {
                     AdminSensorsData data = new AdminSensorsData();
                     String Device_ID = message.substring(14, 16);
                     data.setDeviceId(Device_ID);
                     sensorsDataAdminMapper.insert(data);
-                    System.out.println("成功");
-                }
-            }
-        }
+                    return "成功";
+                }else return "错误";
+            }else return "错误";
+        }else return "错误";
     }
-
     @Override
-    public void reportSensorAddrAndTypeAndNum(String message) {
+    public String reportSensorAddrAndTypeAndNum(String message){
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
-            if (h.equals("A2")) {
+            if (h.equals("A2")){
                 String ACK = message.substring(12, 14);
                 if (ACK.equals("01"))
-                    System.out.println("失败");
+                    return "失败";
                 if (ACK.equals("02"))
-                    System.out.println("CRC失败");
-                if (ACK.equals("00")) {
+                    return "CRC校验失败";
+                if(ACK.equals("00")) {
                     AdminSensorsData data = new AdminSensorsData();
                     String Device_ID = message.substring(14, 16);
                     data.setDeviceId(Device_ID);
@@ -71,9 +78,8 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     Integer Num = Integer.valueOf(Sensor_Num, 16);
                     //System.out.println(Num);
                     data.setSensorNum(Num);
-                    for (int N = 0; N < Num; N++) {
-                        String Sensor_Type = message.substring(18 + N * 6, 20 + N * 6);
-                        //String SType;
+                    for (int N=0;N<Num;N++) {
+                        String Sensor_Type = message.substring(18+N*6, 20+N*6);
                         if (Sensor_Type.equals("01")) {
                             Sensor_Type = "湿度传感器";
                         } else {
@@ -86,38 +92,34 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                             }
                         }
                         data.setSensorType(Sensor_Type);
-
-                        String Sensor_Addr = message.substring(20 + N * 6, 24 + N * 6);
+                        String Sensor_Addr = message.substring(20+N*6, 24+N*6);
                         data.setSensorAddr(Sensor_Addr);
                     }
                     sensorsDataAdminMapper.insert(data);
-                    System.out.println("成功");
-                }
-            }
-        }
+                    return "成功";
+                }else return "错误";
+            }else return "错误";
+        }else return "错误";
     }
-
     @Override
-    public void deleteSensor(String message) {
+    public String deleteSensor(String message){
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
-            if (h.equals("A3")) {
+            if (h.equals("A3")){
                 String ACK = message.substring(12, 14);
-                if (ACK.equals("00")) {
+                if (ACK.equals("01"))
+                    return "失败";
+                if (ACK.equals("02"))
+                    return "CRC校验失败";
+                if(ACK.equals("00")) {
                     AdminSensorsData data = new AdminSensorsData();
                     String Device_ID = message.substring(14, 16);
                     data.setDeviceId(Device_ID);
                     sensorsDataAdminMapper.insert(data);
-                    System.out.println("成功");
-                } else {
-                    if (ACK.equals("01")) {
-                        System.out.println("失败");
-                    } else {
-                        System.out.println("CRC失败");
-                    }
-                }
-            }
-        }
+                    return "成功";
+                }else return "错误";
+            }else return "错误";
+        }else return "错误";
     }
 
     @Override
@@ -134,12 +136,15 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                     /*AdminSensorsData data = new AdminSensorsData();
                     data.setDeviceId(deviceId);
                     sensorsDataAdminMapper.insert(data);*/
-                    System.out.println("成功");
+                    //System.out.println("成功");
+                    log.info("成功");
                 }else {
                     if (CRC.equals("01")){
-                        System.out.println("失败");
+                        //System.out.println("失败");
+                        log.info("失败");
                     }else {
-                        System.out.println("CRC校验失败");
+                        //System.out.println("CRC校验失败");
+                        log.info("CRC校验失败");
                     }
                 }
             }
@@ -157,20 +162,23 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                 Date date = new Date();
                 String ACK = message.substring(12,14);
                 if (ACK.equals("00")){
-                    AdminSensorsData data = new AdminSensorsData();
-                    String time = "";
+                    //AdminSensorsData data = new AdminSensorsData();
+                    AdminDtuSensor data = new AdminDtuSensor();
+                    int time;
                     String deviceId = message.substring(14,16);
                     String str = message.substring(16,20);
                     String sub = new BigInteger(str, 16).toString(10);
-                    time = sub;
+                    time = Integer.parseInt(sub);
                     data.setTime(time);
-                    sensorsDataAdminMapper.insert(data);
+                    dtuSensorAdminMapper.insert(data);//将传感其上报时间存到dtu_sensor表中
                 }else {
                     if (ACK.equals("01")){
-                        System.out.println( "失败");
+                        //System.out.println( "失败");
+                        log.info("失败");
                     }else {
                         if (ACK.equals("02")){
-                            System.out.println("校验失败");
+                            //System.out.println("校验失败");
+                            log.info("CRC校验失败");
                         }
                     }
                 }
@@ -181,16 +189,15 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
 
     @Override
     public void ReportSensorDataCommand(String message) {
-        if (message.startsWith("AA55") && message.endsWith("55AA")) {
-            /**
+       /* if (message.startsWith("AA55") && message.endsWith("55AA")) {
+            *//**
              * (6)	上报传感器数据指令：0xA6
-             */
+             *//*
             String h = message.substring(6, 8);
             if (h.equals("A6")) {
                 String deviceId = message.substring(12, 14);
                 String sensorsType = message.substring(14, 16);
                 String sensorsAddr = message.substring(16, 20);
-                AdminSensorsData data = new AdminSensorsData();
                 if (sensorsType.equals("01")) {
                     sensorsType = "湿度传感器";
                 }
@@ -203,10 +210,27 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
                 String sensorDataLen = message.substring(20,22);
                 int len = Integer.valueOf(message.substring(20,22));
                 String s = message.substring(22,22+2*len);
-                float sensorData = Float.parseFloat(s);
-                influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorData);
+                float sensorsData = Float.parseFloat(s);
             }
+        }*/
+        String deviceId = message.substring(12, 14);
+        String sensorsType = message.substring(14, 16);
+        String sensorsAddr = message.substring(16, 20);
+
+        if (sensorsType.equals("01")) {
+            sensorsType = "湿度传感器";
         }
+        if (sensorsType.equals("02")) {
+            sensorsType = "风速传感器";
+        }
+        if (sensorsType.equals("03")) {
+            sensorsType = "水盐传感器";
+        }
+        String sensorDataLen = message.substring(20,22);
+        int len = Integer.valueOf(message.substring(20,22));
+        String s = message.substring(22,22+2*len);
+        float sensorsData = Float.parseFloat(s);
+        influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorsData);
     }
     @Override
     public void querySensorAdress(String message) throws Exception{

@@ -1,8 +1,11 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
+import jnr.ffi.annotations.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ public class KafkaReceiver {
     SensorsDataAdminServiceImpl sensorsDataAdminService;
     @Autowired
     InfluxDBContoller influxDBContoller;
+    @Autowired
+    CollectDataAdminMapper collectDataAdminMapper;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
@@ -42,7 +47,17 @@ public class KafkaReceiver {
                         System.out.println("此处调用方法A5");break;
                        //TODO
                     case "A6":
+                        //System.out.println(message);
                         sensorsDataAdminService.ReportSensorDataCommand(message.toString());
+                        String[] sensorType = InstructionUtil.getSensorType(Message);
+                        String sensorId = InstructionUtil.getDeviceId(Message);
+                        AdminCollectData data = new AdminCollectData();
+                        data.setSensorType(sensorType[0]);
+                        data.setSensorId(sensorId);
+                        collectDataAdminMapper.insert(data);
+                        break;
+                        //data.setSensorValue(sensorValue);
+                        //collectDataAdminMapper.insert(data);
                         //influxDBContoller.insertOneToInflux("2020测试","风速传感器",25);
                         //TODO
                     case "A7":
@@ -78,6 +93,7 @@ public class KafkaReceiver {
                             log.info("数据终端设备的充电状态为："+change);
                     }
                     default:
+                        System.out.println(message);
                         System.out.println("传入数据不合法");
                 }
             }catch (Exception e){
