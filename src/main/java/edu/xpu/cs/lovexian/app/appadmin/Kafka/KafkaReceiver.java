@@ -18,6 +18,7 @@ public class KafkaReceiver {
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
+    @Autowired
     InfluxDBContoller influxDBContoller;
     CollectDataAdminMapper collectDataAdminMapper;
     @KafkaListener(topics = {"sensorsTopic"})
@@ -29,6 +30,7 @@ public class KafkaReceiver {
                 Object message = kafkaMessage.get();
                 command = message.toString().substring(6,8);
                 String Message=message.toString();
+                System.out.println(Message);
                 switch (command){
                     case "A1":
                         sensorsDataAdminService.setSensorAddrAndType(message.toString());break;
@@ -46,14 +48,14 @@ public class KafkaReceiver {
                         System.out.println("此处调用方法A5");break;
                        //TODO
                     case "A6":
-                        //System.out.println(message);
+                        System.out.println(message);
                         sensorsDataAdminService.ReportSensorDataCommand(message.toString());
-                        String[] sensorType = InstructionUtil.getSensorType(Message);
+                        /*String[] sensorType = InstructionUtil.getSensorType(Message);
                         String sensorId = InstructionUtil.getDeviceId(Message);
                         AdminCollectData data = new AdminCollectData();
                         data.setSensorType(sensorType[0]);
                         data.setSensorId(sensorId);
-                        collectDataAdminMapper.insert(data);
+                        collectDataAdminMapper.insert(data);*/
                         break;
                     //data.setSensorValue(sensorValue);
                     //collectDataAdminMapper.insert(data);
@@ -68,13 +70,16 @@ public class KafkaReceiver {
                         log.error("CRC校验失败");
                         if(ack.equals("00"))
                         log.info("指令解析成功，数据终端设备地址为"+deviceId);
+                        break;
                     }
                     case "A8":
                     {
+                        System.out.println("A8="+Message);
                         String deviceId = InstructionUtil.getDeviceId(Message);
                         String change = InstructionUtil.getChange(Message);
                         String batteryLevel = InstructionUtil.getBatteryLevel(Message);
                         influxDBContoller.insertTwoToInfluxDB(deviceId,change,batteryLevel);
+                        break;
                     }
                     case "A9":
                     {   String ack = InstructionUtil.getAck(Message);
@@ -85,10 +90,11 @@ public class KafkaReceiver {
                             log.error("确认帧错误，失败");
                         if (ack.equals("02"))
                             log.error("CRC校验失败");
-                        if(ack.equals("00"))
-                            log.info("指令解析成功，数据终端设备地址为"+deviceId);
-                            log.info("数据终端设备电量为："+batteryLevel);
-                            log.info("数据终端设备的充电状态为："+change);
+                        if(ack.equals("00")) {
+                            log.info("指令解析成功，数据终端设备地址为" + deviceId);
+                            log.info("数据终端设备电量为：" + batteryLevel);
+                            log.info("数据终端设备的充电状态为：" + change);
+                        }    break;
                     }
                     default:
                         log.error("传入数据不合法");

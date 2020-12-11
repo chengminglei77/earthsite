@@ -175,11 +175,13 @@ public class InstructionUtil {
     {String instructionType = getInstructionType(message);
         if(instructionType.equals("A8"))
         {
-            String batteryLevel = message.substring(16, 18);
+            String battery = message.substring(16, 20);
+            String batteryLevel = new BigInteger(battery, 16).toString();
             return batteryLevel;
         }
         else
-        { String batteryLevel = message.substring(18, 20);
+        {String battery = message.substring(18, 22);
+            String batteryLevel = new BigInteger(battery, 16).toString();
             return batteryLevel;
         }
     }

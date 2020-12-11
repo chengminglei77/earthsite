@@ -78,22 +78,6 @@ spring:
     settings:
       template_update_delay: 0
 
-  influx:
-    url: http://39.105.171.192:8086
-    userName: xpuadmin
-    password: 123456
-    database: earthsize
-    retention_policy: default
-    retention_policy_time: 30d
-    actions: 10000
-    bufferLimit: 20000
-  kafka:
-    bootstrap-servers: 39.105.171.192:9092
-    consumer:
-      group-id: test-consumer-group
-      auto-offset-reset: earliest
-      enable-auto-commit: true
-      auto-commit-interval: 100
 #mybatis plus 设置
 mybatis-plus:
   type-aliases-package: edu.xpu.cs.lovexian.systemadmin.domain,edu.xpu.cs.lovexian.systemadmin.generator.entity,edu.xpu.cs.lovexian.app.api.entity,edu.xpu.cs.lovexian.app.appadmin.entity
