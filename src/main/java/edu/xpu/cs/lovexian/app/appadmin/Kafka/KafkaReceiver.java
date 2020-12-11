@@ -3,7 +3,9 @@ package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminUnresovledData;
+import edu.xpu.cs.lovexian.app.appadmin.entity.KafkaReceiveData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.KafkaReceiveDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
@@ -28,6 +30,8 @@ public class KafkaReceiver {
     CollectDataAdminMapper collectDataAdminMapper;
     @Autowired
     UnresovledDataMapper unresovledDataMapper;
+    @Autowired
+    KafkaReceiveDataMapper kafkaReceiveDataMapper;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
@@ -36,10 +40,13 @@ public class KafkaReceiver {
             try{
                 Object message = kafkaMessage.get();
                 command = message.toString().substring(6,8);
-                //AdminUnresovledData instructionType = new AdminUnresovledData();
-                //instructionType.setInstructionType(command);
-                //unresovledDataMapper.insert(instructionType);
                 String Message=message.toString();
+                //插入到mysql数据库表A6_data
+                Date time2 = new java.sql.Date(new java.util.Date().getTime());
+                KafkaReceiveData kafkaReceiveData = new KafkaReceiveData();
+                kafkaReceiveData.setReceiveData((message.toString()));
+                kafkaReceiveData.setColTime(time2);
+                kafkaReceiveDataMapper.insert(kafkaReceiveData);
                 switch (command){
                     case "A1":
                         sensorsDataAdminService.setSensorAddrAndType(message.toString());break;
