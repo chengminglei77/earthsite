@@ -43,19 +43,14 @@ public class KafkaReceiver {
                 switch (command){
                     case "A1":
                         sensorsDataAdminService.setSensorAddrAndType(message.toString());break;
-                        //TODO
                     case "A2":
                         sensorsDataAdminService.reportSensorAddrAndTypeAndNum(message.toString());break;
-                        //TODO
                     case "A3":
                         sensorsDataAdminService.deleteSensor(message.toString());break;
-                        //TODO
                     case "A4":
                         System.out.println("此处调用方法A4");break;
-                       //TODO
                     case "A5":
                         System.out.println("此处调用方法A5");break;
-                       //TODO
                     case "A6":
                         System.out.println("A6:"+message);
                         //插入到influxdb
@@ -102,6 +97,7 @@ public class KafkaReceiver {
                         String change = InstructionUtil.getChange(Message);
                         String batteryLevel = InstructionUtil.getBatteryLevel(Message);
                         influxDBContoller.insertTwoToInfluxDB(deviceId,change,batteryLevel);
+                        break;
                     }
                     case "A9":
                     {   String ack = InstructionUtil.getAck(Message);

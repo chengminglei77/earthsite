@@ -30,9 +30,9 @@ spring:
         # 数据源-1，名称为 master
         master:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://123.57.94.242/earthsiterbac?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
+          url: jdbc:mysql://39.105.171.192/earthsiterbac?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
           username: root
-          password: conan2007
+          password: 123456
           # 数据源-2，名称为 slave
         slave:
           driver-class-name: com.mysql.cj.jdbc.Driver
