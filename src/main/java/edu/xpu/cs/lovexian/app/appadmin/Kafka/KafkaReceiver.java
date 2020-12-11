@@ -2,7 +2,9 @@ package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminUnresovledData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
+import java.sql.Date;
 import java.util.Optional;
 
 @Component
@@ -20,7 +24,10 @@ public class KafkaReceiver {
     SensorsDataAdminServiceImpl sensorsDataAdminService;
     @Autowired
     InfluxDBContoller influxDBContoller;
+    @Autowired
     CollectDataAdminMapper collectDataAdminMapper;
+    @Autowired
+    UnresovledDataMapper unresovledDataMapper;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
@@ -29,33 +36,44 @@ public class KafkaReceiver {
             try{
                 Object message = kafkaMessage.get();
                 command = message.toString().substring(6,8);
+                //AdminUnresovledData instructionType = new AdminUnresovledData();
+                //instructionType.setInstructionType(command);
+                //unresovledDataMapper.insert(instructionType);
                 String Message=message.toString();
-                System.out.println(Message);
                 switch (command){
                     case "A1":
                         sensorsDataAdminService.setSensorAddrAndType(message.toString());break;
-                        //TODO
                     case "A2":
                         sensorsDataAdminService.reportSensorAddrAndTypeAndNum(message.toString());break;
-                        //TODO
                     case "A3":
                         sensorsDataAdminService.deleteSensor(message.toString());break;
-                        //TODO
                     case "A4":
                         System.out.println("此处调用方法A4");break;
-                       //TODO
                     case "A5":
                         System.out.println("此处调用方法A5");break;
-                       //TODO
                     case "A6":
-                        System.out.println(message);
+                        System.out.println("A6:"+message);
+                        //插入到influxdb
                         sensorsDataAdminService.ReportSensorDataCommand(message.toString());
-                        /*String[] sensorType = InstructionUtil.getSensorType(Message);
+                        //插入到mysql数据库表collect_datas
+                        Date time0 = new java.sql.Date(new java.util.Date().getTime());
+                        String[] sensorType = InstructionUtil.getSensorType(Message);
                         String sensorId = InstructionUtil.getDeviceId(Message);
                         AdminCollectData data = new AdminCollectData();
                         data.setSensorType(sensorType[0]);
                         data.setSensorId(sensorId);
-                        collectDataAdminMapper.insert(data);*/
+                        data.setColTime(time0);
+                        data.setSensorValue(InstructionUtil.getSensorData(message.toString()));
+                        collectDataAdminMapper.insert(data);
+                        //插入到mysql数据库表A6_data
+                        Date time1 = new java.sql.Date(new java.util.Date().getTime());
+                        AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
+                        adminUnresovledData.setData(message.toString());
+                        adminUnresovledData.setSensorType(sensorType[0]);
+                        adminUnresovledData.setSensorData(InstructionUtil.getSensorData(message.toString()));
+                        adminUnresovledData.setInstructionType(command);
+                        adminUnresovledData.setColTime(time1);
+                        unresovledDataMapper.insert(adminUnresovledData);
                         break;
                     //data.setSensorValue(sensorValue);
                     //collectDataAdminMapper.insert(data);
@@ -74,7 +92,7 @@ public class KafkaReceiver {
                     }
                     case "A8":
                     {
-                        System.out.println("A8="+Message);
+                        System.out.println("A8:"+message);
                         String deviceId = InstructionUtil.getDeviceId(Message);
                         String change = InstructionUtil.getChange(Message);
                         String batteryLevel = InstructionUtil.getBatteryLevel(Message);
@@ -90,13 +108,14 @@ public class KafkaReceiver {
                             log.error("确认帧错误，失败");
                         if (ack.equals("02"))
                             log.error("CRC校验失败");
-                        if(ack.equals("00")) {
-                            log.info("指令解析成功，数据终端设备地址为" + deviceId);
-                            log.info("数据终端设备电量为：" + batteryLevel);
-                            log.info("数据终端设备的充电状态为：" + change);
-                        }    break;
+                        if(ack.equals("00"))
+                            log.info("指令解析成功，数据终端设备地址为"+deviceId);
+                            log.info("数据终端设备电量为："+batteryLevel);
+                            log.info("数据终端设备的充电状态为："+change);
+                        break;
                     }
                     default:
+                        System.out.println(message);
                         log.error("传入数据不合法");
                 }
             }catch (Exception e){

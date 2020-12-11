@@ -225,9 +225,12 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
             sensorsType = "水盐传感器";
         }
         String sensorDataLen = message.substring(20,22);
-        int len = Integer.valueOf(message.substring(20,22));
-        String s = message.substring(22,22+2*len);
-        float sensorsData = Float.parseFloat(s);
+        String s0 = message.substring(20,22);
+        String len = new BigInteger(s0, 16).toString(10);
+        int length = Integer.valueOf(len);
+        String s = message.substring(22,22+2*length);
+        String sensorsData = s;
+        //float sensorsData = Float.parseFloat(s);
         influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorsData);
     }
     @Override

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Date;
+
 
 /**
  *  Entity
@@ -37,11 +39,11 @@ public class AdminCollectData {
      * 传感器数据数据
      */
     @TableId(value = "sensor_value", type = IdType.ID_WORKER_STR)
-    private double sensorValue;
+    private String sensorValue;
 
     /**
      *收集时间
      */
     @TableId(value = "col_time", type = IdType.ID_WORKER_STR)
-    private String colTime;
+    private Date colTime;
 }

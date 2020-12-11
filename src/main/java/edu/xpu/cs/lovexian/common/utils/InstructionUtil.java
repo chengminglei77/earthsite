@@ -216,4 +216,18 @@ public class InstructionUtil {
         }
         return sb.toString();
     }
+
+
+    /**
+     * 获取A6的传感器数据
+     */
+    public static String getSensorData(String message){
+        String s0 = message.substring(20,22);
+        String len = new BigInteger(s0, 16).toString(10);
+        int length = Integer.valueOf(len);
+        String s = message.substring(22,22+2*length);
+        String sensorsData = s;
+        return sensorsData;
+
+    }
 }
