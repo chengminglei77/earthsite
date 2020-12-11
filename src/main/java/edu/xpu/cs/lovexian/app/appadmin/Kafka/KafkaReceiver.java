@@ -97,6 +97,15 @@ public class KafkaReceiver {
                         String change = InstructionUtil.getChange(Message);
                         float batteryLevel = InstructionUtil.getBatteryLevel(Message);
                         influxDBContoller.insertTwoToInfluxDB(deviceId,change,batteryLevel);
+                        //插入到MYSQL数据库A6_data
+                        Date time = new java.sql.Date(new java.util.Date().getTime());
+                        AdminUnresovledData adminUnresovledData1 = new AdminUnresovledData();
+                        adminUnresovledData1.setData(message.toString());
+                        adminUnresovledData1.setSensorType(deviceId);
+                        adminUnresovledData1.setSensorData(String.valueOf(batteryLevel));
+                        adminUnresovledData1.setInstructionType("A8");
+                        adminUnresovledData1.setColTime(time);
+                        unresovledDataMapper.insert(adminUnresovledData1);
                         break;
                     }
                     case "A9":
