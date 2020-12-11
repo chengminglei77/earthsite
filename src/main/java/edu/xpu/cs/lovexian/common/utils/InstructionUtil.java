@@ -171,18 +171,20 @@ public class InstructionUtil {
      * @param message
      * @return
      */
-    public static String getBatteryLevel(String message)
+    public static float getBatteryLevel(String message)
     {String instructionType = getInstructionType(message);
         if(instructionType.equals("A8"))
         {
             String battery = message.substring(16, 20);
             String batteryLevel = new BigInteger(battery, 16).toString();
-            return batteryLevel;
+            float BatteryLevel=Float.parseFloat(batteryLevel);
+            return BatteryLevel;
         }
         else
         {String battery = message.substring(18, 22);
             String batteryLevel = new BigInteger(battery, 16).toString();
-            return batteryLevel;
+            float BatteryLevel=Float.parseFloat(batteryLevel);
+            return BatteryLevel;
         }
     }
 

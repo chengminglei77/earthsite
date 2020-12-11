@@ -31,7 +31,7 @@ public class InfluxDBContoller {
         influxDBConnection.insert("sensors_data", tagsMap, fieldsMap);
     }
     @PostMapping("/insertTwoToInfluxDB")
-    public void insertTwoToInfluxDB(String Device_ID,String change,String Battery_Level )
+    public void insertTwoToInfluxDB(String Device_ID,String change,float Battery_Level )
     {Map<String, String> tagsMap = new HashMap<>();
         Map<String, Object> fieldsMap = new HashMap<>();
         tagsMap.put("Device_ID",Device_ID);

@@ -95,7 +95,7 @@ public class KafkaReceiver {
                         System.out.println("A8:"+message);
                         String deviceId = InstructionUtil.getDeviceId(Message);
                         String change = InstructionUtil.getChange(Message);
-                        String batteryLevel = InstructionUtil.getBatteryLevel(Message);
+                        float batteryLevel = InstructionUtil.getBatteryLevel(Message);
                         influxDBContoller.insertTwoToInfluxDB(deviceId,change,batteryLevel);
                         break;
                     }
@@ -103,7 +103,7 @@ public class KafkaReceiver {
                     {   String ack = InstructionUtil.getAck(Message);
                         String deviceId = InstructionUtil.getDeviceId(Message);
                         String change = InstructionUtil.getChange(Message);
-                        String batteryLevel = InstructionUtil.getBatteryLevel(Message);
+                        float batteryLevel = InstructionUtil.getBatteryLevel(Message);
                         if(ack.equals("01"))
                             log.error("确认帧错误，失败");
                         if (ack.equals("02"))
