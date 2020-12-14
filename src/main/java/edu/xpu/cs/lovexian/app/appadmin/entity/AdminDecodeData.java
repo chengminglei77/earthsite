@@ -73,9 +73,9 @@ public class AdminDecodeData {
     private Integer speed3sNo2;
 
     /**
-     * 1号传感器3s时的风向
+     * 2号传感器3s时的风向
      */
-    @TableField("direction_3s_no1")
+    @TableField("direction_3s_no2")
     private Integer direction3sNo2;
 
     /**
@@ -106,7 +106,7 @@ public class AdminDecodeData {
      * 2号传感器10min时的风向
      */
     @TableField("temperature")
-    private Integer temperature;
+    private String temperature;
 
     /**
      * 传感器类型
