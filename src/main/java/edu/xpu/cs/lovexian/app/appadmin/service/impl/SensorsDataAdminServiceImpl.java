@@ -284,7 +284,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 平均风速
          */
-        String sensor_data_speed_10min_no1 = message.substring(42,46);
+        String sensor_data_speed_10min_no1 = message.substring(38,42);
         //System.out.println(sensor_data_speed_10min_no1);
         String speed_10min_no1 = new BigInteger(sensor_data_speed_10min_no1,16).toString(10);
         int windSpeed_10min_no1 = Integer.parseInt(speed_10min_no1);
@@ -293,7 +293,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 风向
          */
-        String sensor_data_direction_10min_no1 = message.substring(46,50);
+        String sensor_data_direction_10min_no1 = message.substring(42,46);
         //System.out.println(sensor_data_direction_10min_no1);
         String direction_10min_no1 = new BigInteger(sensor_data_direction_10min_no1,16).toString(10);
         int windDirection_10min_no1 = Integer.parseInt(direction_10min_no1)+92;
@@ -306,7 +306,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 平均风速
          */
-        String sensor_data_speed_3s_no2 = message.substring(50,54);
+        String sensor_data_speed_3s_no2 = message.substring(46,50);
         //System.out.println(sensor_data_speed_3s_no2);
         String speed_3s_no2 = new BigInteger(sensor_data_speed_3s_no2,16).toString(10);
         int windSpeed_3s_no2 = Integer.parseInt(speed_3s_no2);
@@ -315,7 +315,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 风向
          */
-        String sensor_data_direction_3s_no2 = message.substring(54,58);
+        String sensor_data_direction_3s_no2 = message.substring(50,54);
         //System.out.println(sensor_data_direction_3s_no2);
         String direction_3s_no2 = new BigInteger(sensor_data_direction_3s_no2,16).toString(10);
         int windDirection_3s_no2 = Integer.parseInt(direction_3s_no2)-22;
@@ -327,7 +327,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 平均风速
          */
-        String sensor_data_speed_2min_no2 = message.substring(58,62);
+        String sensor_data_speed_2min_no2 = message.substring(54,58);
         //System.out.println(sensor_data_speed_2min_no2);
         String speed_2min_no2 = new BigInteger(sensor_data_speed_2min_no2,16).toString(10);
         int windSpeed_2min_no2 = Integer.parseInt(speed_2min_no2);
@@ -336,7 +336,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 风向
          */
-        String sensor_data_direction_2min_no2 = message.substring(62,66);
+        String sensor_data_direction_2min_no2 = message.substring(58,62);
         //System.out.println(sensor_data_direction_2min_no2);
         String direction_2min_no2 = new BigInteger(sensor_data_direction_2min_no2,16).toString(10);
         int windDirection_2min_no2 = Integer.parseInt(direction_2min_no2)-22;
@@ -348,7 +348,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 平均风速
          */
-        String sensor_data_speed_10min_no2 = message.substring(66,70);
+        String sensor_data_speed_10min_no2 = message.substring(62,66);
         //System.out.println(sensor_data_speed_10min_no2);
         String speed_10min_no2 = new BigInteger(sensor_data_speed_10min_no2,16).toString(10);
         int windSpeed_10min_no2 = Integer.parseInt(speed_10min_no2);
@@ -357,7 +357,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         /**
          * 风向
          */
-        String sensor_data_direction_10min_no2 = message.substring(70,74);
+        String sensor_data_direction_10min_no2 = message.substring(66,70);
         //System.out.println(sensor_data_direction_10min_no2);
         String direction_10min_no2 = new BigInteger(sensor_data_direction_10min_no2,16).toString(10);
         int windDirection_10min_no2 = Integer.parseInt(direction_10min_no2)-22;
@@ -365,8 +365,8 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println("10min_风向_no2："+windDirection_10min_no2);
 
         //温度的正负
-        String negative_positive = message.substring(74,76);//sensor_data_temperature
-        String sensor_data_temperature = message.substring(76,78);
+        String negative_positive = message.substring(70,72);//sensor_data_temperature
+        String sensor_data_temperature = message.substring(72,74);
         String s1 = new BigInteger(sensor_data_temperature,16).toString(10);
         if (negative_positive.equals("00")){
             String symbol = "-";
@@ -375,7 +375,8 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
             //int temperature = Integer.parseInt(s1);
             adminDecodeData.setTemperature(temperature);
         }else{
-            adminDecodeData.setTemperature(s1);
+            String centigrade = "℃";
+            adminDecodeData.setTemperature(s1+centigrade);
         }
         adminDecodeData.setSensor_Type(sensorsType);
         adminDecodeData.setInstructionType("A6");
