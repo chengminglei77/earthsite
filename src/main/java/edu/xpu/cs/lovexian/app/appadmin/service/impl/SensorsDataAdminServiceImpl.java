@@ -13,6 +13,7 @@ import edu.xpu.cs.lovexian.app.appadmin.mapper.DtuSensorAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.utils.InfluxDbConnection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -255,6 +256,10 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println(sensor_data_direction_3s_no1);
         String direction_3s_no1 = new BigInteger(sensor_data_direction_3s_no1,16).toString(10);
         int windDirection_3s_no1 = Integer.parseInt(direction_3s_no1)+92;
+        if (windDirection_3s_no1 > 359){
+            windDirection_3s_no1 = windDirection_3s_no1-359;
+            adminDecodeData.setDirection3sNo1(windDirection_3s_no1);
+        }
         adminDecodeData.setDirection3sNo1(windDirection_3s_no1);
         //System.out.println("3s_风向_no1："+windDirection_3s_no1);
 
@@ -276,6 +281,10 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println(sensor_data_direction_2min_no1);
         String direction_2min_no1 = new BigInteger(sensor_data_direction_2min_no1,16).toString(10);
         int windDirection_2min_no1 = Integer.parseInt(direction_2min_no1)+92;
+        if (windDirection_2min_no1 > 359){
+            windDirection_2min_no1 = windDirection_2min_no1-359;
+            adminDecodeData.setDirection2minNo1(windDirection_2min_no1);
+        }
         adminDecodeData.setDirection2minNo1(windDirection_2min_no1);
         //System.out.println("2min_风向_no1："+windDirection_2min_no1);
 
@@ -297,6 +306,10 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println(sensor_data_direction_10min_no1);
         String direction_10min_no1 = new BigInteger(sensor_data_direction_10min_no1,16).toString(10);
         int windDirection_10min_no1 = Integer.parseInt(direction_10min_no1)+92;
+        if (windDirection_10min_no1 > 359){
+            windDirection_10min_no1 = windDirection_10min_no1-359;
+            adminDecodeData.setDirection10minNo1(windDirection_10min_no1);
+        }
         adminDecodeData.setDirection10minNo1(windDirection_10min_no1);
         //System.out.println("10min_风向_no1："+windDirection_10min_no1);
 
@@ -319,6 +332,10 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println(sensor_data_direction_3s_no2);
         String direction_3s_no2 = new BigInteger(sensor_data_direction_3s_no2,16).toString(10);
         int windDirection_3s_no2 = Integer.parseInt(direction_3s_no2)-22;
+        if (windDirection_3s_no2 < 0){
+            windDirection_3s_no2 = windDirection_3s_no2+359;
+            adminDecodeData.setDirection3sNo2(windDirection_3s_no2);
+        }
         adminDecodeData.setDirection3sNo2(windDirection_3s_no2);
         //System.out.println("3s_风向_no2："+windDirection_3s_no2);
 
@@ -340,6 +357,10 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println(sensor_data_direction_2min_no2);
         String direction_2min_no2 = new BigInteger(sensor_data_direction_2min_no2,16).toString(10);
         int windDirection_2min_no2 = Integer.parseInt(direction_2min_no2)-22;
+        if (windDirection_2min_no2 < 0){
+            windDirection_2min_no2 = windDirection_2min_no2+359;
+            adminDecodeData.setDirection2minNo2(windDirection_2min_no2);
+        }
         adminDecodeData.setDirection2minNo2(windDirection_2min_no2);
         //System.out.println("2min_风向_no2："+windDirection_2min_no2);
 
@@ -361,6 +382,10 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println(sensor_data_direction_10min_no2);
         String direction_10min_no2 = new BigInteger(sensor_data_direction_10min_no2,16).toString(10);
         int windDirection_10min_no2 = Integer.parseInt(direction_10min_no2)-22;
+        if (windDirection_10min_no2 < 0){
+            windDirection_10min_no2 = windDirection_10min_no2+359;
+            adminDecodeData.setDirection10minNo2(windDirection_10min_no2);
+        }
         adminDecodeData.setDirection10minNo2(windDirection_10min_no2);
         //System.out.println("10min_风向_no2："+windDirection_10min_no2);
 
