@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import io.lettuce.core.dynamic.annotation.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,6 +23,10 @@ public interface DtusAdminMapper extends BaseMapper<AdminDtus> {
 
     IPage<AdminDtus> queryDtuInfo(Page page, @Param("adminDtus") AdminDtus adminDtus);
     IPage<AdminDtus> selectDtuId(Page page, @Param("dtuId") String dtuId);
+
+
+    @Select("select elc_status,elec_charge,created_at,dtu_id from dtus order by id desc limit 1")
+    AdminDtus selectThelastDtuInfo();
 
 
 }
