@@ -60,6 +60,12 @@ public class AdminGateways {
     private String elecCharge;
 
     /**
+     * 充放电状态
+     */
+    @TableField("elc_status")
+    private Integer elcStatus;
+
+    /**
      * 电池容量
      */
     @TableField("bat_capacity")
