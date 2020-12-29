@@ -15,7 +15,7 @@ import java.util.Date;
  * @date 2020-12-07 17:00:00
  */
 @Data
-@TableName("collect_datas")
+@TableName("sensor_data")
 public class AdminCollectData {
     /**
      * 每条数据的id
@@ -36,10 +36,16 @@ public class AdminCollectData {
     private String sensorType;
 
     /**
-     * 传感器数据数据
+     * 传感器数据
      */
     @TableId(value = "sensor_value", type = IdType.ID_WORKER_STR)
-    private String sensorValue;
+    private double sensorValue;
+
+    /**
+     * 传感器数据
+     */
+    @TableId(value = "sensor_param", type = IdType.ID_WORKER_STR)
+    private double sensorParam;
 
     /**
      *收集时间
