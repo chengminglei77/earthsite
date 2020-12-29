@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  *  Entity
  *
- * @author zhanganjie
- * @date 2020-09-01 17:01:18
+ * @author zhangAnJie
+ * @date 2020-12-15 17:01:18
  */
 @Data
 @TableName("sensor_data")
@@ -34,7 +34,7 @@ public class AdminDecodeData {
      * 1号传感器3s时的风速
      */
     @TableField("speed_3s_no1")
-    private Integer speed3sNo1;
+    private double speed3sNo1;
 
     /**
      * 1号传感器3s时的风向
@@ -46,7 +46,7 @@ public class AdminDecodeData {
      * 1号传感器2min时的风速
      */
     @TableField("speed_2min_no1")
-    private Integer speed2minNo1;
+    private double speed2minNo1;
 
     /**
      * 1号传感器2min时的风向
@@ -58,7 +58,7 @@ public class AdminDecodeData {
      * 1号传感器10min时的风速
      */
     @TableField("speed_10min_no1")
-    private Integer speed10minNo1;
+    private double speed10minNo1;
 
     /**
      * 1号传感器10min时的风向
@@ -70,7 +70,7 @@ public class AdminDecodeData {
      * 2号传感器3s时的风速
      */
     @TableField("speed_3s_no2")
-    private Integer speed3sNo2;
+    private double speed3sNo2;
 
     /**
      * 2号传感器3s时的风向
@@ -82,7 +82,7 @@ public class AdminDecodeData {
      * 2号传感器2min时的风向
      */
     @TableField("speed_2min_no2")
-    private Integer speed2minNo2;
+    private double speed2minNo2;
 
     /**
      * 2号传感器2min时的风向
@@ -94,7 +94,7 @@ public class AdminDecodeData {
      * 2号传感器10min时的风速
      */
     @TableField("speed_10min_no2")
-    private Integer speed10minNo2;
+    private double speed10minNo2;
 
     /**
      * 2号传感器10min时的风向
