@@ -22,13 +22,13 @@ public class InfluxDBContoller {
     InfluxDbConnection influxDBConnection;
 
     @PostMapping("/insertOneToInfluxDB")
-    public void insertOneToInflux(String sensorsAddr,String sensorsType,String sensorsData) {
+    public void insertOneToInflux(String sensorAddr,String sensorType,double average_windSpeed) {
         Map<String, String> tagsMap = new HashMap<>();
         Map<String, Object> fieldsMap = new HashMap<>();
-        tagsMap.put("sensors_id",sensorsAddr);
-        tagsMap.put("sensors_type",sensorsType);
-        fieldsMap.put("sensors_data",sensorsData);
-        influxDBConnection.insert("sensors_data", tagsMap, fieldsMap);
+        tagsMap.put("sensor_id",sensorAddr);
+        tagsMap.put("sensor_type",sensorType);
+        fieldsMap.put("sensor_data",average_windSpeed);
+        influxDBConnection.insert("sensor_data", tagsMap, fieldsMap);
     }
     @PostMapping("/insertTwoToInfluxDB")
     public void insertTwoToInfluxDB(String Device_ID,String change,float Battery_Level )
@@ -40,7 +40,4 @@ public class InfluxDBContoller {
         influxDBConnection.insert("Battery_Level",tagsMap,fieldsMap);
 
     }
-
-
-
 }

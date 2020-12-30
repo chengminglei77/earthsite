@@ -9,6 +9,8 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  *  Mapper
  *
@@ -25,8 +27,8 @@ public interface DtusAdminMapper extends BaseMapper<AdminDtus> {
     IPage<AdminDtus> selectDtuId(Page page, @Param("dtuId") String dtuId);
 
 
-    @Select("select elc_status,elec_charge,created_at,dtu_id from dtus order by id desc limit 1")
-    AdminDtus selectThelastDtuInfo();
+    @Select("select elc_status,elec_charge,dtu_id from dtus")
+    List<AdminDtus> selectThelastDtuInfo();
 
 
 }

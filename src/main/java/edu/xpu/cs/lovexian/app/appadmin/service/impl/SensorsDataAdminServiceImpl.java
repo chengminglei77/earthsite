@@ -14,6 +14,7 @@ import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.InfluxDbConnection;
+import edu.xpu.cs.lovexian.common.utils.DecodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -195,27 +196,9 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
        /* if (message.startsWith("AA55") && message.endsWith("55AA")) {
             *//**
              * (6)	上报传感器数据指令：0xA6
-             *//*
-            String h = message.substring(6, 8);
-            if (h.equals("A6")) {
-                String deviceId = message.substring(12, 14);
-                String sensorsType = message.substring(14, 16);
-                String sensorsAddr = message.substring(16, 20);
-                if (sensorsType.equals("01")) {
-                    sensorsType = "湿度传感器";
-                }
-                if (sensorsType.equals("02")) {
-                        sensorsType = "风速传感器";
-                }
-                if (sensorsType.equals("03")) {
-                    sensorsType = "水盐传感器";
-                }
-                String sensorDataLen = message.substring(20,22);
-                int len = Integer.valueOf(message.substring(20,22));
-                String s = message.substring(22,22+2*len);
-                float sensorsData = Float.parseFloat(s);
-            }
-        }*/
+             */
+
+
         String deviceId = message.substring(12, 14);
         String sensorsType = message.substring(14, 16);
         String sensorsAddr = message.substring(16, 20);
@@ -236,7 +219,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         String s = message.substring(22,22+2*length);
         String sensorsData = s;
         //float sensorsData = Float.parseFloat(s);
-        influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorsData);
+        //influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorsData);
 
         AdminDecodeData adminDecodeData = new AdminDecodeData();
         //1号传感器3s时的平均风速和风向
@@ -246,7 +229,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         String sensor_data_speed_3s_no1 = message.substring(22,26);
         //System.out.println(sensor_data_speed_3s_no1);
         String speed_3s_no1 = new BigInteger(sensor_data_speed_3s_no1,16).toString(10);
-        int windSpeed_3s_no1 = Integer.parseInt(speed_3s_no1);
+        double windSpeed_3s_no1 = Integer.parseInt(speed_3s_no1)/100.0;
         adminDecodeData.setSpeed3sNo1(windSpeed_3s_no1);
         //System.out.println("3s_风速_no1："+windSpeed_3s_no1);
         /**
@@ -271,7 +254,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         String sensor_data_speed_2min_no1 = message.substring(30,34);
         //System.out.println(sensor_data_speed_2min_no1);
         String speed_2min_no1 = new BigInteger(sensor_data_speed_2min_no1,16).toString(10);
-        int windSpeed_2min_no1 = Integer.parseInt(speed_2min_no1);
+        double windSpeed_2min_no1 = Integer.parseInt(speed_2min_no1)/100.0;
         adminDecodeData.setSpeed2minNo1(windSpeed_2min_no1);
         //System.out.println("2min_风速_no1："+windSpeed_2min_no1);
         /**
@@ -296,7 +279,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         String sensor_data_speed_10min_no1 = message.substring(38,42);
         //System.out.println(sensor_data_speed_10min_no1);
         String speed_10min_no1 = new BigInteger(sensor_data_speed_10min_no1,16).toString(10);
-        int windSpeed_10min_no1 = Integer.parseInt(speed_10min_no1);
+        double windSpeed_10min_no1 = Integer.parseInt(speed_10min_no1)/100.0;
         adminDecodeData.setSpeed10minNo1(windSpeed_10min_no1);
         //System.out.println("10min_风速_no1："+windSpeed_10min_no1);
         /**
@@ -314,7 +297,6 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         //System.out.println("10min_风向_no1："+windDirection_10min_no1);
 
 
-
         //2号传感器3s时的平均风速和风向
         /**
          * 平均风速
@@ -322,7 +304,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         String sensor_data_speed_3s_no2 = message.substring(46,50);
         //System.out.println(sensor_data_speed_3s_no2);
         String speed_3s_no2 = new BigInteger(sensor_data_speed_3s_no2,16).toString(10);
-        int windSpeed_3s_no2 = Integer.parseInt(speed_3s_no2);
+        double windSpeed_3s_no2 = Integer.parseInt(speed_3s_no2)/100.0;
         adminDecodeData.setSpeed3sNo2(windSpeed_3s_no2);
         //System.out.println("3s_风速_no2："+windSpeed_3s_no2);
         /**
@@ -347,7 +329,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         String sensor_data_speed_2min_no2 = message.substring(54,58);
         //System.out.println(sensor_data_speed_2min_no2);
         String speed_2min_no2 = new BigInteger(sensor_data_speed_2min_no2,16).toString(10);
-        int windSpeed_2min_no2 = Integer.parseInt(speed_2min_no2);
+        double windSpeed_2min_no2 = Integer.parseInt(speed_2min_no2)/100.0;
         adminDecodeData.setSpeed2minNo2(windSpeed_2min_no2);
         //System.out.println("2min_风速_no2："+windSpeed_2min_no2);
         /**
@@ -372,7 +354,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         String sensor_data_speed_10min_no2 = message.substring(62,66);
         //System.out.println(sensor_data_speed_10min_no2);
         String speed_10min_no2 = new BigInteger(sensor_data_speed_10min_no2,16).toString(10);
-        int windSpeed_10min_no2 = Integer.parseInt(speed_10min_no2);
+        double windSpeed_10min_no2 = Integer.parseInt(speed_10min_no2)/100.0;
         adminDecodeData.setSpeed10minNo2(windSpeed_10min_no2);
         //System.out.println("10min_风速_no2："+windSpeed_10min_no2);
         /**
@@ -407,8 +389,28 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         adminDecodeData.setInstructionType("A6");
         java.sql.Date colTime = new java.sql.Date(new java.util.Date().getTime());
         adminDecodeData.setColTime(colTime);
-        decodeDataMapper.insert(adminDecodeData);
+        //decodeDataMapper.insert(adminDecodeData);
         //System.out.println(temperature);
+
+        if (sensorsType.equals("风速传感器")){
+            double average_windSpeed = (windSpeed_3s_no1+windSpeed_2min_no1+windSpeed_10min_no1)/3.0;
+            influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,average_windSpeed);
+            decodeDataMapper.insert(adminDecodeData);
+        }
+
+
+
+        /**
+         * 把三个时间段的1号风速求平均值，存入到influxDB
+         */
+       /* if (sensorsType.equals("风速传感器"))
+        {
+            double speed = (windSpeed_3s_no1+windSpeed_2min_no1+windSpeed_10min_no1)/3.0;
+            double average_windSpeed = speed;
+            influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,average_windSpeed);
+        }*/
+
+
     }
     @Override
     public void querySensorAdress(String message) throws Exception{

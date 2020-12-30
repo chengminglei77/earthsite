@@ -70,7 +70,7 @@ public class KafkaReceiver {
                         data.setSensorType(sensorType[0]);
                         data.setSensorId(sensorId);
                         data.setColTime(time0);
-                        data.setSensorValue(InstructionUtil.getSensorData(message.toString()));
+                        //data.setSensorValue(InstructionUtil.getSensorData(message.toString()));
                         collectDataAdminMapper.insert(data);
                         //插入到mysql数据库表A6_data
                         Date time1 = new java.sql.Date(new java.util.Date().getTime());
@@ -132,7 +132,7 @@ public class KafkaReceiver {
                     }
                     default:
                         System.out.println(message);
-                        log.error("传入数据不合法");
+                        log.error("传入数据不合法"+message);
                 }
             }catch (Exception e){
                 e.printStackTrace();
