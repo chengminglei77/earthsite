@@ -28,10 +28,11 @@ public class DtuAlarmTime {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
+    AdminAlarmInfo adminAlarmInfo = new AdminAlarmInfo();
     //每30分钟执行一次
-    @Scheduled(cron="0 0/30 * * * ?")
+    //@Scheduled(cron="0 0/30 * * * ?")
 
+    @Scheduled(cron=" 0/10 * * * * ?")
 
     public void timmer() throws ParseException {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
@@ -60,7 +61,7 @@ public class DtuAlarmTime {
             int minutes = (int) ((to3 - from3) / (1000 * 60));
 
             if (minutes>=(samplingFrequency+1)){
-                AdminAlarmInfo adminAlarmInfo = new AdminAlarmInfo();
+                adminAlarmInfo.setDeviceId(sensorId);
                 adminAlarmInfo.setAlarmTime(currentDate);
                 adminAlarmInfo.setAlarmInfo("传感器"+sensorId+"超过"+samplingFrequency+"分钟未收到数据");
                 adminAlarmInfo.setAlarmReason(sensorId+"最后一次收到数据的时间是："+currentTime);

@@ -26,8 +26,11 @@ public class DtuAlarmElec {
     @Autowired
     private IAlarmInfoAdminService alarmInfoAdminService;
 
+    AdminAlarmInfo adminAlarmInfo = new AdminAlarmInfo();
+
     //每30分钟执行一次
-    @Scheduled(cron="0 0/30 * * * ?")
+    //@Scheduled(cron="0 0/30 * * * ?")
+    @Scheduled(cron=" 0/10 * * * * ?")
     public void timmer() throws ParseException {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         ThreadContext.bind(manager);
@@ -45,7 +48,7 @@ public class DtuAlarmElec {
             Date currentDate = new Date(System.currentTimeMillis());
 
             if (stateOfCharge==0&&currentCapacity<=10000){
-                AdminAlarmInfo adminAlarmInfo = new AdminAlarmInfo();
+                adminAlarmInfo.setDeviceId(dtuId);
                 adminAlarmInfo.setAlarmTime(currentDate);
                 adminAlarmInfo.setAlarmInfo("DTU"+dtuId+"电压小于10V且未充电");
                 adminAlarmInfo.setAlarmReason(dtuId+"电压小于10V且未充电，电压为："+currentCapacity);
@@ -53,21 +56,5 @@ public class DtuAlarmElec {
                 alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+   }
 }
