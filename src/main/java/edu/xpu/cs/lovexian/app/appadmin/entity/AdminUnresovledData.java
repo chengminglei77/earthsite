@@ -29,7 +29,11 @@ public class AdminUnresovledData {
      */
     @TableField("data")
     private String data;
-
+    /**
+     * 设备ID
+     */
+    @TableField("setting_id")
+    private  String settingId;
     /**
      * 传感器类型
      */

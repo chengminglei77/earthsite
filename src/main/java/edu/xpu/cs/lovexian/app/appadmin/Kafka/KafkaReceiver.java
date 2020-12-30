@@ -7,6 +7,7 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.KafkaReceiveData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.KafkaReceiveDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
+import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ public class KafkaReceiver {
     UnresovledDataMapper unresovledDataMapper;
     @Autowired
     KafkaReceiveDataMapper kafkaReceiveDataMapper;
+    @Autowired
+    IDeviceStatisticsAdminService deviceStatisticsAdminService;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
@@ -65,13 +68,13 @@ public class KafkaReceiver {
                         //插入到mysql数据库表collect_datas
                         Date time0 = new java.sql.Date(new java.util.Date().getTime());
                         String[] sensorType = InstructionUtil.getSensorType(Message);
-                        String sensorId = InstructionUtil.getDeviceId(Message);
+                      /*  String sensorId = InstructionUtil.getDeviceId(Message);
                         AdminCollectData data = new AdminCollectData();
                         data.setSensorType(sensorType[0]);
                         data.setSensorId(sensorId);
                         data.setColTime(time0);
                         //data.setSensorValue(InstructionUtil.getSensorData(message.toString()));
-                        collectDataAdminMapper.insert(data);
+                        collectDataAdminMapper.insert(data);*/
                         //插入到mysql数据库表A6_data
                         Date time1 = new java.sql.Date(new java.util.Date().getTime());
                         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
@@ -111,7 +114,12 @@ public class KafkaReceiver {
                         adminUnresovledData1.setSensorType(deviceId);
                         adminUnresovledData1.setSensorData(String.valueOf(batteryLevel));
                         adminUnresovledData1.setInstructionType("A8");
+                        System.out.println("deviceId为"+deviceId);
+                        String settingId=InstructionUtil.getSettingId(deviceId);
                         adminUnresovledData1.setColTime(time);
+                        adminUnresovledData1.setSettingId(settingId);
+                        deviceStatisticsAdminService.insertDeviceStatistic(message.toString(),settingId);
+
                         unresovledDataMapper.insert(adminUnresovledData1);
                         break;
                     }

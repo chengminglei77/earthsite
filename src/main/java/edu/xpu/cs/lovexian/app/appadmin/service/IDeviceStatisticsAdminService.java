@@ -16,5 +16,7 @@ import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 public interface IDeviceStatisticsAdminService extends IService<AdminDeviceStatistics> {
     //IPage<AdminDtus> findDtuss(QueryRequest request, AdminDtus adminDtus);
     IPage<AdminDeviceStatistics> findDeviceStatisticsByTypeId(QueryRequest request, AdminDeviceStatistics adminDeviceStatistics);
+    void insertDeviceStatistic(String message,String settingId);
     boolean deleteDevice(String id);
+
 }
