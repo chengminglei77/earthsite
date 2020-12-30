@@ -29,8 +29,8 @@ public class DtuAlarmElec {
     AdminAlarmInfo adminAlarmInfo = new AdminAlarmInfo();
 
     //每30分钟执行一次
-    //@Scheduled(cron="0 0/30 * * * ?")
-    @Scheduled(cron=" 0/10 * * * * ?")
+    @Scheduled(cron="0 0/30 * * * ?")
+    //@Scheduled(cron=" 0/10 * * * * ?")
     public void timmer() throws ParseException {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         ThreadContext.bind(manager);
