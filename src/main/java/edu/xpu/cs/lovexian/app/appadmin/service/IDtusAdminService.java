@@ -40,6 +40,6 @@ public interface IDtusAdminService extends IService<AdminDtus> {
 
     IPage<AdminDtus> queryDtuInfo(QueryRequest request, AdminDtus adminDtus);
 
-
+   // public boolean autoUpdateDtus(AdminDtus adminDtus);
 
 }

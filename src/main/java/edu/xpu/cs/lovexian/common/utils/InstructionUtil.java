@@ -38,7 +38,7 @@ public class InstructionUtil {
     public  static  String  toType(String message)
     {if(message.equals("01"))
     {
-        return  "温度传感器";
+        return  "湿度传感器";
     }
     if (message.equals("02"))
     {
@@ -231,5 +231,16 @@ public class InstructionUtil {
         String sensorsData = s;
         return sensorsData;
 
+    }
+    public  static  int   getDataLength(String message)
+    {
+        int length=message.substring(0,message.length()-4).length();
+        return  length;
+    }
+    public static  String getSettingId(String deviceId)
+    {
+        if(deviceId.equals("01"))
+            return "网关01";
+            else return "DTU"+deviceId;
     }
 }

@@ -24,6 +24,11 @@ public class AdminAlarmInfo {
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
+
+    //设备id：唯一标识
+    @TableField("device_id")
+    private String deviceId;
+
     /**
      * 警报信息
      */

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 /**
  *  Service实现
  *
@@ -117,4 +118,19 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
         dtusAdminMapper.selectById(dtuId);
         return true;
     }
+
+  /*  @Override
+    public boolean autoUpdateDtus(AdminDtus adminDtus) {
+        adminDtus.setUpdatedAt(new Date());
+        adminDtus.setStatus(0);
+        QueryWrapper<AdminDtus> queryWrapper = new QueryWrapper<>();
+        if (adminDtus.getUpdatedAt() != null) {
+            queryWrapper.lambda().eq(AdminDtus::getUpdatedAt, adminDtus.getUpdatedAt());
+        }
+        IService<AdminDtus> dtusAdminService;
+        dtusAdminService.getOne(queryWrapper);
+        boolean actOper = dtusAdminService.saveOrUpdate(adminDtus);
+
+        return true;
+    }*/
 }

@@ -3,14 +3,27 @@
 <mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.DeviceStatisticsAdminMapper">
     <resultMap id="deviceStatistics" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDeviceStatistics">
         <id column="id" jdbcType="VARCHAR" property="id"/>
-        <result column="eq_duration" jdbcType="VARCHAR" property="eqDuration"/>
-        <result column="record_nms" jdbcType="INTEGER" property="recordNms"/>
+        <result column="eq_duration" jdbcType="INTEGER" property="eqDuration"/>
         <result column="packet_size" jdbcType="INTEGER" property="packetSize"/>
-        <result column="breakdown_nms" jdbcType="TIMESTAMP" property="breakdownNms"/>
-        <result column="gateway_records" jdbcType="VARCHAR" property="gatewayRecords"/>
-        <result column="info_total" jdbcType="TIMESTAMP" property="infoTotal"/>
+        <result column="info_total" jdbcType="INTEGER" property="infoTotal"/>
         <result column="setting_id" jdbcType="VARCHAR" property="settingId"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
-        <result column="updated_at" jdbcType="VARCHAR" property="updatedAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
     </resultMap>
+
+
+    <select id="selectDeviceStatistics" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDeviceStatistics" >
+        SELECT eq_duration,packet_size,info_total,type,setting_id,updated_at
+        FROM eq_statistics
+        <where>
+            eq_statistics.setting_id=#{settingId}
+        </where>
+    </select>
+    <select id="selectCreateTime" resultType="java.util.Date" >
+        SELECT created_at
+        from ${table}
+        <where>
+            ${column}=#{settingId}
+        </where>
+    </select>
 </mapper>
