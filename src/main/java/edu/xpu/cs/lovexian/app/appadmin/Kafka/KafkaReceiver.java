@@ -75,13 +75,7 @@ public class KafkaReceiver {
                         //插入到mysql数据库表collect_datas
                         Date time0 = new java.sql.Date(new java.util.Date().getTime());
                         String[] sensorType = InstructionUtil.getSensorType(Message);
-                      /*  String sensorId = InstructionUtil.getDeviceId(Message);
-                        AdminCollectData data = new AdminCollectData();
-                        data.setSensorType(sensorType[0]);
-                        data.setSensorId(sensorId);
-                        data.setColTime(time0);
-                        //data.setSensorValue(InstructionUtil.getSensorData(message.toString()));
-                        collectDataAdminMapper.insert(data);*/
+
                         //插入到mysql数据库表A6_data
                         Date time1 = new java.sql.Date(new java.util.Date().getTime());
                         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
@@ -92,9 +86,6 @@ public class KafkaReceiver {
                         adminUnresovledData.setColTime(time1);
                         unresovledDataMapper.insert(adminUnresovledData);
                         break;
-                    //data.setSensorValue(sensorValue);
-                    //collectDataAdminMapper.insert(data);
-                    //influxDBContoller.insertOneToInflux("2020测试","风速传感器",25);
                     case "A7": {
                         String ack = InstructionUtil.getAck(Message);
                         String deviceId = InstructionUtil.getDeviceId(Message);

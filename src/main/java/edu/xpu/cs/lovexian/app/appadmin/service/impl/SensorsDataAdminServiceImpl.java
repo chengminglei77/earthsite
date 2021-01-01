@@ -1,12 +1,10 @@
 package edu.xpu.cs.lovexian.app.appadmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDecodeData;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensorsData;
+import edu.xpu.cs.lovexian.app.appadmin.entity.*;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.DecodeDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.DtuSensorAdminMapper;
@@ -14,6 +12,7 @@ import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
 
+import edu.xpu.cs.lovexian.common.utils.WindSpeedUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -217,186 +216,22 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
         int length = Integer.valueOf(len);
         String s = message.substring(22,22+2*length);
         String sensorsData = s;
-        //float sensorsData = Float.parseFloat(s);
-        //influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,sensorsData);
 
         AdminDecodeData adminDecodeData = new AdminDecodeData();
-        //1号传感器3s时的平均风速和风向
-        /**
-         * 平均风速
-         */
-        String sensor_data_speed_3s_no1 = message.substring(22,26);
-        //System.out.println(sensor_data_speed_3s_no1);
-        String speed_3s_no1 = new BigInteger(sensor_data_speed_3s_no1,16).toString(10);
-        double windSpeed_3s_no1 = Integer.parseInt(speed_3s_no1)/100.0;
-        adminDecodeData.setSpeed3sNo1(windSpeed_3s_no1);
-        //System.out.println("3s_风速_no1："+windSpeed_3s_no1);
-        /**
-         * 风向
-         */
-        String sensor_data_direction_3s_no1 = message.substring(26,30);
-        //System.out.println(sensor_data_direction_3s_no1);
-        String direction_3s_no1 = new BigInteger(sensor_data_direction_3s_no1,16).toString(10);
-        int windDirection_3s_no1 = Integer.parseInt(direction_3s_no1)+92;
-        if (windDirection_3s_no1 > 359){
-            windDirection_3s_no1 = windDirection_3s_no1-359;
-            adminDecodeData.setDirection3sNo1(windDirection_3s_no1);
-        }
-        adminDecodeData.setDirection3sNo1(windDirection_3s_no1);
-        //System.out.println("3s_风向_no1："+windDirection_3s_no1);
-
-
-        //1号传感器2min时的平均风速和风向
-        /**
-         * 平均风速
-         */
-        String sensor_data_speed_2min_no1 = message.substring(30,34);
-        //System.out.println(sensor_data_speed_2min_no1);
-        String speed_2min_no1 = new BigInteger(sensor_data_speed_2min_no1,16).toString(10);
-        double windSpeed_2min_no1 = Integer.parseInt(speed_2min_no1)/100.0;
-        adminDecodeData.setSpeed2minNo1(windSpeed_2min_no1);
-        //System.out.println("2min_风速_no1："+windSpeed_2min_no1);
-        /**
-         * 风向
-         */
-        String sensor_data_direction_2min_no1 = message.substring(34,38);
-        //System.out.println(sensor_data_direction_2min_no1);
-        String direction_2min_no1 = new BigInteger(sensor_data_direction_2min_no1,16).toString(10);
-        int windDirection_2min_no1 = Integer.parseInt(direction_2min_no1)+92;
-        if (windDirection_2min_no1 > 359){
-            windDirection_2min_no1 = windDirection_2min_no1-359;
-            adminDecodeData.setDirection2minNo1(windDirection_2min_no1);
-        }
-        adminDecodeData.setDirection2minNo1(windDirection_2min_no1);
-        //System.out.println("2min_风向_no1："+windDirection_2min_no1);
-
-
-        //1号传感器10min时的平均风速和风向
-        /**
-         * 平均风速
-         */
-        String sensor_data_speed_10min_no1 = message.substring(38,42);
-        //System.out.println(sensor_data_speed_10min_no1);
-        String speed_10min_no1 = new BigInteger(sensor_data_speed_10min_no1,16).toString(10);
-        double windSpeed_10min_no1 = Integer.parseInt(speed_10min_no1)/100.0;
-        adminDecodeData.setSpeed10minNo1(windSpeed_10min_no1);
-        //System.out.println("10min_风速_no1："+windSpeed_10min_no1);
-        /**
-         * 风向
-         */
-        String sensor_data_direction_10min_no1 = message.substring(42,46);
-        //System.out.println(sensor_data_direction_10min_no1);
-        String direction_10min_no1 = new BigInteger(sensor_data_direction_10min_no1,16).toString(10);
-        int windDirection_10min_no1 = Integer.parseInt(direction_10min_no1)+92;
-        if (windDirection_10min_no1 > 359){
-            windDirection_10min_no1 = windDirection_10min_no1-359;
-            adminDecodeData.setDirection10minNo1(windDirection_10min_no1);
-        }
-        adminDecodeData.setDirection10minNo1(windDirection_10min_no1);
-        //System.out.println("10min_风向_no1："+windDirection_10min_no1);
-
-
-        //2号传感器3s时的平均风速和风向
-        /**
-         * 平均风速
-         */
-        String sensor_data_speed_3s_no2 = message.substring(46,50);
-        //System.out.println(sensor_data_speed_3s_no2);
-        String speed_3s_no2 = new BigInteger(sensor_data_speed_3s_no2,16).toString(10);
-        double windSpeed_3s_no2 = Integer.parseInt(speed_3s_no2)/100.0;
-        adminDecodeData.setSpeed3sNo2(windSpeed_3s_no2);
-        //System.out.println("3s_风速_no2："+windSpeed_3s_no2);
-        /**
-         * 风向
-         */
-        String sensor_data_direction_3s_no2 = message.substring(50,54);
-        //System.out.println(sensor_data_direction_3s_no2);
-        String direction_3s_no2 = new BigInteger(sensor_data_direction_3s_no2,16).toString(10);
-        int windDirection_3s_no2 = Integer.parseInt(direction_3s_no2)-22;
-        if (windDirection_3s_no2 < 0){
-            windDirection_3s_no2 = windDirection_3s_no2+359;
-            adminDecodeData.setDirection3sNo2(windDirection_3s_no2);
-        }
-        adminDecodeData.setDirection3sNo2(windDirection_3s_no2);
-        //System.out.println("3s_风向_no2："+windDirection_3s_no2);
-
-
-        //2号传感器2min时的平均风速和风向
-        /**
-         * 平均风速
-         */
-        String sensor_data_speed_2min_no2 = message.substring(54,58);
-        //System.out.println(sensor_data_speed_2min_no2);
-        String speed_2min_no2 = new BigInteger(sensor_data_speed_2min_no2,16).toString(10);
-        double windSpeed_2min_no2 = Integer.parseInt(speed_2min_no2)/100.0;
-        adminDecodeData.setSpeed2minNo2(windSpeed_2min_no2);
-        //System.out.println("2min_风速_no2："+windSpeed_2min_no2);
-        /**
-         * 风向
-         */
-        String sensor_data_direction_2min_no2 = message.substring(58,62);
-        //System.out.println(sensor_data_direction_2min_no2);
-        String direction_2min_no2 = new BigInteger(sensor_data_direction_2min_no2,16).toString(10);
-        int windDirection_2min_no2 = Integer.parseInt(direction_2min_no2)-22;
-        if (windDirection_2min_no2 < 0){
-            windDirection_2min_no2 = windDirection_2min_no2+359;
-            adminDecodeData.setDirection2minNo2(windDirection_2min_no2);
-        }
-        adminDecodeData.setDirection2minNo2(windDirection_2min_no2);
-        //System.out.println("2min_风向_no2："+windDirection_2min_no2);
-
-
-        //2号传感器10min时的平均风速和风向
-        /**
-         * 平均风速
-         */
-        String sensor_data_speed_10min_no2 = message.substring(62,66);
-        //System.out.println(sensor_data_speed_10min_no2);
-        String speed_10min_no2 = new BigInteger(sensor_data_speed_10min_no2,16).toString(10);
-        double windSpeed_10min_no2 = Integer.parseInt(speed_10min_no2)/100.0;
-        adminDecodeData.setSpeed10minNo2(windSpeed_10min_no2);
-        //System.out.println("10min_风速_no2："+windSpeed_10min_no2);
-        /**
-         * 风向
-         */
-        String sensor_data_direction_10min_no2 = message.substring(66,70);
-        //System.out.println(sensor_data_direction_10min_no2);
-        String direction_10min_no2 = new BigInteger(sensor_data_direction_10min_no2,16).toString(10);
-        int windDirection_10min_no2 = Integer.parseInt(direction_10min_no2)-22;
-        if (windDirection_10min_no2 < 0){
-            windDirection_10min_no2 = windDirection_10min_no2+359;
-            adminDecodeData.setDirection10minNo2(windDirection_10min_no2);
-        }
-        adminDecodeData.setDirection10minNo2(windDirection_10min_no2);
-        //System.out.println("10min_风向_no2："+windDirection_10min_no2);
-
-        //温度的正负
-        String negative_positive = message.substring(70,72);//sensor_data_temperature
-        String sensor_data_temperature = message.substring(72,74);
-        String s1 = new BigInteger(sensor_data_temperature,16).toString(10);
-        if (negative_positive.equals("00")){
-            String symbol = "-";
-            String centigrade = "℃";
-            String temperature = symbol+s1+centigrade;
-            //int temperature = Integer.parseInt(s1);
-            adminDecodeData.setTemperature(temperature);
-        }else{
-            String centigrade = "℃";
-            adminDecodeData.setTemperature(s1+centigrade);
-        }
         adminDecodeData.setSensor_Type(sensorsType);
         adminDecodeData.setInstructionType("A6");
         java.sql.Date colTime = new java.sql.Date(new java.util.Date().getTime());
         adminDecodeData.setColTime(colTime);
-        //decodeDataMapper.insert(adminDecodeData);
-        //System.out.println(temperature);
 
         if (sensorsType.equals("风速传感器")){
-            double average_windSpeed = (windSpeed_3s_no1+windSpeed_2min_no1+windSpeed_10min_no1)/3.0;
-            influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,average_windSpeed);
-            decodeDataMapper.insert(adminDecodeData);
+            influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType, WindSpeedUtils.average_speed_no1(message));
         }
-
+        LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(AdminCollectData::getSensorType, sensorsType)
+                .set(AdminCollectData::getSensorValue, WindSpeedUtils.average_speed_no1(message))
+                .set(AdminCollectData::getSensorParam,WindSpeedUtils.average_direction_no1(message))
+                .set(AdminCollectData::getColTime,colTime);
+        Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
 
 
         /**
