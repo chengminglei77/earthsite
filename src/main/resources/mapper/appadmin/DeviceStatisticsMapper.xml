@@ -17,6 +17,7 @@
         FROM eq_statistics
         <where>
             eq_statistics.setting_id=#{settingId}
+            limit 1
         </where>
     </select>
     <select id="selectCreateTime" resultType="java.util.Date" >

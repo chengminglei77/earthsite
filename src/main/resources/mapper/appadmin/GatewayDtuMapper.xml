@@ -57,5 +57,10 @@
         where
             dtu_id not in (select dtu_id from gateway_dtu);
     </select>
+    <select id="selectGatewaySettingId" resultType="String">
+        select gateway_id
+        from gateway_dtu
+        where dtu_id like #{settingId}
+    </select>
 
 </mapper>

@@ -35,6 +35,8 @@ public class KafkaReceiver {
     KafkaReceiveDataMapper kafkaReceiveDataMapper;
     @Autowired
     IDeviceStatisticsAdminService deviceStatisticsAdminService;
+    @Autowired
+    PerformInstrution performInstrution;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
@@ -87,52 +89,13 @@ public class KafkaReceiver {
                         unresovledDataMapper.insert(adminUnresovledData);
                         break;
                     case "A7": {
-                        String ack = InstructionUtil.getAck(Message);
-                        String deviceId = InstructionUtil.getDeviceId(Message);
-                        if (ack.equals("01"))
-                            log.error("确认帧错误，失败");
-                        if (ack.equals("02"))
-                            log.error("CRC校验失败");
-                        if (ack.equals("00"))
-                            log.info("指令解析成功，数据终端设备地址为" + deviceId);
-                        break;
+                        performInstrution.performA7(Message);
                     }
                     case "A8": {
-                        System.out.println("A8:" + message);
-                        String deviceId = InstructionUtil.getDeviceId(Message);
-                        String change = InstructionUtil.getChange(Message);
-                        float batteryLevel = InstructionUtil.getBatteryLevel(Message);
-                        influxDBContoller.insertTwoToInfluxDB(deviceId, change, batteryLevel);
-                        //插入到MYSQL数据库A6_data
-                        Date time = new java.sql.Date(new java.util.Date().getTime());
-                        AdminUnresovledData adminUnresovledData1 = new AdminUnresovledData();
-                        adminUnresovledData1.setData(message.toString());
-                        adminUnresovledData1.setSensorType(deviceId);
-                        adminUnresovledData1.setSensorData(String.valueOf(batteryLevel));
-                        adminUnresovledData1.setInstructionType("A8");
-                        System.out.println("deviceId为" + deviceId);
-                        String settingId = InstructionUtil.getSettingId(deviceId);
-                        adminUnresovledData1.setColTime(time);
-                        adminUnresovledData1.setSettingId(settingId);
-                        deviceStatisticsAdminService.insertDeviceStatistic(message.toString(), settingId);
-
-                        unresovledDataMapper.insert(adminUnresovledData1);
-                        break;
+                        performInstrution.performA8(Message);
                     }
                     case "A9": {
-                        String ack = InstructionUtil.getAck(Message);
-                        String deviceId = InstructionUtil.getDeviceId(Message);
-                        String change = InstructionUtil.getChange(Message);
-                        float batteryLevel = InstructionUtil.getBatteryLevel(Message);
-                        if (ack.equals("01"))
-                            log.error("确认帧错误，失败");
-                        if (ack.equals("02"))
-                            log.error("CRC校验失败");
-                        if (ack.equals("00"))
-                            log.info("指令解析成功，数据终端设备地址为" + deviceId);
-                        log.info("数据终端设备电量为：" + batteryLevel);
-                        log.info("数据终端设备的充电状态为：" + change);
-                        break;
+                      performInstrution.performA9(Message);
                     }
                     default:
                         System.out.println(message);
