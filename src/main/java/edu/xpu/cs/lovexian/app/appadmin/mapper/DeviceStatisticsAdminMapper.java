@@ -23,6 +23,7 @@ import java.util.Date;
 @DS("slave")
 public interface DeviceStatisticsAdminMapper extends BaseMapper<AdminDeviceStatistics> {
     IPage<AdminDeviceStatistics> selectAll(Page page, @Param("adminDeviceStatistics") AdminDeviceStatistics adminDeviceStatistics);
+
     AdminDeviceStatistics selectDeviceStatistics(@Param("settingId") String settingId);
 
 

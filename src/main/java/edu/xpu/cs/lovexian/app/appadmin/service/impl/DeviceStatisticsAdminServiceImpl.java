@@ -32,7 +32,7 @@ import java.util.Date;
  */
 @Service("deviceStatisticsAdminService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class DeviceStatisticsAdminServiceImpl  extends ServiceImpl<DeviceStatisticsAdminMapper, AdminDeviceStatistics> implements IDeviceStatisticsAdminService {
+public class DeviceStatisticsAdminServiceImpl extends ServiceImpl<DeviceStatisticsAdminMapper, AdminDeviceStatistics> implements IDeviceStatisticsAdminService {
     @Autowired
     private DeviceStatisticsAdminMapper DeviceStatisticsAdminMapper;
     @Autowired
@@ -41,14 +41,12 @@ public class DeviceStatisticsAdminServiceImpl  extends ServiceImpl<DeviceStatist
     @Override
     public IPage<AdminDeviceStatistics> findDeviceStatisticsByTypeId(QueryRequest request, AdminDeviceStatistics adminDeviceStatistics) {
         QueryWrapper<AdminDeviceStatistics> queryWrapper = new QueryWrapper<>();
-        insertDeviceStatistic("AA550CA8000402012FF26E0755AA0D0A","网关01");
-        if(adminDeviceStatistics.getType()!=null)
-        {
+        //insertDeviceStatistic("AA550CA8000402012FF26E0755AA0D0A","网关01");
+        if (adminDeviceStatistics.getType() != null) {
             queryWrapper.lambda().eq(AdminDeviceStatistics::getType, adminDeviceStatistics.getType()).orderByDesc(AdminDeviceStatistics::getUpdatedAt);
         }
-        if(adminDeviceStatistics.getSettingId()!=null)
-        {
-            queryWrapper.lambda().eq(AdminDeviceStatistics::getSettingId,adminDeviceStatistics.getSettingId()).orderByDesc(AdminDeviceStatistics::getUpdatedAt);
+        if (adminDeviceStatistics.getSettingId() != null) {
+            queryWrapper.lambda().eq(AdminDeviceStatistics::getSettingId, adminDeviceStatistics.getSettingId()).orderByDesc(AdminDeviceStatistics::getUpdatedAt);
         }
         Page<AdminDeviceStatistics> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
@@ -57,83 +55,45 @@ public class DeviceStatisticsAdminServiceImpl  extends ServiceImpl<DeviceStatist
     }
 
     @Override
-    public void insertDeviceStatistic(String message,String settingId) {
+    public void insertDeviceStatistic(String message, String settingId) {
         AdminDeviceStatistics adminDeviceStatistics = DeviceStatisticsAdminMapper.selectDeviceStatistics(settingId);
         Date date = new Date();
         //初始化
-        if(adminDeviceStatistics==null)
-        {
-            adminDeviceStatistics=new AdminDeviceStatistics();
+        if (adminDeviceStatistics == null) {
+            adminDeviceStatistics = new AdminDeviceStatistics();
             adminDeviceStatistics = initializeDeviceStatistic(adminDeviceStatistics, settingId);
             DeviceStatisticsAdminMapper.insert(adminDeviceStatistics);
         }
-        Date createTime = DeviceStatisticsAdminMapper.selectCreateTime(getTbale(settingId),getColum(settingId),settingId);
+        Date createTime = DeviceStatisticsAdminMapper.selectCreateTime(InstructionUtil.getTbale(settingId), InstructionUtil.getColum(settingId), settingId);
+        if (InstructionUtil.getEqDuration(adminDeviceStatistics.getUpdatedAt(), date) > 1) {
             adminDeviceStatistics.setUpdatedAt(date);
-            adminDeviceStatistics.setEqDuration(getEqDuration(createTime,adminDeviceStatistics.getUpdatedAt()));
-        adminDeviceStatistics.setInfoTotal(unresovledDataMapper.getCount(settingId));
-        adminDeviceStatistics.setPacketSize(unresovledDataMapper.getCount(settingId)* InstructionUtil.getDataLength(message));
-        UpdateWrapper<AdminDeviceStatistics> updateWrapper=new UpdateWrapper<>();
-        updateWrapper.set("eq_duration",adminDeviceStatistics.getEqDuration())
-                     .set("packet_size",adminDeviceStatistics.getPacketSize())
-                     .set("info_total",adminDeviceStatistics.getInfoTotal())
-                     .set("updated_at",adminDeviceStatistics.getUpdatedAt())
-                     .set("type",getType(settingId));
-        updateWrapper.eq("setting_id",adminDeviceStatistics.getSettingId());
-        DeviceStatisticsAdminServiceImpl.this.update(updateWrapper);
+            adminDeviceStatistics.setEqDuration(InstructionUtil.getEqDuration(createTime, adminDeviceStatistics.getUpdatedAt()));
+            adminDeviceStatistics.setInfoTotal(unresovledDataMapper.getCount(settingId));
+            adminDeviceStatistics.setPacketSize(unresovledDataMapper.getCount(settingId) * InstructionUtil.getDataLength(message));
+            UpdateWrapper<AdminDeviceStatistics> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.set("eq_duration", adminDeviceStatistics.getEqDuration())
+                    .set("packet_size", adminDeviceStatistics.getPacketSize())
+                    .set("info_total", adminDeviceStatistics.getInfoTotal())
+                    .set("updated_at", adminDeviceStatistics.getUpdatedAt())
+                    .set("type", InstructionUtil.getType(settingId));
+            updateWrapper.eq("setting_id", adminDeviceStatistics.getSettingId());
+            DeviceStatisticsAdminServiceImpl.this.update(updateWrapper);
+        }
+
     }
-    public  AdminDeviceStatistics  initializeDeviceStatistic(AdminDeviceStatistics adminDeviceStatistics,String settingId )
-    {   Date date = new Date();
+
+    public AdminDeviceStatistics initializeDeviceStatistic(AdminDeviceStatistics adminDeviceStatistics, String settingId) {
+        Date date = new Date();
         //System.out.println("没有现有的对象");
         adminDeviceStatistics.setSettingId(settingId);
         adminDeviceStatistics.setEqDuration(0);
         adminDeviceStatistics.setInfoTotal(0);
         adminDeviceStatistics.setPacketSize(0);
         adminDeviceStatistics.setUpdatedAt(date);
-        return  adminDeviceStatistics;
-    }
-    public  int getEqDuration(Date createTime,Date updateTime)
-    {
-        long t1 =updateTime.getTime();
-        long t2 = createTime.getTime();
-        //3.时间差
-        int day = (int) ((t1-t2) / (1000 * 60*60*24));
-        return day;
-    }
-    public String getTbale(String settingId)
-    {
-        if(settingId.length()==5)
-            return  "dtus";
-        if(settingId.length()==4)
-            return   "gateways";
-        return "sensors" ;
-
-    }
-    public  String getColum(String settingId)
-    {switch (getTbale(settingId))
-    {
-        case "dtus":
-            return "dtu_id";
-        case "gateways":
-            return "gate_id";
-        case "sensors":
-            return "sensor_id";
-        default:
-            return null;
-    }
-    }
-    public  String getType(String settingId)
-    {switch (getTbale(settingId))
-    { case "dtus":
-        return "1";
-        case "sensors":
-        return  "0";
-        case "gateways":
-        return  "2";
-        default:
-            return null;
+        return adminDeviceStatistics;
     }
 
-    }
+
 
     @Override
     public boolean deleteDevice(String id) {
