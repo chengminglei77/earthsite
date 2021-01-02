@@ -72,20 +72,17 @@ public class KafkaReceiver {
                         break;
                     case "A6":
                         System.out.println("A6:" + message);
-                        //插入到influxdb
-                        sensorsDataAdminService.ReportSensorDataCommand(message.toString());
-                        //插入到mysql数据库表collect_datas
-                        Date time0 = new java.sql.Date(new java.util.Date().getTime());
+                        performInstrution.performA6(Message);
+                        //插入到A6_data
+                        Date time = new java.sql.Date(new java.util.Date().getTime());
                         String[] sensorType = InstructionUtil.getSensorType(Message);
-
                         //插入到mysql数据库表A6_data
-                        Date time1 = new java.sql.Date(new java.util.Date().getTime());
                         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
                         adminUnresovledData.setData(message.toString());
                         adminUnresovledData.setSensorType(sensorType[0]);
                         adminUnresovledData.setSensorData(InstructionUtil.getSensorData(message.toString()));
                         adminUnresovledData.setInstructionType(command);
-                        adminUnresovledData.setColTime(time1);
+                        adminUnresovledData.setColTime(time);
                         unresovledDataMapper.insert(adminUnresovledData);
                         break;
                     case "A7": {

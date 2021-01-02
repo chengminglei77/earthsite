@@ -1,17 +1,19 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminUnresovledData;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.GatewayDtuAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import edu.xpu.cs.lovexian.common.utils.TransferVUtil;
+import edu.xpu.cs.lovexian.common.utils.WindSpeedUtils;
 import lombok.Data;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.TestOnly;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +35,37 @@ public class PerformInstrution {
     IDeviceStatisticsAdminService deviceStatisticsAdminService;
     @Autowired
     GatewayDtuAdminMapper gatewayDtuAdminMapper;
+    @Autowired
+    CollectDataAdminMapper collectDataAdminMapper;
+
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
+
+    public void performA6(String message){
+        java.sql.Date colTime = new java.sql.Date(new java.util.Date().getTime());
+        String deviceId = message.substring(12, 14);
+        String sensorsType = message.substring(14, 16);
+        String sensorsAddr = message.substring(16, 20);
+
+        double [] averageSpeed = WindSpeedUtils.windSpeed(message);
+        String [] windDirection = WindSpeedUtils.windDirection(message);
+        if (InstructionUtil.getSensorType(message).equals("风速传感器")) {
+            for (int i=0;i<averageSpeed.length;i++){
+                influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,averageSpeed[i]);
+            }
+        }
+        String sensorId[] = getSensorSettingId(message);
+
+        for (int i=0;i<windDirection.length;i++){
+            LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.eq(AdminCollectData::getSensorType, sensorsType)
+                    .set(AdminCollectData::getSensorId,sensorId[0]+"0"+i)
+                    .set(AdminCollectData::getSensorValue, averageSpeed[i])
+                    .set(AdminCollectData::getSensorParam,windDirection[i])
+                    .set(AdminCollectData::getColTime, colTime);
+            Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+
+        }
+    }
 
     public void performA7(String Message) {
         String ack = InstructionUtil.getAck(Message);
