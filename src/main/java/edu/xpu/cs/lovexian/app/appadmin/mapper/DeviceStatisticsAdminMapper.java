@@ -30,6 +30,8 @@ public interface DeviceStatisticsAdminMapper extends BaseMapper<AdminDeviceStati
 
 
     Date selectCreateTime(@Param("table") String table,@Param("column") String column, @Param("settingId") String settingId);
-    List<AdminDeviceStatistics> selectDtuSensors(String setting);
-    List<AdminDeviceStatistics> selectgatewayDtus(String setting);
+   List<AdminDeviceStatistics> getByType(@Param("type")String type);
+    List<AdminDeviceStatistics> getDtuSensors(@Param("type")String type,@Param("settingId")String settingId);
+    List<AdminDeviceStatistics> selectDtuSensors(@Param("settingId")String settingId);
+    List<AdminDeviceStatistics> selectgatewayDtus(@Param("settingId")String settingId);
 }

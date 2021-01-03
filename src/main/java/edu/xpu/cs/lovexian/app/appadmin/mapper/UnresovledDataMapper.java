@@ -18,5 +18,5 @@ import org.springframework.stereotype.Component;
 public interface UnresovledDataMapper extends BaseMapper<AdminUnresovledData> {
     //把int改成long
     int getCount(@Param("settingId") String settingId);
-
+    String getMessage(@Param("settingId") String settingId);
 }

@@ -73,8 +73,8 @@ public class PerformInstrution {
                 influxDBContoller.insertOneToInflux(sensorId[0],sensorsType[0],(double) Math.round(humidity[i]*100)/100);
             }
         }
-        String[] sensorSettingId = getSensorSettingId(message);
-        deviceStatisticsAdminService.insertDeviceStatistic(message, sensorSettingId[0]);
+//        String[] sensorSettingId = getSensorSettingId(message);
+//        deviceStatisticsAdminService.insertDeviceStatistic(message, sensorSettingId[0]);
 
     }
 
@@ -110,7 +110,7 @@ public class PerformInstrution {
         adminUnresovledData1.setSettingID(settingId);
         unresovledDataMapper.insert(adminUnresovledData1);
         //插入数据统计中
-        deviceStatisticsAdminService.insertDeviceStatistic(Message.toString(), settingId);
+        //deviceStatisticsAdminService.insertDeviceStatistic(Message.toString(), settingId);
     }
 
     public void performA9(String Message) {
