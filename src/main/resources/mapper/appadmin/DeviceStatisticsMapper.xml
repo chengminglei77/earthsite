@@ -37,7 +37,7 @@
     <select id="selectgatewayDtus" resultMap="deviceStatistics">
         select * from eq_statistics
         <where>
-            eq_statistics.setting_id like #{settingId}
+            eq_statistics.setting_id like CONCAT('%',#{setting},'%')
         </where>
     </select>
 </mapper>

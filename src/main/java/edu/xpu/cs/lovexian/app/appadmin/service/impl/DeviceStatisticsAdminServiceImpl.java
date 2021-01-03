@@ -69,13 +69,13 @@ public class DeviceStatisticsAdminServiceImpl extends ServiceImpl<DeviceStatisti
          {
             {
                 switch (InstructionUtil.getType(settingId)) {
-                    case "1":
+                    case "0":
                         adminDeviceStatistics = getSensorsDeviceStatistic(adminDeviceStatistics, settingId, message, date, createTime);
                         break;
-                    case "2":
+                    case "1":
                         adminDeviceStatistics = getDtusDeviceStatistic(adminDeviceStatistics, settingId, message, date, createTime);
                         break;
-                    case "3":
+                    case "2":
                         adminDeviceStatistics = getGatewayDeviceStatistic(adminDeviceStatistics, settingId, message, date, createTime);
                         break;
                 }
@@ -100,6 +100,7 @@ public class DeviceStatisticsAdminServiceImpl extends ServiceImpl<DeviceStatisti
         adminDeviceStatistics.setEqDuration("0年0月0天");
         adminDeviceStatistics.setInfoTotal("0条");
         adminDeviceStatistics.setPacketSize("0B");
+        adminDeviceStatistics.setType(InstructionUtil.getType(settingId));
         adminDeviceStatistics.setUpdatedAt(date);
         return adminDeviceStatistics;
     }
