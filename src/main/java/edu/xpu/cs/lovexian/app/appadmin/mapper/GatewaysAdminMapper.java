@@ -26,4 +26,6 @@ public interface GatewaysAdminMapper extends BaseMapper<AdminGateways> {
     AdminGateways selectThelastGatewayInfo();
 
 
+
+
 }

@@ -7,8 +7,10 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.KafkaReceiveData;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.KafkaReceiveDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
+import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.impl.SensorsDataAdminServiceImpl;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +33,21 @@ public class KafkaReceiver {
     UnresovledDataMapper unresovledDataMapper;
     @Autowired
     KafkaReceiveDataMapper kafkaReceiveDataMapper;
-
+    @Autowired
+    IDeviceStatisticsAdminService deviceStatisticsAdminService;
+    @Autowired
+    PerformInstrution performInstrution;
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
-            String command = null;
+            String command=null;
             try {
                 Object message = kafkaMessage.get();
                 command = message.toString().substring(6, 8);
                 String Message = message.toString();
+                boolean ifTrueMes = Message.startsWith("A");
+                if (ifTrueMes == true) {
                 //插入到mysql数据库表A6_data
                 Date time2 = new java.sql.Date(new java.util.Date().getTime());
                 KafkaReceiveData kafkaReceiveData = new KafkaReceiveData();
@@ -65,79 +72,36 @@ public class KafkaReceiver {
                         break;
                     case "A6":
                         System.out.println("A6:" + message);
-                        //插入到influxdb
-                        sensorsDataAdminService.ReportSensorDataCommand(message.toString());
-                        //插入到mysql数据库表collect_datas
-                        Date time0 = new java.sql.Date(new java.util.Date().getTime());
+                        performInstrution.performA6(Message);
+                        //插入到A6_data
+                        Date time = new java.sql.Date(new java.util.Date().getTime());
                         String[] sensorType = InstructionUtil.getSensorType(Message);
-                        String sensorId = InstructionUtil.getDeviceId(Message);
-                        AdminCollectData data = new AdminCollectData();
-                        data.setSensorType(sensorType[0]);
-                        data.setSensorId(sensorId);
-                        data.setColTime(time0);
-                        //data.setSensorValue(InstructionUtil.getSensorData(message.toString()));
-                        collectDataAdminMapper.insert(data);
                         //插入到mysql数据库表A6_data
-                        Date time1 = new java.sql.Date(new java.util.Date().getTime());
                         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
                         adminUnresovledData.setData(message.toString());
                         adminUnresovledData.setSensorType(sensorType[0]);
-                        adminUnresovledData.setSensorData(InstructionUtil.getSensorData(message.toString()));
+                        adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message));
                         adminUnresovledData.setInstructionType(command);
-                        adminUnresovledData.setColTime(time1);
+                        adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
+                        adminUnresovledData.setColTime(time);
                         unresovledDataMapper.insert(adminUnresovledData);
                         break;
-                    //data.setSensorValue(sensorValue);
-                    //collectDataAdminMapper.insert(data);
-                    //influxDBContoller.insertOneToInflux("2020测试","风速传感器",25);
                     case "A7": {
-                        String ack = InstructionUtil.getAck(Message);
-                        String deviceId = InstructionUtil.getDeviceId(Message);
-                        if (ack.equals("01"))
-                            log.error("确认帧错误，失败");
-                        if (ack.equals("02"))
-                            log.error("CRC校验失败");
-                        if (ack.equals("00"))
-                            log.info("指令解析成功，数据终端设备地址为" + deviceId);
-                        break;
+                        performInstrution.performA7(Message);
                     }
                     case "A8": {
-                        System.out.println("A8:" + message);
-                        String deviceId = InstructionUtil.getDeviceId(Message);
-                        String change = InstructionUtil.getChange(Message);
-                        float batteryLevel = InstructionUtil.getBatteryLevel(Message);
-                        influxDBContoller.insertTwoToInfluxDB(deviceId, change, batteryLevel);
-                        //插入到MYSQL数据库A6_data
-                        Date time = new java.sql.Date(new java.util.Date().getTime());
-                        AdminUnresovledData adminUnresovledData1 = new AdminUnresovledData();
-                        adminUnresovledData1.setData(message.toString());
-                        adminUnresovledData1.setSensorType(deviceId);
-                        adminUnresovledData1.setSensorData(String.valueOf(batteryLevel));
-                        adminUnresovledData1.setInstructionType("A8");
-                        adminUnresovledData1.setColTime(time);
-                        unresovledDataMapper.insert(adminUnresovledData1);
-                        break;
+                        performInstrution.performA8(Message);
                     }
                     case "A9": {
-                        String ack = InstructionUtil.getAck(Message);
-                        String deviceId = InstructionUtil.getDeviceId(Message);
-                        String change = InstructionUtil.getChange(Message);
-                        float batteryLevel = InstructionUtil.getBatteryLevel(Message);
-                        if (ack.equals("01"))
-                            log.error("确认帧错误，失败");
-                        if (ack.equals("02"))
-                            log.error("CRC校验失败");
-                        if (ack.equals("00"))
-                            log.info("指令解析成功，数据终端设备地址为" + deviceId);
-                        log.info("数据终端设备电量为：" + batteryLevel);
-                        log.info("数据终端设备的充电状态为：" + change);
-                        break;
+                      performInstrution.performA9(Message);
                     }
                     default:
                         System.out.println(message);
                         log.error("传入数据不合法" + message);
                 }
-            } catch (Exception e) {
+
+            }
+            }catch (Exception e){
                 e.printStackTrace();
                 log.error(e.getMessage());
             }

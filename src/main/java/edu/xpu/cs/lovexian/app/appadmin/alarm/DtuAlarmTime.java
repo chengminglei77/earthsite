@@ -1,6 +1,7 @@
 package edu.xpu.cs.lovexian.app.appadmin.alarm;
 
 import edu.xpu.cs.lovexian.app.appadmin.entity.*;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.AlarmInfoAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IAlarmInfoAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -25,6 +26,8 @@ public class DtuAlarmTime {
     private SensorDataMapper sensorDataMapper;
     @Autowired
     private IAlarmInfoAdminService alarmInfoAdminService;
+    @Autowired
+    AlarmInfoAdminMapper alarmInfoAdminMapper;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -50,6 +53,8 @@ public class DtuAlarmTime {
             //得到采集频率
             int samplingFrequency=Integer.parseInt(sensorAlarmRelevantInfo.getSamplingFrequency());
 
+            String theId = alarmInfoAdminMapper.checkIfExist(sensorId);
+
             //1.采集到的最后一条数据时间
             long from3 = theLastData.getTime();
 
@@ -61,6 +66,7 @@ public class DtuAlarmTime {
             int minutes = (int) ((to3 - from3) / (1000 * 60));
 
             if (minutes>=(samplingFrequency+1)){
+                adminAlarmInfo.setId(theId);
                 adminAlarmInfo.setDeviceId(sensorId);
                 adminAlarmInfo.setAlarmTime(currentDate);
                 adminAlarmInfo.setAlarmInfo("传感器"+sensorId+"超过"+samplingFrequency+"分钟未收到数据");

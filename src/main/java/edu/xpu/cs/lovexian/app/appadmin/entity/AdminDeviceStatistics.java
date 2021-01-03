@@ -23,37 +23,19 @@ public class AdminDeviceStatistics {
      * 工作时间
      */
     @TableField("eq_duration")
-    private String eqDuration;
+    private int eqDuration;
 
-    /**
-     * 记录数
-     */
-    @TableField("record_nms")
-    private String recordNms;
     /**
      * 信息包总量大小，每个信息包大小是固定的
      */
     @TableField("packet_size")
-    private Double packetSize;
-
-    /**
-     * 出现故障次数
-     */
-    @TableField("breakdown_nms")
-    private Double breakdownNms;
-
-
-    /**
-     * 网关的记录数
-     */
-    @TableField("gateway_records")
-    private String gatewayRecords;
+    private int packetSize;
 
     /**
      * 信息总量
      */
     @TableField("info_total")
-    private String infoTotal;
+    private int infoTotal;
 
     /**
      * 设备型号
@@ -68,5 +50,5 @@ public class AdminDeviceStatistics {
     private String type;
 
     @TableField("updated_at")
-    private String updatedAt;
+    private Date updatedAt;
 }

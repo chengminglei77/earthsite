@@ -29,7 +29,11 @@ public class AdminUnresovledData {
      */
     @TableField("data")
     private String data;
-
+    /**
+     * 设备ID
+     */
+    @TableField("setting_id")
+    private  String settingId;
     /**
      * 传感器类型
      */
@@ -47,6 +51,14 @@ public class AdminUnresovledData {
      */
     @TableField("instruction_type")
     private String instructionType;
+
+
+    /**
+     * 帧序号
+     */
+    @TableField("frame_num")
+    private String frameNum;
+
 
     /**
      * 采集时间

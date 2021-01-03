@@ -24,7 +24,7 @@ public class TransferVUtil {
 
 	private static int currentP;
 
-	public static int encrypt(double currentV) {
+	public static int encrypt(float currentV) {
 		if(currentV<=12600&&currentV>=9300) {
 			for (int i = 0; i < 11; i++) {
 				if (currentV >= Vms[i] && currentV < Vms[i - 1]) {

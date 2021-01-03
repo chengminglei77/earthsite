@@ -111,8 +111,8 @@ public class DtusAdminController extends BaseController {
         /*if (adminDtus.getStatus() == null){
             adminDtus.setStatus(StatusEnum.ABNORMAL_STATE.getCode());//当未选择DTU状态时，默认DTU状态为离线
         }*/
-        adminDtus.setUpdatedAt(date);//设置dtu最后更新时间
 
+        adminDtus.setUpdatedAt(date);//设置dtu最后更新时间
         //保存或更新dtu信息
         boolean actOper = dtusAdminService.saveOrUpdate(adminDtus);
         return EarthSiteResponse.SUCCESS().data(actOper);

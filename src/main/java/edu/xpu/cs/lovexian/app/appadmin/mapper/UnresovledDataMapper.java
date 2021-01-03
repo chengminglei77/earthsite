@@ -3,6 +3,8 @@ package edu.xpu.cs.lovexian.app.appadmin.mapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminUnresovledData;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,5 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 @DS("slave")
 public interface UnresovledDataMapper extends BaseMapper<AdminUnresovledData> {
+    int getCount(@Param("settingId") String settingId);
 
 }

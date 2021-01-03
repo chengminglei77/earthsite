@@ -1,7 +1,9 @@
 package edu.xpu.cs.lovexian.app.appadmin.alarm;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.AlarmInfoAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.DtusAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IAlarmInfoAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -25,6 +27,8 @@ public class DtuAlarmElec {
     private DtusAdminMapper dtusAdminMapper;
     @Autowired
     private IAlarmInfoAdminService alarmInfoAdminService;
+    @Autowired
+    AlarmInfoAdminMapper alarmInfoAdminMapper;
 
     AdminAlarmInfo adminAlarmInfo = new AdminAlarmInfo();
 
@@ -37,7 +41,6 @@ public class DtuAlarmElec {
         List<AdminDtus> adminDtusList = dtusAdminMapper.selectThelastDtuInfo();
 
         for (AdminDtus adminDtus:adminDtusList){
-
             //1.充电状态
             Integer stateOfCharge=adminDtus.getElcStatus();
             //2.当前电量
@@ -47,11 +50,22 @@ public class DtuAlarmElec {
             //2.当前时间
             Date currentDate = new Date(System.currentTimeMillis());
 
-            if (stateOfCharge==0&&currentCapacity<=10000){
+            String theId = alarmInfoAdminMapper.checkIfExist(dtuId);
+            if (stateOfCharge==0&&currentCapacity<=30&&currentCapacity>=10){
+                adminAlarmInfo.setId(theId);
                 adminAlarmInfo.setDeviceId(dtuId);
                 adminAlarmInfo.setAlarmTime(currentDate);
-                adminAlarmInfo.setAlarmInfo("DTU"+dtuId+"电压小于10V且未充电");
-                adminAlarmInfo.setAlarmReason(dtuId+"电压小于10V且未充电，电压为："+currentCapacity);
+                adminAlarmInfo.setAlarmInfo("DTU"+dtuId+"电量小于30%且未充电");
+                adminAlarmInfo.setAlarmReason(dtuId+"电量为："+currentCapacity);
+                adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//未删除状态
+                alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
+            }
+            if (currentCapacity<=10){
+                adminAlarmInfo.setId(theId);
+                adminAlarmInfo.setDeviceId(dtuId);
+                adminAlarmInfo.setAlarmTime(currentDate);
+                adminAlarmInfo.setAlarmInfo("DTU"+dtuId+"电量小于10%");
+                adminAlarmInfo.setAlarmReason(dtuId+"电量为："+currentCapacity);
                 adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//未删除状态
                 alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
             }

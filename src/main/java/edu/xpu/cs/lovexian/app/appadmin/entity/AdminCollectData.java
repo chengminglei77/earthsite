@@ -45,7 +45,7 @@ public class AdminCollectData {
      * 传感器数据
      */
     @TableId(value = "sensor_param", type = IdType.ID_WORKER_STR)
-    private double sensorParam;
+    private String sensorParam;
 
     /**
      * 收集时间

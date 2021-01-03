@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
 import io.lettuce.core.dynamic.annotation.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,4 +21,9 @@ public interface AlarmInfoAdminMapper extends BaseMapper<AdminAlarmInfo> {
     IPage<AdminAlarmInfo> selectAll(Page page, @Param("adminAlarmInfo") AdminAlarmInfo adminAlarmInfo);
 
     IPage<AdminAlarmInfo> queryAlarmInfo(Page page, @Param("adminAlarmInfo") AdminAlarmInfo adminAlarmInfo);
+
+    @Select("select id from alarm_info where device_id=#{deviceId,jdbcType=VARCHAR}")
+    String checkIfExist(@Param("deviceId") String deviceId);
+
+
 }

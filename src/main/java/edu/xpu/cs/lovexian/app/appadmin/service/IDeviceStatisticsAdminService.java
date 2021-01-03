@@ -3,7 +3,9 @@ package edu.xpu.cs.lovexian.app.appadmin.service;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDeviceStatistics;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 
 /**
@@ -14,6 +16,8 @@ import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 public interface IDeviceStatisticsAdminService extends IService<AdminDeviceStatistics> {
     //IPage<AdminDtus> findDtuss(QueryRequest request, AdminDtus adminDtus);
     IPage<AdminDeviceStatistics> findDeviceStatisticsByTypeId(QueryRequest request, AdminDeviceStatistics adminDeviceStatistics);
+    void insertDeviceStatistic(String message,String settingId);
 
     boolean deleteDevice(String id);
+
 }
