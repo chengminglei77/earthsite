@@ -1,6 +1,14 @@
 package edu.xpu.cs.lovexian.common.utils;
 
+import edu.xpu.cs.lovexian.app.appadmin.Kafka.PerformInstrution;
+import jdk.nashorn.api.scripting.ScriptUtils;
+import org.jcp.xml.dsig.internal.dom.DOMUtils;
+
 import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -82,7 +90,7 @@ public class InstructionUtil {
         }
         if (instructionType.equals("A2")) {
             int number = getSensorNumber(message);
-            System.out.println("number为"+number);
+            System.out.println("number为" + number);
             String[] sensorType = new String[number];
             for (int i = 0; i < number; i++) {
                 String Sensor_Type = toType(message.substring(18 + i * 6, 20 + i * 6));
@@ -266,20 +274,38 @@ public class InstructionUtil {
         return length;
     }
 
-    public static int getEqDuration(Date createTime, Date updateTime) {
-        long t1 = updateTime.getTime();
-        long t2 = createTime.getTime();
-        //3.时间差
-        int day = (int) ((t1 - t2) / (1000 * 60 * 60 * 24));
-        return day;
+    public static int getDayEqDuration(Date fromDate, Date toDate) {
+        int days = 0;
+        long time1 = fromDate.getTime();
+        long time2 = toDate.getTime();
+
+        long diff;
+        if (time1 < time2) {
+            diff = time2 - time1;
+        } else {
+            diff = time1 - time2;
+        }
+        days = (int) (diff / (24 * 60 * 60 * 1000));
+        return days;
+    }
+    public static String getEqDuration(int day)
+    {
+        return day/365+"年"+(day%365)/30+"月"+(day%365)%30+"天";
     }
 
     public static String getTbale(String settingId) {
-        if (settingId.length() == 5)
+        if (settingId.length() == 9)
             return "dtus";
         if (settingId.length() == 4)
             return "gateways";
         return "sensors";
+
+    }
+    public static int getdayEqDuration(String message)
+    {
+        int indexOfDay=message.indexOf("天");
+        int indexOfMonth=message.indexOf("月");
+        return Integer.parseInt(message.substring(indexOfMonth+1,indexOfDay));
 
     }
 
@@ -307,5 +333,111 @@ public class InstructionUtil {
             default:
                 return null;
         }
+    }
+
+    public static String countTransfer(int count) {
+        if (count > 0 && count < 10000)
+            return count + "条";
+        if (count > 10000 && count < 100000000)
+            return (count / 10000) + "万" + (count % 10000) + "条";
+        return (count / 100000000) + "亿" + ((count % 100000000) / 10000) + "万" + ((count % 100000000) % 10000) + "条";
+    }
+
+    public static int transferCount(String count) {
+        int billion, tenThousand, one;
+        int indexOfTenThousand, indexOfBillion, indexOfOne;
+        indexOfBillion = count.indexOf("亿");
+        if (indexOfBillion != -1) {
+            billion = Integer.parseInt(count.substring(0, indexOfBillion));
+            indexOfTenThousand = count.indexOf("万");
+            if (indexOfTenThousand != -1) {
+                tenThousand = Integer.parseInt(count.substring(indexOfBillion + 1, indexOfTenThousand));
+                indexOfOne = count.indexOf("条");
+                if (indexOfTenThousand + 1 != indexOfOne) {
+                    one = Integer.parseInt(count.substring(indexOfTenThousand + 1, indexOfOne));
+                    return billion * 100000000 + tenThousand * 10000 + one;
+                }
+                return billion * 100000000 + tenThousand * 10000;
+            }
+            indexOfOne = count.indexOf("条");
+            if (indexOfBillion + 1 != indexOfOne)
+            {  one = Integer.parseInt(count.substring(indexOfBillion + 1, indexOfOne));
+            return billion * 100000000+one ;
+        }return billion*100000000;
+        }
+        indexOfTenThousand = count.indexOf("万");
+        if (indexOfTenThousand != -1) {
+            tenThousand = Integer.parseInt(count.substring(indexOfBillion + 1, indexOfTenThousand));
+            indexOfOne = count.indexOf("条");
+            if (indexOfTenThousand + 1 != indexOfOne) {
+                one = Integer.parseInt(count.substring(indexOfTenThousand + 1, indexOfOne));
+                return tenThousand * 10000 + one;
+            }
+            return tenThousand * 10000;
+        }
+        indexOfOne = count.indexOf("条");
+        one = Integer.parseInt(count.substring(0, indexOfOne));
+        return one;
+    }
+
+    public static String getPrintSize(long fileS)
+    {
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fileSizeString = "";
+        String wrongSize="0B";
+        if(fileS==0){
+            return wrongSize;
+        }
+        if (fileS < 1024){
+            fileSizeString = df.format((double) fileS) + "B";
+        }
+        else if (fileS < 1048576){
+            fileSizeString = df.format((double) fileS / 1024) + "KB";
+        }
+        else if (fileS < 1073741824){
+            fileSizeString = df.format((double) fileS / 1048576) + "MB";
+        }
+        else{
+            fileSizeString = df.format((double) fileS / 1073741824) + "GB";
+        }
+        return fileSizeString;
+    }
+
+    //返回Byte数目
+    public static int toSize(String message) {
+        double GB, KB, MB, B;
+        int indexOfGB, indexOfKB, indexOfMB, indexOfB;
+        indexOfGB = message.indexOf("GB");
+        if (indexOfGB != -1) {
+            GB = Double.parseDouble(message.substring(0, indexOfGB));
+            return (int) (GB * 1024 * 1024 * 1024);
+        }
+        indexOfMB = message.indexOf("MB");
+        if (indexOfMB != -1) {
+            MB = Double.parseDouble(message.substring(0, indexOfMB));
+            return (int) (MB * 1024* 1024);
+        }
+        indexOfKB = message.indexOf("KB");
+        if (indexOfKB != -1) {
+            KB = Double.parseDouble(message.substring(0, indexOfKB));
+            return (int) (KB * 1024 );
+        }
+
+        indexOfB = message.indexOf("B");
+        B = Double.parseDouble(message.substring(0, indexOfB));
+        return (int) B;
+    }
+
+    public static void main(String[] args) throws ParseException {
+        //设置Date格式为“年-月-日 小时:分钟:秒.毫秒”
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//设置时间，String转为Date
+        String strStart = "2017-2-11 11:11:50.5";
+        String strEnd = "2019-1-11 11:11:50.555";
+        Date dateStart = sdf.parse(strStart);
+        Date dateEnd = sdf.parse(strEnd);    //查询的数据时间
+        int str=InstructionUtil.getDayEqDuration(dateStart,dateEnd);
+        System.out.println(str);
+        System.out.println(InstructionUtil.getEqDuration(str));
     }
 }

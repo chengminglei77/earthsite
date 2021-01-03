@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDeviceStatistics;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGateways;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.apache.ibatis.annotations.Select;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author czy
@@ -28,5 +30,6 @@ public interface DeviceStatisticsAdminMapper extends BaseMapper<AdminDeviceStati
 
 
     Date selectCreateTime(@Param("table") String table,@Param("column") String column, @Param("settingId") String settingId);
-
+    List<AdminDeviceStatistics> selectDtuSensors(String setting);
+    List<AdminDeviceStatistics> selectgatewayDtus(String setting);
 }
