@@ -62,7 +62,7 @@ public class PerformInstrution {
                 lambdaUpdateWrapper.eq(AdminCollectData::getId,id[i])
                         .set(AdminCollectData::getSensorType, sensorsType[0])
                         .set(AdminCollectData::getSensorId,sensorId[0]+"0"+i)
-                        .set(AdminCollectData::getSensorValue, averageSpeed[i])
+                        .set(AdminCollectData::getSensorValue, (double) Math.round(averageSpeed[i]*100)/100)
                         .set(AdminCollectData::getSensorParam,windDirection[i])
                         .set(AdminCollectData::getColTime, coltTime);
                 Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
@@ -165,7 +165,7 @@ public class PerformInstrution {
 
     public static void main(String[] args) {
         PerformInstrution performInstrution = new PerformInstrution();
-        String[] settingId = performInstrution.getSensorSettingId("AA552AA6001F010200011A004A0000006A016400510150003400E1002B00CB002500C100129DA655AA");
+        String[] settingId = performInstrution.getSensorSettingId("AA552AA6001F020200011A004A0000006A016400510150003400E1002B00CB002500C100129DA655AA");
         for (int i = 0; i <settingId.length ; i++) {
             System.out.println(settingId[i]);
         }

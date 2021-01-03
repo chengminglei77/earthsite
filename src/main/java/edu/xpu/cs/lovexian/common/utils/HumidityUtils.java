@@ -2,6 +2,7 @@ package edu.xpu.cs.lovexian.common.utils;
 
 import java.math.BigInteger;
 
+
 /**                                                                                ____________________
  _                _                                                           < 神兽护体，永无bug! >
  | |__  _   _  ___| |__   ___ _ __   __ _ _ __   ___ _ __   __ _                --------------------
@@ -23,7 +24,7 @@ public class HumidityUtils {
             deep[i] = new BigInteger(message.substring(34+12*i, 40+12*i), 16).toString(10);
         }
        for (int i=0;i<3;i++){
-               humidity[i] = 100-(Math.pow(Double.valueOf(deep[i]),0.25)/2)*10;
+               humidity[i] = 100-(Math.pow(Double.valueOf(deep[i])/2,0.25))*10;
        }
        return humidity;
     }

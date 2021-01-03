@@ -15,7 +15,7 @@ public class WindSpeedUtils {
     /**
      * 1号设备和2号设备三个时间段的平均风速
      */
-    private static final String [] deviceNum = {"01","02"};
+    private static final String [] deviceNum = {"00","01"};
     private static final String [][] windSpeedString = new String[2][3];
     private static double [][] windSpeedDouble = new double[2][3];
     private static double [] averageWindSpeed = new double[2];
