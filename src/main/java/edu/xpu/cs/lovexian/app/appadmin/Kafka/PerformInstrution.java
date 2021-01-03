@@ -73,6 +73,9 @@ public class PerformInstrution {
                 influxDBContoller.insertOneToInflux(sensorId[0],sensorsType[0],(double) Math.round(humidity[i]*100)/100);
             }
         }
+        String[] sensorSettingId = getSensorSettingId(message);
+        deviceStatisticsAdminService.insertDeviceStatistic(message, sensorSettingId[0]);
+
     }
 
     public void performA7(String Message) {

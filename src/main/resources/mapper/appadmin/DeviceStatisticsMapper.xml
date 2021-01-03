@@ -3,9 +3,9 @@
 <mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.DeviceStatisticsAdminMapper">
     <resultMap id="deviceStatistics" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminDeviceStatistics">
         <id column="id" jdbcType="VARCHAR" property="id"/>
-        <result column="eq_duration" jdbcType="INTEGER" property="eqDuration"/>
-        <result column="packet_size" jdbcType="INTEGER" property="packetSize"/>
-        <result column="info_total" jdbcType="INTEGER" property="infoTotal"/>
+        <result column="eq_duration" jdbcType="VARCHAR" property="eqDuration"/>
+        <result column="packet_size" jdbcType="VARCHAR" property="packetSize"/>
+        <result column="info_total" jdbcType="VARCHAR" property="infoTotal"/>
         <result column="setting_id" jdbcType="VARCHAR" property="settingId"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
@@ -25,6 +25,19 @@
         from ${table}
         <where>
             ${column}=#{settingId}
+        </where>
+    </select>
+    <select id="selectDtuSensors" resultMap="deviceStatistics">
+        select *
+        from eq_statistics
+        <where>
+            eq_statistics.setting_id like #{settingId}
+        </where>
+    </select>
+    <select id="selectgatewayDtus" resultMap="deviceStatistics">
+        select * from eq_statistics
+        <where>
+            eq_statistics.setting_id like #{settingId}
         </where>
     </select>
 </mapper>
