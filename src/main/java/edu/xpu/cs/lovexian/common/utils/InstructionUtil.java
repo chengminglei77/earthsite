@@ -108,6 +108,17 @@ public class InstructionUtil {
     }*/
 
     /**
+     * 获取数据的帧序号
+     * @param message
+     * @return String
+     */
+     public static String getFrameNum(String message){
+         String frameNumHex = message.substring(4,6);
+         String frameNumDec = new BigInteger(frameNumHex,16).toString(10);
+         return frameNumDec;
+     }
+
+    /**
      * 获取Device_ID
      *
      * @param message

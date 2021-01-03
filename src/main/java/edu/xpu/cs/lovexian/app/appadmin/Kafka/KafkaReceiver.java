@@ -80,8 +80,9 @@ public class KafkaReceiver {
                         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
                         adminUnresovledData.setData(message.toString());
                         adminUnresovledData.setSensorType(sensorType[0]);
-                        adminUnresovledData.setSensorData(InstructionUtil.getSensorData(message.toString()));
+                        adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message));
                         adminUnresovledData.setInstructionType(command);
+                        adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
                         adminUnresovledData.setColTime(time);
                         unresovledDataMapper.insert(adminUnresovledData);
                         break;

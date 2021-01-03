@@ -8,6 +8,7 @@ import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.GatewayDtuAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
+import edu.xpu.cs.lovexian.common.utils.HumidityUtils;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import edu.xpu.cs.lovexian.common.utils.TransferVUtil;
 import edu.xpu.cs.lovexian.common.utils.WindSpeedUtils;
@@ -41,29 +42,36 @@ public class PerformInstrution {
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
 
     public void performA6(String message){
-        java.sql.Date colTime = new java.sql.Date(new java.util.Date().getTime());
+        Date coltTime = new Date();
+        //java.sql.Date colTime = new java.sql.Date(new java.util.Date().getTime());
         String deviceId = message.substring(12, 14);
-        String sensorsType = message.substring(14, 16);
+        String sensorsType[] = InstructionUtil.getSensorType(message);
         String sensorsAddr = message.substring(16, 20);
 
         double [] averageSpeed = WindSpeedUtils.windSpeed(message);
-        String [] windDirection = WindSpeedUtils.windDirection(message);
-        if (InstructionUtil.getSensorType(message).equals("风速传感器")) {
-            for (int i=0;i<averageSpeed.length;i++){
-                influxDBContoller.insertOneToInflux(sensorsAddr,sensorsType,averageSpeed[i]);
-            }
-        }
         String sensorId[] = getSensorSettingId(message);
+        String [] windDirection = WindSpeedUtils.windDirection(message);
+        double [] humidity = HumidityUtils.humidityDecode(message);
+        String [] id = {"1344101086971305986","1344101086971305987"};
+        if (sensorsType[0].equals("风速传感器")) {
+            for (int i=0;i<averageSpeed.length;i++){
+                influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(averageSpeed[i]*100)/100);
+            }
+            for (int i=0;i<averageSpeed.length;i++){
+                LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(AdminCollectData::getId,id[i])
+                        .set(AdminCollectData::getSensorType, sensorsType[0])
+                        .set(AdminCollectData::getSensorId,sensorId[0]+"0"+i)
+                        .set(AdminCollectData::getSensorValue, averageSpeed[i])
+                        .set(AdminCollectData::getSensorParam,windDirection[i])
+                        .set(AdminCollectData::getColTime, coltTime);
+                Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+            }
 
-        for (int i=0;i<windDirection.length;i++){
-            LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-            lambdaUpdateWrapper.eq(AdminCollectData::getSensorType, sensorsType)
-                    .set(AdminCollectData::getSensorId,sensorId[0]+"0"+i)
-                    .set(AdminCollectData::getSensorValue, averageSpeed[i])
-                    .set(AdminCollectData::getSensorParam,windDirection[i])
-                    .set(AdminCollectData::getColTime, colTime);
-            Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
-
+        }else {
+            for (int i=0;i<humidity.length;i++){
+                influxDBContoller.insertOneToInflux(sensorId[0],sensorsType[0],(double) Math.round(humidity[i]*100)/100);
+            }
         }
     }
 

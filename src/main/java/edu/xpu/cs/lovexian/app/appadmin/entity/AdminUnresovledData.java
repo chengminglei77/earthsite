@@ -52,6 +52,14 @@ public class AdminUnresovledData {
     @TableField("instruction_type")
     private String instructionType;
 
+
+    /**
+     * 帧序号
+     */
+    @TableField("frame_num")
+    private String frameNum;
+
+
     /**
      * 采集时间
      */
