@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author zhangAnJie
  * @date 2020-12-15 17:01:18

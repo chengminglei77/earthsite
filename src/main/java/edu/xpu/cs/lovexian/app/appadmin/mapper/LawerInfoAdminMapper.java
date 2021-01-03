@@ -20,6 +20,7 @@ public interface LawerInfoAdminMapper extends BaseMapper<AdminLawerInfo> {
 
     /**
      * 查询所有活动信息（分页）
+     *
      * @param page
      * @param adminLawerInfo
      * @return

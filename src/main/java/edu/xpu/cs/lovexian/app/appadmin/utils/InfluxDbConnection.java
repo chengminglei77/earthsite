@@ -4,6 +4,7 @@ package edu.xpu.cs.lovexian.app.appadmin.utils;
  * Description:infludb连接工具类
  * User: 马鹏森 2020-09-25-8:46
  */
+
 import org.influxdb.BatchOptions;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;

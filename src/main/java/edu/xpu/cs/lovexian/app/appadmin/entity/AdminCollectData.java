@@ -9,7 +9,7 @@ import java.util.Date;
 
 
 /**
- *  Entity
+ * Entity
  *
  * @author xpu
  * @date 2020-12-07 17:00:00
@@ -48,7 +48,7 @@ public class AdminCollectData {
     private double sensorParam;
 
     /**
-     *收集时间
+     * 收集时间
      */
     @TableId(value = "col_time", type = IdType.ID_WORKER_STR)
     private Date colTime;

@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author xpu
  * @date 2020-09-21 16:34:55
@@ -39,12 +39,11 @@ public class DtuSensorAdminServiceImpl extends ServiceImpl<DtuSensorAdminMapper,
     @Override
     public IPage<AdminDtuSensor> findSensorsByTypeId(QueryRequest request, AdminDtuSensor adminDtuSensor) {
         QueryWrapper<AdminDtuSensor> queryWrapper = new QueryWrapper<>();
-        if(StringUtils.isNotBlank(adminDtuSensor.getSensorId()))
-        {
-            queryWrapper.lambda().like(AdminDtuSensor::getSensorId,adminDtuSensor.getSensorId());
+        if (StringUtils.isNotBlank(adminDtuSensor.getSensorId())) {
+            queryWrapper.lambda().like(AdminDtuSensor::getSensorId, adminDtuSensor.getSensorId());
         }
-        if(StringUtils.isNotBlank(adminDtuSensor.getDtuId())){
-            queryWrapper.lambda().like(AdminDtuSensor::getDtuId,adminDtuSensor.getDtuId());
+        if (StringUtils.isNotBlank(adminDtuSensor.getDtuId())) {
+            queryWrapper.lambda().like(AdminDtuSensor::getDtuId, adminDtuSensor.getDtuId());
         }
         Page<AdminDtuSensor> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
@@ -53,23 +52,23 @@ public class DtuSensorAdminServiceImpl extends ServiceImpl<DtuSensorAdminMapper,
     @Override
     public IPage<AdminDtuSensor> findAgentChecks(QueryRequest request, String dtuId) {
         Page<AdminDtuSensor> page = new Page<>(request.getPageNum(), request.getPageSize());
-        IPage<AdminDtuSensor> result=dtuSensorAdminMapper.selectCheckInfos(page,dtuId);
+        IPage<AdminDtuSensor> result = dtuSensorAdminMapper.selectCheckInfos(page, dtuId);
         System.out.println(result);
-        return dtuSensorAdminMapper.selectCheckInfos(page,dtuId);
+        return dtuSensorAdminMapper.selectCheckInfos(page, dtuId);
     }
 
     @Override
     public IPage<AdminDtuSensor> selectDtuInfo(QueryRequest request, String sensorId) {
         Page<AdminDtuSensor> page = new Page<>(request.getPageNum(), request.getPageSize());
-        IPage<AdminDtuSensor> result=dtuSensorAdminMapper.selDtuInfo(page,sensorId);
+        IPage<AdminDtuSensor> result = dtuSensorAdminMapper.selDtuInfo(page, sensorId);
         System.out.println(result);
-        return dtuSensorAdminMapper.selDtuInfo(page,sensorId);
+        return dtuSensorAdminMapper.selDtuInfo(page, sensorId);
     }
 
     @Override
     public IPage<AdminDtuSensor> querySensorsInfo(QueryRequest request) {
         Page<AdminDtuSensor> page = new Page<>(request.getPageNum(), request.getPageSize());
-        IPage<AdminDtuSensor> result=dtuSensorAdminMapper.querySensorsInfo(page);
+        IPage<AdminDtuSensor> result = dtuSensorAdminMapper.querySensorsInfo(page);
         System.out.println(result);
         return dtuSensorAdminMapper.querySensorsInfo(page);
     }

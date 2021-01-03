@@ -19,7 +19,7 @@ public interface ILawerInfoAdminService extends IService<AdminLawerInfo> {
     /**
      * 查询（分页）
      *
-     * @param request QueryRequest
+     * @param request        QueryRequest
      * @param adminLawerInfo adminLawerInfo
      * @return IPage<AdminLawerInfo>
      */
@@ -30,6 +30,7 @@ public interface ILawerInfoAdminService extends IService<AdminLawerInfo> {
 
     /**
      * 查找不同类型的信息
+     *
      * @param request
      * @param adminLawerInfo
      * @return
@@ -38,6 +39,7 @@ public interface ILawerInfoAdminService extends IService<AdminLawerInfo> {
 
     /**
      * 爱公平里按照关键字段搜索信息
+     *
      * @param request
      * @param adminLawerInfo
      * @return

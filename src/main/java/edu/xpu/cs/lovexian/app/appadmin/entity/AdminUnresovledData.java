@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author zhanganajie
  * @date 2020-09-01 17:01:18
@@ -25,7 +25,7 @@ public class AdminUnresovledData {
     private String id;
 
     /**
-     * 未解码的数据，远水数据
+     * 未解码的数据，原始数据
      */
     @TableField("data")
     private String data;
@@ -53,5 +53,23 @@ public class AdminUnresovledData {
      */
     @TableField("col_time")
     private Date colTime;
+
+    /**
+     * 设备编号
+     */
+    @TableField("setting_id")
+    private String settingID;
+
+    /**
+     * ack状态
+     */
+    @TableField("ack_state")
+    private String ackState;
+
+    /**
+     * 帧序号
+     */
+    @TableField("frame_num")
+    private String frameNum;
 
 }

@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * @author czy
  * @create 2020-10-25-18:04
@@ -58,7 +56,7 @@ public class AdminDeviceStatistics {
     private String infoTotal;
 
     /**
-     *    设备型号
+     * 设备型号
      */
     @TableField("setting_id")
     private String settingId;

@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- *  Controller
+ * Controller
  *
  * @author xpu
  * @date 2020-09-01 21:29:32
@@ -56,7 +56,7 @@ public class DtusAdminController extends BaseController {
     @Log("dtu管理:通过id进行删除信息")
     @DeleteMapping("deleteById")
     public EarthSiteResponse deleteDtu(String id) {
-        if(dtusAdminService.deleteDtus(id)){
+        if (dtusAdminService.deleteDtus(id)) {
             return EarthSiteResponse.SUCCESS().message("删除成功");
         }
         return EarthSiteResponse.FAIL().message("删除失败");
@@ -67,11 +67,11 @@ public class DtusAdminController extends BaseController {
     @DeleteMapping("BatchDelete/{actionIds}")
     public EarthSiteResponse deleteBatchDtus(@NotBlank(message = "{required}") @PathVariable String actionIds)
             throws EarthSiteException {
-        try{
+        try {
             //通过逗号进行分割为数组,循环输出进行删除
-            String[] ids =actionIds.split(StringPool.COMMA);
-            Arrays.stream(ids).forEach(id->this.dtusAdminService.deleteDtus(id));
-        }catch (Exception e){
+            String[] ids = actionIds.split(StringPool.COMMA);
+            Arrays.stream(ids).forEach(id -> this.dtusAdminService.deleteDtus(id));
+        } catch (Exception e) {
             message = "批量删除用户失败";
             log.error(message, e);
             throw new EarthSiteException(message);
@@ -96,10 +96,9 @@ public class DtusAdminController extends BaseController {
     }
 
 
-
     @Log("dtu管理:保存更新(增加)相关信息")
     @PostMapping("saveOrUpdate")
-    public EarthSiteResponse addOrUpdateDtus (AdminDtus adminDtus){
+    public EarthSiteResponse addOrUpdateDtus(AdminDtus adminDtus) {
         System.out.println("=========================进入dtu添加功能========================");
         //String currentUserName = getCurrentUser();//得到当前用户名
         Date date = new Date();
@@ -120,11 +119,10 @@ public class DtusAdminController extends BaseController {
     }
 
 
-
     @Log("dtu管理:彻底删除信息")
     @DeleteMapping("completelyDelete")
     public EarthSiteResponse CompletelyDelete(String id) {
-        if(dtusAdminService.completelyDeleteDtus(id)){
+        if (dtusAdminService.completelyDeleteDtus(id)) {
             return EarthSiteResponse.SUCCESS().message("彻底删除成功");
         }
         return EarthSiteResponse.FAIL().message("彻底删除失败");
@@ -132,7 +130,7 @@ public class DtusAdminController extends BaseController {
 
     @PostMapping("restoreById")
     public EarthSiteResponse restoreAlarm(String id) {
-        if(dtusAdminService.restoreDtus(id)){
+        if (dtusAdminService.restoreDtus(id)) {
             return EarthSiteResponse.SUCCESS().message("还原成功");
         }
         return EarthSiteResponse.FAIL().message("还原失败");
@@ -141,14 +139,12 @@ public class DtusAdminController extends BaseController {
 
     @Log
     @PostMapping("getDtuId")
-    public EarthSiteResponse getDtuId(String dtuId){
-        if (dtusAdminService.getDtuId(dtuId)){
+    public EarthSiteResponse getDtuId(String dtuId) {
+        if (dtusAdminService.getDtuId(dtuId)) {
             return EarthSiteResponse.SUCCESS().message("关联成功");
         }
-     return EarthSiteResponse.FAIL().message("关联失败");
+        return EarthSiteResponse.FAIL().message("关联失败");
     }
-
-
 
     //info类专用，其他类删除
 //    @PostMapping("saveOrUpdate")

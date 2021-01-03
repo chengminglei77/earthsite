@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author xpu
  * @date 2020-09-01 21:51:18
  */
 @Service("gatewayDtuAdminService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class GatewayDtuAdminServiceImpl extends ServiceImpl<GatewayDtuAdminMapper,AdminGatewayDtu> implements IGatewayDtuAdminService {
+public class GatewayDtuAdminServiceImpl extends ServiceImpl<GatewayDtuAdminMapper, AdminGatewayDtu> implements IGatewayDtuAdminService {
 
     @Autowired
     private GatewayDtuAdminMapper gatewayDtuAdminMapper;
@@ -33,8 +33,8 @@ public class GatewayDtuAdminServiceImpl extends ServiceImpl<GatewayDtuAdminMappe
     public IPage<AdminGatewayDtu> findGatewayDtus(QueryRequest request, AdminGatewayDtu adminGatewayDtu) {
         QueryWrapper<AdminGatewayDtu> queryWrapper = new QueryWrapper<>();
         // TODO 设置查询条件
-        Page<AdminGatewayDtu> page = new Page<>(request.getPageNum(),request.getPageSize());
-        return this.page(page,queryWrapper);
+        Page<AdminGatewayDtu> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.page(page, queryWrapper);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GatewayDtuAdminServiceImpl extends ServiceImpl<GatewayDtuAdminMappe
     @Override
     public boolean updateGatewayDtu(AdminGatewayDtu adminGatewayDtu) {
         UpdateWrapper<AdminGatewayDtu> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(AdminGatewayDtu::getDtuId,adminGatewayDtu.getDtuId());
+        updateWrapper.lambda().eq(AdminGatewayDtu::getDtuId, adminGatewayDtu.getDtuId());
         return this.update(adminGatewayDtu, updateWrapper);
     }
 
@@ -67,15 +67,15 @@ public class GatewayDtuAdminServiceImpl extends ServiceImpl<GatewayDtuAdminMappe
 
 
     @Override
-    public IPage<AdminGatewayDtu>  getGatewayDtu(QueryRequest request,String gateId) {
+    public IPage<AdminGatewayDtu> getGatewayDtu(QueryRequest request, String gateId) {
         Page<AdminGatewayDtu> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return gatewayDtuAdminMapper.selectGatewayDtu(page,gateId);
-        }
+        return gatewayDtuAdminMapper.selectGatewayDtu(page, gateId);
+    }
 
     @Override
     public IPage<AdminGatewayDtu> findDtusNotInGatewayDtu(QueryRequest request, String dtuId) {
         Page<AdminGatewayDtu> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return gatewayDtuAdminMapper.selectDtusNotInGatewayDtu(page,dtuId);
+        return gatewayDtuAdminMapper.selectDtusNotInGatewayDtu(page, dtuId);
     }
 
 }

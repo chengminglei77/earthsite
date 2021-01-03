@@ -9,7 +9,7 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.stereotype.Component;
 
 /**
- *  Mapper
+ * Mapper
  *
  * @author xpu
  * @date 2020-09-21 19:42:21
@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 @DS("slave")
 public interface CommandInfoAdminMapper extends BaseMapper<AdminCommandInfo> {
     IPage<AdminCommandInfo> selectAll(Page page, @Param("adminCommandInfo") AdminCommandInfo adminCommandInfo);
+
     AdminCommandInfo selCommandInfo(String deviceID);
+
     IPage<AdminCommandInfo> queryCommandInfo(Page page, @Param("adminCommandInfo") AdminCommandInfo adminCommandInfo);
 }

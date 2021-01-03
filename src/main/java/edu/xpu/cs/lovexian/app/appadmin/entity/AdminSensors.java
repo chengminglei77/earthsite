@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author xpu
  * @date 2020-09-01 22:02:59
@@ -99,10 +99,10 @@ public class AdminSensors {
     传感器的编号
      */
     @TableField("Sensor_Serial_Num")
-    private  String sensorSerialNum;
+    private String sensorSerialNum;
     /*
     传感器的地址
      */
     @TableField("Sensor_Address")
-    private  String sensorAddress;
+    private String sensorAddress;
 }

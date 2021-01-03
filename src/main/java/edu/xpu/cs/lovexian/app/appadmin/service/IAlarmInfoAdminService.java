@@ -7,7 +7,7 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 
 /**
- *  Service接口
+ * Service接口
  *
  * @author xpu
  * @date 2020-09-21 19:42:21
@@ -17,6 +17,7 @@ public interface IAlarmInfoAdminService extends IService<AdminAlarmInfo> {
 
     /**
      * 查找不同类型的信息
+     *
      * @param request
      * @param adminAlarmInfo
      * @return

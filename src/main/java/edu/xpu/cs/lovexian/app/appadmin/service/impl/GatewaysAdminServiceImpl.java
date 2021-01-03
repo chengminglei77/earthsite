@@ -18,13 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author xpu
  * @date 2020-09-01 17:01:18
  */
 @Service("GatewaysAdminService")
-@Transactional(propagation = Propagation.SUPPORTS,readOnly = true,rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, AdminGateways> implements IGatewaysAdminService {
     @Autowired
     private GatewaysAdminMapper gatewaysAdminMapper;
@@ -51,9 +51,9 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
             queryWrapper.lambda().eq(AdminGateways::getStatus, adminGateways.getStatus()).orderByDesc(AdminGateways::getCreatedAt);
         }
 
-        if (adminGateways.getDeleteState() != null){
-            queryWrapper.lambda().eq(AdminGateways::getDeleteState,adminGateways.getDeleteState()).orderByDesc(AdminGateways::getCreatedAt);
-        }else {
+        if (adminGateways.getDeleteState() != null) {
+            queryWrapper.lambda().eq(AdminGateways::getDeleteState, adminGateways.getDeleteState()).orderByDesc(AdminGateways::getCreatedAt);
+        } else {
             adminGateways.setDeleteState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
             System.out.println("查询为删除数据的标志deleteState==" + adminGateways.getDeleteState());
             queryWrapper.lambda().eq(AdminGateways::getDeleteState, adminGateways.getDeleteState()).orderByDesc(AdminGateways::getCreatedAt);
@@ -65,8 +65,8 @@ public class GatewaysAdminServiceImpl extends ServiceImpl<GatewaysAdminMapper, A
     @Override
     public boolean deleteGateWays(String id) {
         UpdateWrapper<AdminGateways> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(AdminGateways::getId,id).set(AdminGateways::getDeleteState,1);
-        updateWrapper.lambda().eq(AdminGateways::getId,id).set(AdminGateways::getStatus,1);
+        updateWrapper.lambda().eq(AdminGateways::getId, id).set(AdminGateways::getDeleteState, 1);
+        updateWrapper.lambda().eq(AdminGateways::getId, id).set(AdminGateways::getStatus, 1);
         return this.update(updateWrapper);
 
     }

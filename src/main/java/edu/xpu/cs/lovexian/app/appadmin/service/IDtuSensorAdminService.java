@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- *  Service接口
+ * Service接口
  *
  * @author xpu
  * @date 2020-09-21 16:34:55
@@ -18,7 +18,7 @@ public interface IDtuSensorAdminService extends IService<AdminDtuSensor> {
     /**
      * 查询（分页）
      *
-     * @param request QueryRequest
+     * @param request        QueryRequest
      * @param adminDtuSensor adminDtuSensor
      * @return IPage<AdminDtuSensor>
      */
@@ -30,6 +30,7 @@ public interface IDtuSensorAdminService extends IService<AdminDtuSensor> {
     IPage<AdminDtuSensor> findAgentChecks(QueryRequest request, String dtuId);
 
     IPage<AdminDtuSensor> selectDtuInfo(QueryRequest request, String sensorId);
-//查询数据库表中未关联的Sensors信息
+
+    //查询数据库表中未关联的Sensors信息
     IPage<AdminDtuSensor> querySensorsInfo(QueryRequest request);
 }

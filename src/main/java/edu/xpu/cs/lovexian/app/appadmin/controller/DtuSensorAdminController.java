@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- *  Controller
+ * Controller
  *
  * @author xpu
  * @date 2020-09-21 16:34:55
@@ -42,24 +42,24 @@ public class DtuSensorAdminController extends BaseController {
         Map<String, Object> dataTable = getDataTable(this.dtuSensorAdminService.findDtuSensors(request, adminDtuSensor));
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
-/*
-    //info类专用，其他类删除
+
+    /*
+        //info类专用，其他类删除
+        @PostMapping("saveOrUpdate")
+        public EarthSiteResponse addOrUpdateDtuSensor (AdminDtuSensor adminDtuSensor){
+
+        }*/
+    @Log("sensorsDtu管理：增加相关的传感器")
     @PostMapping("saveOrUpdate")
-    public EarthSiteResponse addOrUpdateDtuSensor (AdminDtuSensor adminDtuSensor){
-
-    }*/
-@Log("sensorsDtu管理：增加相关的传感器")
-@PostMapping("saveOrUpdate")
-public  EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor)
-{
-    boolean saveOrUpdate = dtuSensorAdminService.save(adminDtuSensor);
-    return EarthSiteResponse.SUCCESS().data(saveOrUpdate);
-}
+    public EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor) {
+        boolean saveOrUpdate = dtuSensorAdminService.save(adminDtuSensor);
+        return EarthSiteResponse.SUCCESS().data(saveOrUpdate);
+    }
 
 
-@Log("sensors管理:显示sensors的信息")
+    @Log("sensors管理:显示sensors的信息")
     @GetMapping("listByTypeId")
-    public EarthSiteResponse getAllinfoByTypeId(QueryRequest request,AdminDtuSensor adminDtuSensor) {
+    public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminDtuSensor adminDtuSensor) {
         //根据查询要求调用Service层的查询未删除的ID的方法
         IPage<AdminDtuSensor> sensorsDtuInfos = dtuSensorAdminService.findSensorsByTypeId(request, adminDtuSensor);
         Map<String, Object> dataTable = getDataTable(sensorsDtuInfos);
@@ -68,15 +68,16 @@ public  EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor)
 
     @Log("sensors管理：显示sensors信息")
     @GetMapping("selectCheckList")
-    public EarthSiteResponse selectCheckInfoByTypeId(QueryRequest request,String dtuId) {
+    public EarthSiteResponse selectCheckInfoByTypeId(QueryRequest request, String dtuId) {
         //System.out.println(adminDtuSensor.toString());
         IPage<AdminDtuSensor> agentChecks = this.dtuSensorAdminService.findAgentChecks(request, dtuId);
         Map<String, Object> dataTable = getDataTable(agentChecks);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
+
     @Log("sensors管理：显示Dtu信息")
     @GetMapping("selectDtuInfo")
-    public EarthSiteResponse selectDtuInfo(QueryRequest request,String sensorId) {
+    public EarthSiteResponse selectDtuInfo(QueryRequest request, String sensorId) {
         //System.out.println(adminDtuSensor.toString());
         IPage<AdminDtuSensor> selectDtuInfo = this.dtuSensorAdminService.selectDtuInfo(request, sensorId);
         Map<String, Object> dataTable = getDataTable(selectDtuInfo);
@@ -87,7 +88,7 @@ public  EarthSiteResponse saveOrUpdateDtuSensor(AdminDtuSensor adminDtuSensor)
     @GetMapping("querySensorsInfo")
     public EarthSiteResponse querySensorsInfo(QueryRequest request) {
         //System.out.println(adminDtuSensor.toString());
-        QueryRequest queryRequest=new QueryRequest();
+        QueryRequest queryRequest = new QueryRequest();
         queryRequest.setPageNum(1);
         queryRequest.setPageSize(20);
         IPage<AdminDtuSensor> selectDtuInfo = this.dtuSensorAdminService.querySensorsInfo(queryRequest);

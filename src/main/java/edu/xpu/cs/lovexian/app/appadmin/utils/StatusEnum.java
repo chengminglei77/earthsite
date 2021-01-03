@@ -10,10 +10,9 @@ import lombok.Getter;
 public enum StatusEnum {
 
 
-    NORMAL_STATE(0,"在线"),
-    ABNORMAL_STATE(1,"离线"),
-    NOT_ENABLE(2,"未启用")
-    ;
+    NORMAL_STATE(0, "在线"),
+    ABNORMAL_STATE(1, "离线"),
+    NOT_ENABLE(2, "未启用");
 
     private Integer code;
     private String msg;

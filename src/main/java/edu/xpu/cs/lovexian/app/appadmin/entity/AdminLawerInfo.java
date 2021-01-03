@@ -1,12 +1,12 @@
 package edu.xpu.cs.lovexian.app.appadmin.entity;
 
-import java.util.Date;
-
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 律师信息表 Entity
@@ -19,10 +19,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class AdminLawerInfo {
 
     /**
-     * 
+     *
      */
 
-    @TableId(value = "id",type = IdType.ID_WORKER_STR)
+    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
     /**
@@ -107,7 +107,7 @@ public class AdminLawerInfo {
     private Integer languageType;
 
     /**
-     * 
+     *
      */
     @TableField("static_page")
     private String staticPage;
@@ -131,7 +131,7 @@ public class AdminLawerInfo {
     private String updaterName;
 
     /**
-     * 
+     *
      */
     @TableField("is_show")
     private Integer isShow;
@@ -140,7 +140,7 @@ public class AdminLawerInfo {
     private Integer isTop;
 
     /**
-     * 
+     *
      */
     @TableField("check_state")
     private Integer checkState;

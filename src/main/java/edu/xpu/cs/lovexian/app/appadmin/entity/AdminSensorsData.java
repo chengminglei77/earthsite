@@ -62,11 +62,11 @@ public class AdminSensorsData {
   传感器数据
   */
     @TableField("Sensor_Data")
-    private  String sensorData;
+    private String sensorData;
 
     /*
     设备电量
      */
     @TableField("Battery_Level")
-    private  String batteryLevel;
+    private String batteryLevel;
 }
