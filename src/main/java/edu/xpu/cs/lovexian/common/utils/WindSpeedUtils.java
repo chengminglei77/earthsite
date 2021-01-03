@@ -34,7 +34,7 @@ public class WindSpeedUtils {
             for (int m=0;m<3;m++){
                 sum += windSpeedDouble[i][m];
             }
-            averageWindSpeed[i] = sum/3.0;
+            averageWindSpeed[i] = sum/300.0;
         }
         return averageWindSpeed;
     }
