@@ -104,7 +104,7 @@ public class PerformInstrution {
         adminUnresovledData1.setInstructionType("A8");
         String settingId = getDtuOrGatewaySettingId(deviceId);
         adminUnresovledData1.setColTime(time);
-        adminUnresovledData1.setSettingId(settingId);
+        adminUnresovledData1.setSettingID(settingId);
         unresovledDataMapper.insert(adminUnresovledData1);
         //插入数据统计中
         deviceStatisticsAdminService.insertDeviceStatistic(Message.toString(), settingId);

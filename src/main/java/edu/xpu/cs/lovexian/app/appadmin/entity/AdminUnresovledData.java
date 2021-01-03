@@ -33,7 +33,7 @@ public class AdminUnresovledData {
      * 设备ID
      */
     @TableField("setting_id")
-    private  String settingId;
+    private  String settingID;
     /**
      * 传感器类型
      */
@@ -67,21 +67,9 @@ public class AdminUnresovledData {
     private Date colTime;
 
     /**
-     * 设备编号
-     */
-    @TableField("setting_id")
-    private String settingID;
-
-    /**
      * ack状态
      */
     @TableField("ack_state")
     private String ackState;
-
-    /**
-     * 帧序号
-     */
-    @TableField("frame_num")
-    private String frameNum;
 
 }
