@@ -44,10 +44,9 @@ public class LawerInfoAdminServiceImpl extends ServiceImpl<LawerInfoAdminMapper,
     @Override
     public boolean updateLawerInfo(AdminLawerInfo adminLawerInfo) {
         UpdateWrapper<AdminLawerInfo> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(AdminLawerInfo::getId,adminLawerInfo.getId());
+        updateWrapper.lambda().eq(AdminLawerInfo::getId, adminLawerInfo.getId());
         return this.update(adminLawerInfo, updateWrapper);
     }
-
 
 
     @Override
@@ -57,22 +56,22 @@ public class LawerInfoAdminServiceImpl extends ServiceImpl<LawerInfoAdminMapper,
 //        if (adminLawerInfo.getLanguageType()!=null){
 //            queryWrapper.lambda().eq(AdminLawerInfo::getLanguageType, adminLawerInfo.getLanguageType());
 //        }
-        if(adminLawerInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminLawerInfo.getCreateTimeFrom()) &&adminLawerInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminLawerInfo.getCreateTimeTo())){
-            queryWrapper.lambda().between(AdminLawerInfo::getCreateTime,adminLawerInfo.getCreateTimeFrom(),adminLawerInfo.getCreateTimeTo());
+        if (adminLawerInfo.getCreateTimeFrom() != null && StringUtils.isNotBlank(adminLawerInfo.getCreateTimeFrom()) && adminLawerInfo.getCreateTimeTo() != null && StringUtils.isNotBlank(adminLawerInfo.getCreateTimeTo())) {
+            queryWrapper.lambda().between(AdminLawerInfo::getCreateTime, adminLawerInfo.getCreateTimeFrom(), adminLawerInfo.getCreateTimeTo());
         }
         //查询未删除的内容
-        if(StringUtils.isNotBlank(adminLawerInfo.getLawerName())){
-            queryWrapper.lambda().like(AdminLawerInfo::getLawerName,adminLawerInfo.getLawerName());
+        if (StringUtils.isNotBlank(adminLawerInfo.getLawerName())) {
+            queryWrapper.lambda().like(AdminLawerInfo::getLawerName, adminLawerInfo.getLawerName());
         }
-        if(adminLawerInfo.getDelState()!=null){
-            queryWrapper.lambda().eq(AdminLawerInfo::getDelState,adminLawerInfo.getDelState());
-        }else{
+        if (adminLawerInfo.getDelState() != null) {
+            queryWrapper.lambda().eq(AdminLawerInfo::getDelState, adminLawerInfo.getDelState());
+        } else {
             adminLawerInfo.setDelState(0);
-            System.out.println("查询为删除数据的标志del_state=="+adminLawerInfo.getDelState());
-            queryWrapper.lambda().eq(AdminLawerInfo::getDelState,adminLawerInfo.getDelState());
+            System.out.println("查询为删除数据的标志del_state==" + adminLawerInfo.getDelState());
+            queryWrapper.lambda().eq(AdminLawerInfo::getDelState, adminLawerInfo.getDelState());
         }
-        if(adminLawerInfo.getCheckState()!=null){
-            queryWrapper.lambda().eq(AdminLawerInfo::getCheckState,adminLawerInfo.getCheckState());
+        if (adminLawerInfo.getCheckState() != null) {
+            queryWrapper.lambda().eq(AdminLawerInfo::getCheckState, adminLawerInfo.getCheckState());
         }
 
         //排除某些字段
@@ -86,30 +85,30 @@ public class LawerInfoAdminServiceImpl extends ServiceImpl<LawerInfoAdminMapper,
     public IPage<AdminLawerInfo> queryLawerInfo(QueryRequest request, AdminLawerInfo adminLawerInfo) {
         QueryWrapper<AdminLawerInfo> queryWrapper = new QueryWrapper<>();
         //查询对应字段lawInfo
-        if(adminLawerInfo.getLawerName()!=null){
-            queryWrapper.lambda().eq(AdminLawerInfo::getLawerName,adminLawerInfo.getLawerName());
+        if (adminLawerInfo.getLawerName() != null) {
+            queryWrapper.lambda().eq(AdminLawerInfo::getLawerName, adminLawerInfo.getLawerName());
         }
 
-        if(adminLawerInfo.getCheckState()!=null){
-            queryWrapper.lambda().eq(AdminLawerInfo::getCheckState,adminLawerInfo.getCheckState());
+        if (adminLawerInfo.getCheckState() != null) {
+            queryWrapper.lambda().eq(AdminLawerInfo::getCheckState, adminLawerInfo.getCheckState());
         }
 
-        Page<AdminLawerInfo> adminLawerInfoPage = new Page<>(request.getPageNum(),request.getPageSize());
-        return this.page(adminLawerInfoPage,queryWrapper);
+        Page<AdminLawerInfo> adminLawerInfoPage = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.page(adminLawerInfoPage, queryWrapper);
     }
 
     @Override
     public boolean deleteBatchLawer(String id) {
         UpdateWrapper<AdminLawerInfo> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(AdminLawerInfo::getId,id).set(AdminLawerInfo::getDelState,1);
-        return  this.update(updateWrapper);
+        updateWrapper.lambda().eq(AdminLawerInfo::getId, id).set(AdminLawerInfo::getDelState, 1);
+        return this.update(updateWrapper);
     }
 
     @Override
     public boolean deleteLawerInfo(String id) {
         UpdateWrapper<AdminLawerInfo> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(AdminLawerInfo::getId,id).set(AdminLawerInfo::getDelState,1);
-        return  this.update(updateWrapper);
+        updateWrapper.lambda().eq(AdminLawerInfo::getId, id).set(AdminLawerInfo::getDelState, 1);
+        return this.update(updateWrapper);
     }
 
 

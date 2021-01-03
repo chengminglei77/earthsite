@@ -17,6 +17,7 @@ public interface IDeviceStatisticsAdminService extends IService<AdminDeviceStati
     //IPage<AdminDtus> findDtuss(QueryRequest request, AdminDtus adminDtus);
     IPage<AdminDeviceStatistics> findDeviceStatisticsByTypeId(QueryRequest request, AdminDeviceStatistics adminDeviceStatistics);
     void insertDeviceStatistic(String message,String settingId);
+
     boolean deleteDevice(String id);
 
 }

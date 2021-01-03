@@ -2,13 +2,12 @@ package edu.xpu.cs.lovexian.app.appadmin.controller;
 
 
 import edu.xpu.cs.lovexian.app.appadmin.utils.InfluxDbConnection;
-import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Description:
@@ -22,22 +21,23 @@ public class InfluxDBContoller {
     InfluxDbConnection influxDBConnection;
 
     @PostMapping("/insertOneToInfluxDB")
-    public void insertOneToInflux(String sensorAddr,String sensorType,double average_windSpeed) {
+    public void insertOneToInflux(String sensorAddr, String sensorType, double average_windSpeed) {
         Map<String, String> tagsMap = new HashMap<>();
         Map<String, Object> fieldsMap = new HashMap<>();
-        tagsMap.put("sensor_id",sensorAddr);
-        tagsMap.put("sensor_type",sensorType);
-        fieldsMap.put("sensor_data",average_windSpeed);
+        tagsMap.put("sensor_id", sensorAddr);
+        tagsMap.put("sensor_type", sensorType);
+        fieldsMap.put("sensor_data", average_windSpeed);
         influxDBConnection.insert("sensor_data", tagsMap, fieldsMap);
     }
+
     @PostMapping("/insertTwoToInfluxDB")
-    public void insertTwoToInfluxDB(String Device_ID,String change,float Battery_Level )
-    {Map<String, String> tagsMap = new HashMap<>();
+    public void insertTwoToInfluxDB(String Device_ID, String change, float Battery_Level) {
+        Map<String, String> tagsMap = new HashMap<>();
         Map<String, Object> fieldsMap = new HashMap<>();
-        tagsMap.put("Device_ID",Device_ID);
-        tagsMap.put("Change ",change);
-        fieldsMap.put("Battery_Level",Battery_Level);
-        influxDBConnection.insert("Battery_Level",tagsMap,fieldsMap);
+        tagsMap.put("Device_ID", Device_ID);
+        tagsMap.put("Change ", change);
+        fieldsMap.put("Battery_Level", Battery_Level);
+        influxDBConnection.insert("Battery_Level", tagsMap, fieldsMap);
 
     }
 }

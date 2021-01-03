@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 /**
- *  Entity
+ * Entity
  *
  * @author xpu
  * @date 2020-09-27 19:33:26
@@ -23,7 +23,7 @@ public class AdminSensorType {
     /**
      * 传感器名
      */
-    @TableField(value ="sensor_name",condition = SqlCondition.EQUAL)
+    @TableField(value = "sensor_name", condition = SqlCondition.EQUAL)
     private String sensorName;
 
     /**

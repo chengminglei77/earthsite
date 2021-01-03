@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author xpu
  * @date 2020-09-01 21:51:18

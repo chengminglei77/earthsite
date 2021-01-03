@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * date:2020-12-7
  */
 @Component
-@DS("slave")
+@DS("master")
 public interface CollectDataAdminMapper extends BaseMapper<AdminCollectData> {
 
 }

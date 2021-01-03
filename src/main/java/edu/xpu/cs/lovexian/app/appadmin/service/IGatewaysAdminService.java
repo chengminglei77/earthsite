@@ -7,7 +7,7 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGateways;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 
 /**
- *  Service接口
+ * Service接口
  *
  * @author xpu
  * @date 2020-09-01 17:01:18
@@ -17,13 +17,15 @@ public interface IGatewaysAdminService extends IService<AdminGateways> {
     /**
      * 查询（分页）
      *
-     * @param request QueryRequest
+     * @param request       QueryRequest
      * @param adminGateways adminGateways
      * @return IPage<AdminGateways>
      */
-    IPage<AdminGateways> findGatewayss(QueryRequest request,AdminGateways adminGateways);
+    IPage<AdminGateways> findGatewayss(QueryRequest request, AdminGateways adminGateways);
+
     /**
      * 查找不同类型的信息
+     *
      * @param request
      * @param adminGateways
      * @return
@@ -36,6 +38,7 @@ public interface IGatewaysAdminService extends IService<AdminGateways> {
     IPage<AdminGateways> queryGateways(QueryRequest request, AdminGateways adminGateways);
 
     boolean completelyDeleteGateway(String id);
+
     public boolean restoreGateways(String id);
 
 

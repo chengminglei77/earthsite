@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 /**
- *  Mapper
+ * Mapper
  *
  * @author xpu
  * @date 2020-12-11 13:23:59

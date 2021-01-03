@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public interface DtuSensorAdminMapper extends BaseMapper<AdminDtuSensor> {
     IPage<AdminDtuSensor> selectCheckInfos(Page page, @Param("dtuId") String dtuId);
 
-    IPage<AdminDtuSensor> selDtuInfo(Page page,@Param("sensorId") String sensorId);
+    IPage<AdminDtuSensor> selDtuInfo(Page page, @Param("sensorId") String sensorId);
+
     IPage<AdminDtuSensor> querySensorsInfo(Page page);
 }

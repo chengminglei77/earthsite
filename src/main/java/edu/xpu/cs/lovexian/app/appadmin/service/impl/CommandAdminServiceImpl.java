@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author xpu
  * @date 2020-09-21 19:42:21
@@ -47,14 +47,13 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }*/
 
-      if(adminCommandInfo.getSendTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getSendTimeFrom()) &&adminCommandInfo.getSendTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getSendTimeTo())){
-           queryWrapper.lambda().between(AdminCommandInfo::getSendTime,adminCommandInfo.getSendTimeFrom(),adminCommandInfo.getSendTimeTo());
-       }
+        if (adminCommandInfo.getSendTimeFrom() != null && StringUtils.isNotBlank(adminCommandInfo.getSendTimeFrom()) && adminCommandInfo.getSendTimeTo() != null && StringUtils.isNotBlank(adminCommandInfo.getSendTimeTo())) {
+            queryWrapper.lambda().between(AdminCommandInfo::getSendTime, adminCommandInfo.getSendTimeFrom(), adminCommandInfo.getSendTimeTo());
+        }
 
         Page<AdminCommandInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
-
 
 
     @Override
@@ -70,6 +69,7 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
 
     /**
      * 分页查找和所有的搜索
+     *
      * @param request
      * @param adminCommandInfo
      * @return
@@ -86,8 +86,8 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         if (adminCommandInfo.getSendTime() != null) {
             queryWrapper.lambda().eq(AdminCommandInfo::getSendTime, adminCommandInfo.getSendTime());
         }
-        if(adminCommandInfo.getSendTimeFrom()!=null&&StringUtils.isNotBlank(adminCommandInfo.getSendTimeFrom()) &&adminCommandInfo.getSendTimeTo()!=null&&StringUtils.isNotBlank(adminCommandInfo.getSendTimeTo())){
-            queryWrapper.lambda().between(AdminCommandInfo::getSendTime,adminCommandInfo.getSendTimeFrom(),adminCommandInfo.getSendTimeTo());
+        if (adminCommandInfo.getSendTimeFrom() != null && StringUtils.isNotBlank(adminCommandInfo.getSendTimeFrom()) && adminCommandInfo.getSendTimeTo() != null && StringUtils.isNotBlank(adminCommandInfo.getSendTimeTo())) {
+            queryWrapper.lambda().between(AdminCommandInfo::getSendTime, adminCommandInfo.getSendTimeFrom(), adminCommandInfo.getSendTimeTo());
         }
         if (adminCommandInfo.getStatus() != null) {
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
@@ -107,8 +107,8 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
     }
 
     @Override
-    public AdminCommandInfo findCommand(AdminCommandInfo adminCommandInfo){
-        AdminCommandInfo coms= commandInfoAdminMapper.selCommandInfo(adminCommandInfo.getDeviceID());
+    public AdminCommandInfo findCommand(AdminCommandInfo adminCommandInfo) {
+        AdminCommandInfo coms = commandInfoAdminMapper.selCommandInfo(adminCommandInfo.getDeviceID());
         System.out.println(coms.getCommand());
         return coms;
     }

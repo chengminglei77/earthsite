@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author xpu
  * @date 2020-09-21 19:42:21
@@ -42,14 +42,13 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
             queryWrapper.lambda().eq(AdminAlarmInfo::getStatus, adminAlarmInfo.getStatus());
         }
 
-        if(adminAlarmInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeFrom()) &&adminAlarmInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeTo())){
-            queryWrapper.lambda().between(AdminAlarmInfo::getAlarmTime,adminAlarmInfo.getCreateTimeFrom(),adminAlarmInfo.getCreateTimeTo());
+        if (adminAlarmInfo.getCreateTimeFrom() != null && StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeFrom()) && adminAlarmInfo.getCreateTimeTo() != null && StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeTo())) {
+            queryWrapper.lambda().between(AdminAlarmInfo::getAlarmTime, adminAlarmInfo.getCreateTimeFrom(), adminAlarmInfo.getCreateTimeTo());
         }
 
         Page<AdminAlarmInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
-
 
 
     @Override
@@ -65,6 +64,7 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
 
     /**
      * 分页查找和所有的搜索
+     *
      * @param request
      * @param adminAlarmInfo
      * @return
@@ -75,11 +75,11 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
 
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
-        if (adminAlarmInfo.getAlarmTime()!=null) {
+        if (adminAlarmInfo.getAlarmTime() != null) {
             queryWrapper.lambda().like(AdminAlarmInfo::getAlarmTime, adminAlarmInfo.getAlarmTime());
         }
-        if(adminAlarmInfo.getCreateTimeFrom()!=null&&StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeFrom()) &&adminAlarmInfo.getCreateTimeTo()!=null&&StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeTo())){
-            queryWrapper.lambda().between(AdminAlarmInfo::getAlarmTime,adminAlarmInfo.getCreateTimeFrom(),adminAlarmInfo.getCreateTimeTo());
+        if (adminAlarmInfo.getCreateTimeFrom() != null && StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeFrom()) && adminAlarmInfo.getCreateTimeTo() != null && StringUtils.isNotBlank(adminAlarmInfo.getCreateTimeTo())) {
+            queryWrapper.lambda().between(AdminAlarmInfo::getAlarmTime, adminAlarmInfo.getCreateTimeFrom(), adminAlarmInfo.getCreateTimeTo());
         }
 
         if (adminAlarmInfo.getStatus() != null) {
@@ -107,6 +107,7 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
         updateWrapper.lambda().eq(AdminAlarmInfo::getId, id).set(AdminAlarmInfo::getDeleteState, 1);
         return this.update(updateWrapper);
     }
+
     @Override
     public boolean restoreAlarms(String id) {
         UpdateWrapper<AdminAlarmInfo> updateWrapper = new UpdateWrapper<>();
@@ -114,6 +115,7 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
         updateWrapper.lambda().eq(AdminAlarmInfo::getId, id).set(AdminAlarmInfo::getDeleteState, 0);
         return this.update(updateWrapper);
     }
+
     @Override
     public boolean completelyDeletealarmInfo(String id) {
         UpdateWrapper<AdminAlarmInfo> updateWrapper = new UpdateWrapper<>();

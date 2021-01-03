@@ -38,8 +38,8 @@ public class LawerInfoAdminController extends BaseController {
     private String message;
     @Autowired
     private ILawerInfoAdminService lawerInfoAdminService;
-   
-    
+
+
     @GetMapping("list")
     public EarthSiteResponse lawerInfoList(QueryRequest request, AdminLawerInfo adminLawerInfo) {
         Map<String, Object> dataTable = getDataTable(this.lawerInfoAdminService.findLawerInfos(request, adminLawerInfo));
@@ -48,7 +48,7 @@ public class LawerInfoAdminController extends BaseController {
 
 
     @PostMapping("saveOrUpdate")
-    public EarthSiteResponse addOrUpdateLawerInfo (AdminLawerInfo adminLawerInfo){
+    public EarthSiteResponse addOrUpdateLawerInfo(AdminLawerInfo adminLawerInfo) {
         System.out.println("=========================进入lawer添加功能========================");
         String currentUserName = getCurrentUser();
         Date date = new Date();
@@ -69,7 +69,7 @@ public class LawerInfoAdminController extends BaseController {
             System.out.println("这是保存草稿的方法");
         } else if (adminLawerInfo.getCheckState().equals(Constant.CheckStateEnum.uncheck.getCode())) {
             //发布审核
-           
+
         }
         return actOper && actCheckOper ? EarthSiteResponse.SUCCESS()
                 : EarthSiteResponse.SUCCESS().message(adminLawerInfo.getCheckState().equals(Constant.CheckStateEnum.draft.getCode())
@@ -78,17 +78,18 @@ public class LawerInfoAdminController extends BaseController {
     }
 
     @DeleteMapping("deleteById")
-    public EarthSiteResponse deleteLawerInfo(String id){
-        Map<String,Object> map=new HashMap<>();
-        map.put("lawer_id",id);
-        if(lawerInfoAdminService.deleteLawerInfo(id)){
-           return EarthSiteResponse.SUCCESS().message("删除成功");
+    public EarthSiteResponse deleteLawerInfo(String id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("lawer_id", id);
+        if (lawerInfoAdminService.deleteLawerInfo(id)) {
+            return EarthSiteResponse.SUCCESS().message("删除成功");
         }
         return EarthSiteResponse.FAIL().message("删除失败");
     }
 
     /**
      * 查找不同类别的信息
+     *
      * @param request
      * @param adminLawerInfo
      * @return
@@ -96,17 +97,18 @@ public class LawerInfoAdminController extends BaseController {
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminLawerInfo adminLawerInfo) {
         IPage<AdminLawerInfo> lawerInfos = lawerInfoAdminService.findLawerInfosByTypeId(request, adminLawerInfo);
-        lawerInfos.getRecords().forEach((data)->{
+        lawerInfos.getRecords().forEach((data) -> {
             String dateFormat = DateUtil.getDateFormat(data.getWorkTime(), DateUtil.YMD);
-            data.setWorkTime(DateUtil.StrToDate(dateFormat,DateUtil.YMD));
+            data.setWorkTime(DateUtil.StrToDate(dateFormat, DateUtil.YMD));
         });
         Map<String, Object> dataTable = getDataTable(lawerInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
-  
+
 
     /**
      * 搜索相关信息
+     *
      * @param request
      * @param adminLawerInfo
      * @return
@@ -121,24 +123,25 @@ public class LawerInfoAdminController extends BaseController {
 
     /**
      * 更新信息的展示状态
+     *
      * @return
      */
     @Log("更新爱公平的置顶和展示状态")
     @PostMapping("updateLawer")
-    public EarthSiteResponse updateIsShow(AdminLawerInfo lawerInfo){
-        Boolean result=lawerInfoAdminService.updateById(lawerInfo);
+    public EarthSiteResponse updateIsShow(AdminLawerInfo lawerInfo) {
+        Boolean result = lawerInfoAdminService.updateById(lawerInfo);
         return result ? EarthSiteResponse.SUCCESS()
-                :EarthSiteResponse.FAIL();
+                : EarthSiteResponse.FAIL();
     }
 
     @DeleteMapping("BatchDelete/{actionIds}")
     public EarthSiteResponse deleteBatchLawer(@NotBlank(message = "{required}") @PathVariable String actionIds)
             throws EarthSiteException {
-        try{
-            String ids[]=actionIds.split(StringPool.COMMA);
-            Arrays.stream(ids).forEach(id->this.lawerInfoAdminService.deleteBatchLawer(id));
-           
-        }catch (Exception e){
+        try {
+            String ids[] = actionIds.split(StringPool.COMMA);
+            Arrays.stream(ids).forEach(id -> this.lawerInfoAdminService.deleteBatchLawer(id));
+
+        } catch (Exception e) {
             message = "批量删除用户失败";
             log.error(message, e);
             throw new EarthSiteException(message);

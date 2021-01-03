@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author xpu
  * @date 2020-09-21 16:34:55
@@ -42,7 +42,7 @@ public class AdminDtuSensor implements Serializable {
     传感器个数
      */
     @TableField("Sensor_Number")
-    private  int sensorNumber;
+    private int sensorNumber;
 
     /*
     传感器上传的时间

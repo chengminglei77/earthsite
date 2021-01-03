@@ -51,7 +51,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
             if (h.equals("A1")) {
                 String ACK = message.substring(12, 14);
                 if (ACK.equals("01"))
-                    log.info("成功");
+                    log.info("失败");
                 if (ACK.equals("02"))
                     log.info("CRC校验失败");
                 if (ACK.equals("00")) {

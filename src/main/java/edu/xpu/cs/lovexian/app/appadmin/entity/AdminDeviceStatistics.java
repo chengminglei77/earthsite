@@ -40,7 +40,7 @@ public class AdminDeviceStatistics {
     private int infoTotal;
 
     /**
-     *    设备型号
+     * 设备型号
      */
     @TableField("setting_id")
     private String settingId;

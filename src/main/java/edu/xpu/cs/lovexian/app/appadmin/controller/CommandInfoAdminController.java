@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- *  Controller
+ * Controller
  *
  * @author xpu
  * @date 2020-09-21 19:42:21
@@ -44,17 +44,19 @@ public class CommandInfoAdminController extends BaseController {
     //显示出列表++++查询
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminCommandInfo adminCommandInfo) {
-        IPage<AdminCommandInfo> commandInfos =commandInfoAdminService.findCommandInfosByTypeId(request, adminCommandInfo);
+        IPage<AdminCommandInfo> commandInfos = commandInfoAdminService.findCommandInfosByTypeId(request, adminCommandInfo);
         Map<String, Object> dataTable = getDataTable(commandInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
+
     @PostMapping("saveOrUpdate")
-    public EarthSiteResponse addOrUpdateCommands (AdminCommandInfo adminCommandInfo){
-        adminCommandInfo.setSendTime(new Date());//网关的部署时间
-        adminCommandInfo.setStatus(0);//将初始的网关删除状态自动设置为0
+    public EarthSiteResponse addOrUpdateCommands(AdminCommandInfo adminCommandInfo) {
+        adminCommandInfo.setSendTime(new Date());
+        adminCommandInfo.setStatus(0);
         boolean actOper = commandInfoAdminService.saveOrUpdate(adminCommandInfo);
         return EarthSiteResponse.SUCCESS().data(actOper);
     }
+
     /**
      * 搜索(查询)dtu相关信息
      *

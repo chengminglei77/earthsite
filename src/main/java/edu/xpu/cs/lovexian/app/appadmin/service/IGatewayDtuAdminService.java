@@ -7,7 +7,7 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 
 /**
- *  Service接口
+ * Service接口
  *
  * @author xpu
  * @date 2020-09-01 21:51:18
@@ -17,7 +17,7 @@ public interface IGatewayDtuAdminService extends IService<AdminGatewayDtu> {
     /**
      * 查询（分页）
      *
-     * @param request QueryRequest
+     * @param request         QueryRequest
      * @param adminGatewayDtu adminGatewayDtu
      * @return IPage<AdminGatewayDtu>
      */
@@ -27,9 +27,9 @@ public interface IGatewayDtuAdminService extends IService<AdminGatewayDtu> {
 
     boolean updateGatewayDtu(AdminGatewayDtu adminGatewayDtu);
 
-    IPage<AdminGatewayDtu> getGatewayDtu(QueryRequest request,String gateId);
+    IPage<AdminGatewayDtu> getGatewayDtu(QueryRequest request, String gateId);
 
-    IPage<AdminGatewayDtu> findDtusNotInGatewayDtu(QueryRequest queryRequest,String dtuId);
+    IPage<AdminGatewayDtu> findDtusNotInGatewayDtu(QueryRequest queryRequest, String dtuId);
 
 
     //List<AdminGatewayDtu> getGatewayDtu(int currPage, int pageSize);

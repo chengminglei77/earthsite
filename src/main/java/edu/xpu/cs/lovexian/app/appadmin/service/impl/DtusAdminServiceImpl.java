@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author xpu
  * @date 2020-09-01 21:29:32
@@ -39,6 +39,7 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
 
     /**
      * 删除和查找操作放在一个实现方法上
+     *
      * @param request
      * @param adminDtus
      * @return
@@ -65,12 +66,12 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
             queryWrapper.lambda().eq(AdminDtus::getStatus,adminDtus.getStatus());
         }*/
 
-        if (adminDtus.getDelState() != null){
-            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState()).orderByDesc(AdminDtus::getCreatedAt);
-        }else{
+        if (adminDtus.getDelState() != null) {
+            queryWrapper.lambda().eq(AdminDtus::getDelState, adminDtus.getDelState()).orderByDesc(AdminDtus::getCreatedAt);
+        } else {
             adminDtus.setDelState(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态
-            System.out.println("查询为数据的标志delstate=="+adminDtus.getDelState());
-            queryWrapper.lambda().eq(AdminDtus::getDelState,adminDtus.getDelState()).orderByDesc(AdminDtus::getCreatedAt);
+            System.out.println("查询为数据的标志delstate==" + adminDtus.getDelState());
+            queryWrapper.lambda().eq(AdminDtus::getDelState, adminDtus.getDelState()).orderByDesc(AdminDtus::getCreatedAt);
         }
         Page<AdminDtus> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
@@ -82,7 +83,7 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
     public boolean deleteDtus(String id) {
         UpdateWrapper<AdminDtus> updateWrapper = new UpdateWrapper<>();
         //删除操作实际上做的是将status设置为1,从而不是真正意义上的在数据库删除,只是不在前端界面显示而已
-        updateWrapper.lambda().eq(AdminDtus::getId,id).set(AdminDtus::getDelState,1);
+        updateWrapper.lambda().eq(AdminDtus::getId, id).set(AdminDtus::getDelState, 1);
         return this.update(updateWrapper);
     }
 
@@ -99,11 +100,11 @@ public class DtusAdminServiceImpl extends ServiceImpl<DtusAdminMapper, AdminDtus
     public IPage<AdminDtus> queryDtuInfo(QueryRequest request, AdminDtus adminDtus) {
         QueryWrapper<AdminDtus> queryWrapper = new QueryWrapper<>();
         //查询对应字段dtuInfo
-        if (adminDtus.getDtuName()!=null){
-            queryWrapper.lambda().eq(AdminDtus::getDtuName,adminDtus.getDtuName());
+        if (adminDtus.getDtuName() != null) {
+            queryWrapper.lambda().eq(AdminDtus::getDtuName, adminDtus.getDtuName());
         }
-        Page<AdminDtus> adminDtusPage = new Page<>(request.getPageNum(),request.getPageSize());
-        return this.page(adminDtusPage,queryWrapper);
+        Page<AdminDtus> adminDtusPage = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.page(adminDtusPage, queryWrapper);
     }
 
 

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- *  Controller
+ * Controller
  *
  * @author xpu
  * @date 2020-09-01 21:51:18
@@ -35,14 +35,14 @@ public class GatewayDtuAdminController extends BaseController {
 
 
     @GetMapping("list")
-    public EarthSiteResponse gatewayDtuList(QueryRequest request, AdminGatewayDtu adminGatewayDtu){
+    public EarthSiteResponse gatewayDtuList(QueryRequest request, AdminGatewayDtu adminGatewayDtu) {
         Map<String, Object> dataTable = getDataTable(this.gatewayDtuAdminService.findGatewayDtus(request, adminGatewayDtu));
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 
     //info类专用，其他类删除
     @PostMapping("saveOrUpdate")
-    public EarthSiteResponse addOrUpdateGatewayDtu (AdminGatewayDtu adminGatewayDtu){
+    public EarthSiteResponse addOrUpdateGatewayDtu(AdminGatewayDtu adminGatewayDtu) {
         System.out.println("=========================进入gatewayDtu添加功能========================");
         String currentUserName = getCurrentUser();
         if (StringUtils.isEmpty(adminGatewayDtu.getDtuId())) {
@@ -60,7 +60,7 @@ public class GatewayDtuAdminController extends BaseController {
     //@Log("网关管理:显示未删除的的信息")
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminGatewayDtu adminGatewayDtu) {
-        IPage<AdminGatewayDtu> gatewaydtuInfos =gatewayDtuAdminService.findGatewayDtuByTypeId(request, adminGatewayDtu);
+        IPage<AdminGatewayDtu> gatewaydtuInfos = gatewayDtuAdminService.findGatewayDtuByTypeId(request, adminGatewayDtu);
         Map<String, Object> dataTable = getDataTable(gatewaydtuInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
@@ -69,8 +69,8 @@ public class GatewayDtuAdminController extends BaseController {
     @Log("多表联查，查询dtu的信息")
     //@ResponseBody
     @GetMapping("gatewayDtu")
-    public EarthSiteResponse getGatewayDtu(QueryRequest request, String gateId){
-        Map<String, Object> dataTable = getDataTable(this.gatewayDtuAdminService.getGatewayDtu(request,gateId));
+    public EarthSiteResponse getGatewayDtu(QueryRequest request, String gateId) {
+        Map<String, Object> dataTable = getDataTable(this.gatewayDtuAdminService.getGatewayDtu(request, gateId));
         return EarthSiteResponse.SUCCESS().data(dataTable);
 
     }
@@ -83,12 +83,12 @@ public class GatewayDtuAdminController extends BaseController {
     }*/
     @Log("关联DTU")
     @GetMapping("findDtusNotInGatewayDtu")
-    public EarthSiteResponse findDtusNotInGatewayDtu(QueryRequest request, String dtuId){
+    public EarthSiteResponse findDtusNotInGatewayDtu(QueryRequest request, String dtuId) {
         QueryRequest queryRequest = new QueryRequest();
         queryRequest.setPageNum(1);
         queryRequest.setPageSize(100);
-        IPage<AdminGatewayDtu> dtusNotInGatewayDtu = gatewayDtuAdminService.findDtusNotInGatewayDtu(queryRequest,dtuId);
+        IPage<AdminGatewayDtu> dtusNotInGatewayDtu = gatewayDtuAdminService.findDtusNotInGatewayDtu(queryRequest, dtuId);
         Map<String, Object> dataTable = getDataTable(dtusNotInGatewayDtu);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
-    }
+}

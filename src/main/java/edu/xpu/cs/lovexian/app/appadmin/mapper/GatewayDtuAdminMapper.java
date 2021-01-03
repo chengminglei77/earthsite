@@ -10,7 +10,7 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.stereotype.Component;
 
 /**
- *  Mapper
+ * Mapper
  *
  * @author xpu
  * @date 2020-09-01 21:51:18
@@ -23,9 +23,9 @@ public interface GatewayDtuAdminMapper extends BaseMapper<AdminGatewayDtu> {
 
     IPage<AdminGatewayDtu> queryGatewayDtuinfo(Page page, @Param("adminGatewayDtu") AdminGatewayDtu adminGatewayDtu);
 
-    IPage<AdminGatewayDtu> selectGatewayDtu(Page page,@Param("gateId") String gateId);
+    IPage<AdminGatewayDtu> selectGatewayDtu(Page page, @Param("gateId") String gateId);
 
-    IPage<AdminGatewayDtu> selectDtusNotInGatewayDtu(Page page,@Param("dtuId") String dtuId);
+    IPage<AdminGatewayDtu> selectDtusNotInGatewayDtu(Page page, @Param("dtuId") String dtuId);
 
     String selectGatewaySettingId(String settingId);
     //List<AdminGatewayDtu> selectGatewayDtu();

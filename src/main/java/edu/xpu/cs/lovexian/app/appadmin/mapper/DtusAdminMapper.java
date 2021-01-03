@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- *  Mapper
+ * Mapper
  *
  * @author xpu
  * @date 2020-09-01 21:29:32
@@ -24,6 +24,7 @@ public interface DtusAdminMapper extends BaseMapper<AdminDtus> {
     IPage<AdminDtus> selectAll(Page page, @Param("adminDtus") AdminDtus adminDtus);
 
     IPage<AdminDtus> queryDtuInfo(Page page, @Param("adminDtus") AdminDtus adminDtus);
+
     IPage<AdminDtus> selectDtuId(Page page, @Param("dtuId") String dtuId);
 
 
