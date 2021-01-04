@@ -57,7 +57,6 @@ public class CommandInfoAdminController extends BaseController {
         }
         adminCommandInfo.setSendTime(new Date());
         adminCommandInfo.setStatus(0);
-        //adminCommandInfo.setDeviceID(SettingID);
         boolean actOper = commandInfoAdminService.saveOrUpdate(adminCommandInfo);
         return EarthSiteResponse.SUCCESS().data(actOper);
     }

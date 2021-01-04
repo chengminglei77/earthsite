@@ -69,8 +69,8 @@ public class DtuAlarmTime {
                 adminAlarmInfo.setId(theId);
                 adminAlarmInfo.setDeviceId(sensorId);
                 adminAlarmInfo.setAlarmTime(currentDate);
-                adminAlarmInfo.setAlarmInfo("传感器"+sensorId+"超过"+samplingFrequency+"分钟未收到数据");
-                adminAlarmInfo.setAlarmReason(sensorId+"最后一次收到数据的时间是："+currentTime);
+                adminAlarmInfo.setAlarmInfo("传感器数据丢失");
+                adminAlarmInfo.setAlarmReason("传感器"+sensorId+"上次采集时间为："+currentTime);
                 adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//未删除状态
                 alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
             }
