@@ -41,27 +41,35 @@ public class PerformInstrution {
 
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
 
-    public void performA6(String message){
+    public void performA4(String Message){
+
+    }
+    public void performA5(String Message){
+
+    }
+    public void performA6(String Message){
         Date coltTime = new Date();
         //java.sql.Date colTime = new java.sql.Date(new java.util.Date().getTime());
-        String deviceId = message.substring(12, 14);
-        String sensorsType[] = InstructionUtil.getSensorType(message);
-        String sensorsAddr = message.substring(16, 20);
+        String deviceId = Message.substring(12, 14);
+        String sensorsType[] = InstructionUtil.getSensorType(Message);
+        String sensorsAddr = Message.substring(16, 20);
 
-        double [] averageSpeed = WindSpeedUtils.windSpeed(message);
-        String sensorId[] = getSensorSettingId(message);
-        String [] windDirection = WindSpeedUtils.windDirection(message);
-        double [] humidity = HumidityUtils.humidityDecode(message);
-        String [] id = {"1344101086971305986","1344101086971305987"};
+        double [] averageSpeed = WindSpeedUtils.windSpeed(Message);
+        String sensorId[] = getSensorSettingId(Message);
+        String [] windDirection = WindSpeedUtils.windDirection(Message);
+        double [] humidity = HumidityUtils.humidityDecode(Message);
+        String [] id = new String[2];
+        for (int i=0;i<id.length;i++){
+            id[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
+        }
         if (sensorsType[0].equals("风速传感器")) {
             for (int i=0;i<averageSpeed.length;i++){
                 influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(averageSpeed[i]*100)/100);
             }
             for (int i=0;i<averageSpeed.length;i++){
                 LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                lambdaUpdateWrapper.eq(AdminCollectData::getId,id[i])
+                lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,id[i])
                         .set(AdminCollectData::getSensorType, sensorsType[0])
-                        .set(AdminCollectData::getSensorId,sensorId[0]+"0"+i)
                         .set(AdminCollectData::getSensorValue, (double) Math.round(averageSpeed[i]*100)/100)
                         .set(AdminCollectData::getSensorParam,windDirection[i])
                         .set(AdminCollectData::getColTime, coltTime);
@@ -73,9 +81,28 @@ public class PerformInstrution {
                 influxDBContoller.insertOneToInflux(sensorId[0],sensorsType[0],(double) Math.round(humidity[i]*100)/100);
             }
         }
-//        String[] sensorSettingId = getSensorSettingId(message);
-//        deviceStatisticsAdminService.insertDeviceStatistic(message, sensorSettingId[0]);
-
+        //插入到A6_data
+        java.sql.Date time = new java.sql.Date(new java.util.Date().getTime());
+        String[] sensorType = InstructionUtil.getSensorType(Message);
+        //插入到mysql数据库表A6_data
+        AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
+        adminUnresovledData.setData(Message);
+        adminUnresovledData.setSensorType(sensorType[0]);
+        adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message));
+        adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
+        adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
+        adminUnresovledData.setColTime(time);
+        String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
+        if (frameNum == null){
+            System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
+        }else {
+            if (frameNum.equals(InstructionUtil.getFrameNum(Message))){
+                System.out.println("数据重复，舍去");
+            }else {
+                System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
+                unresovledDataMapper.insert(adminUnresovledData);
+            }
+        }
     }
 
     public void performA7(String Message) {
@@ -108,9 +135,20 @@ public class PerformInstrution {
         String settingId = getDtuOrGatewaySettingId(deviceId);
         adminUnresovledData1.setColTime(time);
         adminUnresovledData1.setSettingID(settingId);
-        unresovledDataMapper.insert(adminUnresovledData1);
+
+        String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
+        if (frameNum == null){
+            System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
+        }else {
+            if (frameNum.equals(InstructionUtil.getFrameNum(Message))){
+                System.out.println("数据重复，舍去");
+            }else {
+                System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
+                unresovledDataMapper.insert(adminUnresovledData1);
+            }
+        }
         //插入数据统计中
-        //deviceStatisticsAdminService.insertDeviceStatistic(Message.toString(), settingId);
+        deviceStatisticsAdminService.insertDeviceStatistic(Message.toString(), settingId);
     }
 
     public void performA9(String Message) {

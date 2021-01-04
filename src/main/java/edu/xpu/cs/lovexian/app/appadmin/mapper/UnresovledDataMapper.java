@@ -16,7 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 @DS("slave")
 public interface UnresovledDataMapper extends BaseMapper<AdminUnresovledData> {
-    //把int改成long
+    @Select("SELECT frame_num FROM A6_data WHERE instruction_type = #{instruction_type,jdbcType=VARCHAR} ORDER BY id DESC LIMIT 0,1")
+    String checkFrameNum(String instruction_type);
+
     int getCount(@Param("settingId") String settingId);
     String getMessage(@Param("settingId") String settingId);
 }
