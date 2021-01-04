@@ -39,23 +39,10 @@ public class CmdstatisticsAdminController extends BaseController {
     @Log("网关管理:显示未删除的的信息")
     @GetMapping("listByTypeId")
     public EarthSiteResponse getAllinfoByTypeId(QueryRequest request, AdminUnresovledData adminUnresovledData) {
-        IPage<AdminUnresovledData> gatewayInfos = cmdstatisticsAdminService.findCmdsByTypeId(request, adminUnresovledData);
-        System.out.println(gatewayInfos);
-        Map<String, Object> dataTable = getDataTable(gatewayInfos);
+        IPage<AdminUnresovledData> cmdInfos = cmdstatisticsAdminService.findCmdsByTypeId(request, adminUnresovledData);
+        System.out.println(cmdInfos);
+        Map<String, Object> dataTable = getDataTable(cmdInfos);
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
-    /**
-     * 搜索相关信息
-     *
-     * @param request
-     * @param adminUnresovledData
-     * @return
-     */
-    @Log("网关管理:查询相关信息")
-    @GetMapping("querycmds")
-    public EarthSiteResponse querycmds(QueryRequest request, AdminUnresovledData adminUnresovledData) {
-        IPage<AdminUnresovledData> cmds = cmdstatisticsAdminService.queryCmds(request, adminUnresovledData);
-        Map<String, Object> dataTable = getDataTable(cmds);
-        return EarthSiteResponse.SUCCESS().data(dataTable);
-    }
+
 }
