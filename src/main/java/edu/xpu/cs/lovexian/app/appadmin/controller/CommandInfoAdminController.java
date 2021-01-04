@@ -51,8 +51,13 @@ public class CommandInfoAdminController extends BaseController {
 
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateCommands(AdminCommandInfo adminCommandInfo) {
+        String SettingID;
+        if (adminCommandInfo.getDeviceID().equals("02")) {
+            //SettingID = adminCommandInfo.;
+        }
         adminCommandInfo.setSendTime(new Date());
         adminCommandInfo.setStatus(0);
+        //adminCommandInfo.setDeviceID(SettingID);
         boolean actOper = commandInfoAdminService.saveOrUpdate(adminCommandInfo);
         return EarthSiteResponse.SUCCESS().data(actOper);
     }
