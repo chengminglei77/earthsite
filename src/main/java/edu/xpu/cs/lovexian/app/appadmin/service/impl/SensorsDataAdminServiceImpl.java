@@ -13,6 +13,7 @@ import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsDataAdminService;
 
+import edu.xpu.cs.lovexian.app.appadmin.utils.ACKCheck;
 import edu.xpu.cs.lovexian.common.utils.WindSpeedUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +45,19 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
     @Autowired
     DecodeDataMapper decodeDataMapper;
 
+    //ACKCheck ackCheck=new ACKCheck();
+    @Autowired
+    ACKCheck ackCheck;
+
     @Override
     public void setSensorAddrAndType(String message) {
+        ackCheck.judgeIfTheSameCommand(message);
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             if (h.equals("A1")) {
                 String ACK = message.substring(12, 14);
                 if (ACK.equals("01"))
-                    log.info("失败");
+                    log.info("成功");
                 if (ACK.equals("02"))
                     log.info("CRC校验失败");
                 if (ACK.equals("00")) {
@@ -67,6 +73,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
 
     @Override
     public void reportSensorAddrAndTypeAndNum(String message) {
+        ackCheck.judgeIfTheSameCommand(message);
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             if (h.equals("A2")) {
@@ -109,6 +116,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
 
     @Override
     public void deleteSensor(String message) {
+        ackCheck.judgeIfTheSameCommand(message);
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             if (h.equals("A3")) {
@@ -130,6 +138,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
 
     @Override
     public void setSensorReportTime(String message) {
+        ackCheck.judgeIfTheSameCommand(message);
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             /**
@@ -159,6 +168,7 @@ public class SensorsDataAdminServiceImpl extends ServiceImpl<SensorsDataAdminMap
 
     @Override
     public void getSensorReportTime(String message) {
+        ackCheck.judgeIfTheSameCommand(message);
         if (message.startsWith("AA55") && message.endsWith("55AA")) {
             String h = message.substring(6, 8);
             /**

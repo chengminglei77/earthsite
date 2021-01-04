@@ -8,6 +8,7 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -28,4 +29,10 @@ public interface CommandInfoAdminMapper extends BaseMapper<AdminCommandInfo> {
 
     @Select("select command from cmd_history")
     List<String> selectAllCommand();
+
+
+    @Select("select id from cmd_history where command=#{command,jdbcType=VARCHAR} and send_time=(select max(send_time) from cmd_history where command=#{command,jdbcType=VARCHAR})")
+    String checkIfExist(@Param("command") String command);
+    
+
 }

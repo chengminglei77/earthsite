@@ -9,6 +9,7 @@ import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtuSensor;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SensorsAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.ISensorsAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.utils.ACKCheck;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,8 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
 
     @Autowired
     private SensorsAdminMapper sensorsAdminMapper;
+    @Autowired
+    ACKCheck ackCheck;
 
     @Override
     public IPage<AdminSensors> findSensorss(QueryRequest request, AdminSensors adminSensors) {
@@ -131,6 +134,7 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
     //查询传感器数据(地址)指令
     @Override
     public String querySensorAdress(String message) {
+        ackCheck.judgeIfTheSameCommand(message);
         //String message="AA550A0700010255AA";
         //StringBuilder sb = new StringBuilder();
         int i;
@@ -148,12 +152,14 @@ public class SensorsAdminServiceImpl extends ServiceImpl<SensorsAdminMapper, Adm
                 } else return "null";
             }
             if (h.equals("A8")) {
+
                 String s = message.substring(12, 14);
                 String s1 = message.substring(14, 18);
                 String sub = new BigInteger(s1, 16).toString(10);
                 return s + sub;
             }
             if (h.equals("A9")) {
+                ackCheck.judgeIfTheSameCommand(message);
                 String s = message.substring(12, 14);
                 if (s.equals("01"))
                     return "失败";
