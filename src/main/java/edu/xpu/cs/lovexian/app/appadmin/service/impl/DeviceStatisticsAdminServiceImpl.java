@@ -66,7 +66,7 @@ public class DeviceStatisticsAdminServiceImpl extends ServiceImpl<DeviceStatisti
             adminDeviceStatistics = initializeDeviceStatistic(adminDeviceStatistics, settingId);
             DeviceStatisticsAdminMapper.insert(adminDeviceStatistics);
         }
-        Date createTime = DeviceStatisticsAdminMapper.selectCreateTime(InstructionUtil.getTbale(settingId), InstructionUtil.getColum(settingId), settingId);
+    /*    Date createTime = DeviceStatisticsAdminMapper.selectCreateTime(InstructionUtil.getTbale(settingId), InstructionUtil.getColum(settingId), settingId);
          {
             {
                 switch (InstructionUtil.getType(settingId)) {
@@ -83,7 +83,7 @@ public class DeviceStatisticsAdminServiceImpl extends ServiceImpl<DeviceStatisti
             }
 
             saveStatistic(adminDeviceStatistics,settingId);
-        }
+        }*/
 
     }
 
