@@ -20,5 +20,5 @@ public interface UnresovledDataMapper extends BaseMapper<AdminUnresovledData> {
     String checkFrameNum(String instruction_type);
 
     int getCount(@Param("settingId") String settingId);
-
+    String getMessage(@Param("settingId") String settingId);
 }

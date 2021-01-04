@@ -31,6 +31,7 @@ import java.util.List;
  * @author czy
  * @create 2020-10-25-19:47
  */
+
 @Service("deviceStatisticsAdminService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeviceStatisticsAdminServiceImpl extends ServiceImpl<DeviceStatisticsAdminMapper, AdminDeviceStatistics> implements IDeviceStatisticsAdminService {

@@ -31,13 +31,26 @@
         select *
         from eq_statistics
         <where>
-            eq_statistics.setting_id like #{settingId}
+            eq_statistics.setting_id   like CONCAT(CONCAT('%',#{settingId}),'%') AND
         </where>
     </select>
     <select id="selectgatewayDtus" resultMap="deviceStatistics">
         select * from eq_statistics
         <where>
-            eq_statistics.setting_id like CONCAT('%',#{setting},'%')
+            eq_statistics.setting_id like CONCAT(CONCAT('%',#{settingId}),'%')
+        </where>
+    </select>
+    <select id="getByType" resultMap="deviceStatistics">
+        select * from eq_statistics
+        <where>
+            eq_statistics.type=#{type}
+        </where>
+    </select>
+    <select id="getDtuSensors" resultMap="deviceStatistics">
+        select *
+        from eq_statistics
+        <where>
+            eq_statistics.type=#{type} and eq_statistics.setting_id like  '%${settingId}%'
         </where>
     </select>
 </mapper>
