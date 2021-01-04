@@ -1,13 +1,15 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminUnresovledData;
+import edu.xpu.cs.lovexian.app.appadmin.entity.*;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.GatewayDtuAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
+import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
 import edu.xpu.cs.lovexian.common.utils.HumidityUtils;
 import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
 import edu.xpu.cs.lovexian.common.utils.TransferVUtil;
@@ -18,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.print.Book;
 import java.util.Date;
 
 
@@ -38,6 +41,10 @@ public class PerformInstrution {
     GatewayDtuAdminMapper gatewayDtuAdminMapper;
     @Autowired
     CollectDataAdminMapper collectDataAdminMapper;
+    @Autowired
+    IDtusAdminService dtusAdminService;
+    @Autowired
+    IGatewaysAdminService gatewaysAdminService;
 
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
 
@@ -119,7 +126,7 @@ public class PerformInstrution {
     }
 
     public void performA8(String Message) {
-        log.info("A8:" + Message);
+        String settingId;
         String deviceId = InstructionUtil.getDeviceId(Message);
         String change = InstructionUtil.getChange(Message);
         float batteryLevel = InstructionUtil.getBatteryLevel(Message);
@@ -129,16 +136,20 @@ public class PerformInstrution {
         influxDBContoller.insertTwoToInfluxDB(deviceId, change, batteryPercentage);
         //插入到MYSQL数据库A6_data
         Date time = new Date();
-        AdminUnresovledData adminUnresovledData1 = new AdminUnresovledData();
-        adminUnresovledData1.setData(Message.toString());
-        adminUnresovledData1.setSensorType(deviceId);
-        adminUnresovledData1.setSensorData(String.valueOf(batteryLevel));
-        adminUnresovledData1.setInstructionType("A8");
-        String settingId = getDtuOrGatewaySettingId(deviceId);
-        adminUnresovledData1.setColTime(time);
-        adminUnresovledData1.setSettingID(settingId);
-
+        AdminUnresovledData dtuData = setData(Message, deviceId, String.valueOf(batteryLevel), "A8",time);
+        AdminUnresovledData gatewayData = setData(Message, deviceId, String.valueOf(batteryLevel), "A8",time);
+        if(judgeDtuOrGateway(deviceId)==1) {
+            settingId = getGatewaySettingId(deviceId);
+            gatewayData.setSettingID(settingId);
+            updateGateways(settingId,Percentage);
+        }
+        //UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(conditionBook);
+        settingId=getDtuSettingId(deviceId);
+        dtuData.setSettingID(settingId);
+        updateGateways(settingId,Percentage);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
+        dtuData.setFrameNum(frameNum);
+        gatewayData.setFrameNum(frameNum);
         if (frameNum == null){
             System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
         }else {
@@ -146,11 +157,13 @@ public class PerformInstrution {
                 System.out.println("数据重复，舍去");
             }else {
                 System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
-                unresovledDataMapper.insert(adminUnresovledData1);
+                if(judgeDtuOrGateway(deviceId)!=1)
+                unresovledDataMapper.insert(dtuData);
+                unresovledDataMapper.insert(gatewayData);
             }
         }
         //插入数据统计中
-        deviceStatisticsAdminService.insertDeviceStatistic(Message.toString(), settingId);
+        deviceStatisticsAdminService.insertDeviceStatistic(Message, settingId);
     }
 
     public void performA9(String Message) {
@@ -167,22 +180,56 @@ public class PerformInstrution {
         log.info("数据终端设备电量为：" + batteryLevel);
         log.info("数据终端设备的充电状态为：" + change);
     }
-
+    public AdminUnresovledData setData(String message,String deviceId,String BatteryLevel,String InstructionType,Date date)
+    {AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
+        adminUnresovledData.setData(message);
+        adminUnresovledData.setSensorType(deviceId);
+        adminUnresovledData.setSensorData(BatteryLevel);
+        adminUnresovledData.setInstructionType(InstructionType);
+        adminUnresovledData.setColTime(date);
+        return adminUnresovledData;
+    }
+    /**
+     * 判断是网关还是DTU，为网关则返回1
+     * @param deviceId
+     * @return
+     */
+    public int judgeDtuOrGateway(String deviceId)
+    {if (deviceId.equals("01")||deviceId.equals("FF"))//增加ff作为第二个网关地址
+        return 1;
+    return 0;
+    }
+    public void updateDtus(String settingId,float Percentage )
+    {
+        AdminDtus Dtu=new AdminDtus();
+        Dtu.setDtuId(settingId);
+        UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(Dtu);
+        updateWrapper.set("elec_charge",String.valueOf(Percentage));
+        dtusAdminService.update(updateWrapper);
+    }
+    public void updateGateways(String settingId,float Percentage)
+    {
+        AdminGateways gateway=new AdminGateways();
+        gateway.setGateId(settingId);
+        UpdateWrapper<AdminGateways> updateWrapper=new UpdateWrapper(gateway);
+        updateWrapper.set("elec_charge",String.valueOf(Percentage));
+        gatewaysAdminService.update(updateWrapper);
+    }
     /**
      * 获取DTU或者Gateway的SettingId
      *
      * @param deviceId
      * @return
      */
-    public String getDtuOrGatewaySettingId(String deviceId) {
-
-        if (deviceId.equals("01"))//增加ff作为第二个网关地址
+    public String getGatewaySettingId(String deviceId) {
             return "GW" + deviceId;
+    }
+    public String getDtuSettingId(String deviceId)
+    {
         String settingId = "DTU" + deviceId;
         String gatewaySettingId = gatewayDtuAdminMapper.selectGatewaySettingId(settingId);
-        return gatewaySettingId + settingId;//判空
+        return gatewaySettingId + settingId;
     }
-
     /**
      * 获取传感器的SettingId
      *
@@ -191,17 +238,17 @@ public class PerformInstrution {
      */
     public  String[] getSensorSettingId(String message) {
         String deviceId = InstructionUtil.getDeviceId(message);
-        String dtuOrGatewaySettingId = getDtuOrGatewaySettingId(deviceId);
+        String dtuSettingId = getDtuSettingId(deviceId);
         String[] sensorType = InstructionUtil.getSensorType(message);
         String[] sensorAddress = InstructionUtil.getSensorAddress(message);
         String[] sensorSettingId = new String[sensorType.length];
         for (int i = 0; i < sensorType.length; i++) {
             if (sensorType[i].equals("湿度传感器"))
-                sensorSettingId[i] = "ST" + dtuOrGatewaySettingId + "01" + sensorAddress[i];
+                sensorSettingId[i] = "SD" + dtuSettingId + "01" + sensorAddress[i];
             if (sensorType[i].equals("风速传感器"))
-                sensorSettingId[i] = "FS" + dtuOrGatewaySettingId + "02" + sensorAddress[i];
+                sensorSettingId[i] = "FS" + dtuSettingId + "02" + sensorAddress[i];
             if (sensorType[i].equals("水盐传感器"))
-                sensorSettingId[i] = "WS" + dtuOrGatewaySettingId + "03" + sensorAddress[i];
+                sensorSettingId[i] = "WS" + dtuSettingId + "03" + sensorAddress[i];
         }
         return sensorSettingId;
     }

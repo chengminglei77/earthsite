@@ -31,7 +31,7 @@ public class DeviceStatistics {
     private UnresovledDataMapper unresovledDataMapper;
     @Autowired
     private IDeviceStatisticsAdminService deviceStatisticsAdminService;
-    @Scheduled(cron="0 0/10 * * * ?")
+    @Scheduled(cron="0 0/30 * * * ?")
     public void timmer() throws ParseException
     { DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         Date date = new Date();
