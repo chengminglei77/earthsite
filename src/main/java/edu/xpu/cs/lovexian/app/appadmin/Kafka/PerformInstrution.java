@@ -49,11 +49,7 @@ public class PerformInstrution {
     }
     public void performA6(String Message){
         Date coltTime = new Date();
-        //java.sql.Date colTime = new java.sql.Date(new java.util.Date().getTime());
-        String deviceId = Message.substring(12, 14);
         String sensorsType[] = InstructionUtil.getSensorType(Message);
-        String sensorsAddr = Message.substring(16, 20);
-
         double [] averageSpeed = WindSpeedUtils.windSpeed(Message);
         String sensorId[] = getSensorSettingId(Message);
         String [] windDirection = WindSpeedUtils.windDirection(Message);
@@ -70,15 +66,14 @@ public class PerformInstrution {
                 LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                 lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,id[i])
                         .set(AdminCollectData::getSensorType, sensorsType[0])
-                        .set(AdminCollectData::getSensorValue, (double) Math.round(averageSpeed[i]*100)/100)
+                        .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s")
                         .set(AdminCollectData::getSensorParam,windDirection[i])
                         .set(AdminCollectData::getColTime, coltTime);
                 Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
             }
-
         }else {
             for (int i=0;i<humidity.length;i++){
-                influxDBContoller.insertOneToInflux(sensorId[0],sensorsType[0],(double) Math.round(humidity[i]*100)/100);
+                influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(humidity[i]*100)/100);
             }
         }
         //插入到A6_data
@@ -141,6 +136,7 @@ public class PerformInstrution {
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
         if (frameNum == null){
             System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
+            unresovledDataMapper.insert(adminUnresovledData1);
         }else {
             if (frameNum.equals(InstructionUtil.getFrameNum(Message))){
                 System.out.println("数据重复，舍去");
