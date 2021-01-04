@@ -95,6 +95,7 @@ public class PerformInstrution {
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
         if (frameNum == null){
             System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
+            unresovledDataMapper.insert(adminUnresovledData);
         }else {
             if (frameNum.equals(InstructionUtil.getFrameNum(Message))){
                 System.out.println("数据重复，舍去");
