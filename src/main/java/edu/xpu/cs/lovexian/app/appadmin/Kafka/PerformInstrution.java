@@ -106,6 +106,7 @@ public class PerformInstrution {
         }
     }
 
+
     public void performA7(String Message) {
         String ack = InstructionUtil.getAck(Message);
         String deviceId = InstructionUtil.getDeviceId(Message);
