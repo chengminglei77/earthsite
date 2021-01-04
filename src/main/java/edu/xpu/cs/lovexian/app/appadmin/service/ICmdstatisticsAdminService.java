@@ -11,7 +11,4 @@ public interface ICmdstatisticsAdminService extends IService<AdminUnresovledData
 
     IPage<AdminUnresovledData> findCmdsByTypeId(QueryRequest request, AdminUnresovledData adminAlarmInfo);
 
-    IPage<AdminUnresovledData> queryCmds(QueryRequest request, AdminUnresovledData adminAlarmInfo);
-
-
 }
