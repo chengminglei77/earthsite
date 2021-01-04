@@ -270,8 +270,7 @@ public class InstructionUtil {
     }
 
     public static int getDataLength(String message) {
-        int length = message.substring(0, message.length() - 4).length();
-        return length;
+        return message.length();
     }
 
     public static int getDayEqDuration(Date fromDate, Date toDate) {

@@ -76,12 +76,16 @@ public class KafkaReceiver {
                         break;
                     case "A7": {
                         performInstrution.performA7(Message);
+                        break;
                     }
                     case "A8": {
+                        System.out.println("执行A8");
                         performInstrution.performA8(Message);
+                        break;
                     }
                     case "A9": {
                       performInstrution.performA9(Message);
+                        break;
                     }
                     default:
                         System.out.println(message);

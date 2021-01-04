@@ -106,6 +106,7 @@ public class PerformInstrution {
                 unresovledDataMapper.insert(adminUnresovledData);
             }
         }
+        deviceStatisticsAdminService.insertDeviceStatistic(Message, sensorId[0]);
     }
 
 
@@ -141,23 +142,23 @@ public class PerformInstrution {
         //UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(conditionBook);
         settingId=getDtuSettingId(deviceId);
         dtuData.setSettingID(settingId);
-        updateGateways(settingId,Percentage);
+        updateDtus(settingId,Percentage);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
         dtuData.setFrameNum(frameNum);
         gatewayData.setFrameNum(frameNum);
         if (frameNum == null){
             System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
-            if(judgeDtuOrGateway(deviceId)!=1)
-                unresovledDataMapper.insert(dtuData);
+            if(judgeDtuOrGateway(deviceId)==1)
             unresovledDataMapper.insert(gatewayData);
+            unresovledDataMapper.insert(dtuData);
         }else {
             if (frameNum.equals(InstructionUtil.getFrameNum(Message))){
                 System.out.println("数据重复，舍去");
             }else {
                 System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
-                if(judgeDtuOrGateway(deviceId)!=1)
+                if(judgeDtuOrGateway(deviceId)==1)
+                    unresovledDataMapper.insert(gatewayData);
                 unresovledDataMapper.insert(dtuData);
-                unresovledDataMapper.insert(gatewayData);
             }
         }
         //插入数据统计中
