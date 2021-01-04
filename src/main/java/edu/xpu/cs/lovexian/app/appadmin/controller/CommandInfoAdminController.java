@@ -1,6 +1,7 @@
 package edu.xpu.cs.lovexian.app.appadmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import edu.xpu.cs.lovexian.app.appadmin.Kafka.PerformInstrution;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import edu.xpu.cs.lovexian.app.appadmin.service.ICommandInfoAdminService;
 import edu.xpu.cs.lovexian.common.annotation.Log;
@@ -51,8 +52,11 @@ public class CommandInfoAdminController extends BaseController {
 
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateCommands(AdminCommandInfo adminCommandInfo) {
+        PerformInstrution performInstrution = new PerformInstrution();
+        String SettingID = performInstrution.getDtuOrGatewaySettingId(adminCommandInfo.getDeviceID());
         adminCommandInfo.setSendTime(new Date());
-        adminCommandInfo.setStatus(0);
+        adminCommandInfo.setStatus("00");
+        adminCommandInfo.setDeviceID(SettingID);
         boolean actOper = commandInfoAdminService.saveOrUpdate(adminCommandInfo);
         return EarthSiteResponse.SUCCESS().data(actOper);
     }

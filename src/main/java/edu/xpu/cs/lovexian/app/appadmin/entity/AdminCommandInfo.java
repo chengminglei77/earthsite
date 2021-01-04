@@ -34,7 +34,7 @@ public class AdminCommandInfo {
      * 处理状态
      */
     @TableField("cmd_status")
-    private Integer status;
+    private String status;
 
     /**
      * 发送时间

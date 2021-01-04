@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCommandInfo;
 import io.lettuce.core.dynamic.annotation.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Mapper
@@ -22,4 +25,7 @@ public interface CommandInfoAdminMapper extends BaseMapper<AdminCommandInfo> {
     AdminCommandInfo selCommandInfo(String deviceID);
 
     IPage<AdminCommandInfo> queryCommandInfo(Page page, @Param("adminCommandInfo") AdminCommandInfo adminCommandInfo);
+
+    @Select("select command from cmd_history")
+    List<String> selectAllCommand();
 }

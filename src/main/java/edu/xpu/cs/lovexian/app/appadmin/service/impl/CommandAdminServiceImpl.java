@@ -78,11 +78,9 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
     public IPage<AdminCommandInfo> findCommandInfosByTypeId(QueryRequest request, AdminCommandInfo adminCommandInfo) {
         QueryWrapper<AdminCommandInfo> queryWrapper = new QueryWrapper<>();
 
-       /* if (StringUtils.isNotBlank(adminCommandInfo.getCommand())) {
+        if (StringUtils.isNotBlank(adminCommandInfo.getCommand())) {
             queryWrapper.lambda().like(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
-        }*/
-        //如果DtuName不为空,那么就模糊查询:dtu名
-        //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
+        }
         if (adminCommandInfo.getSendTime() != null) {
             queryWrapper.lambda().eq(AdminCommandInfo::getSendTime, adminCommandInfo.getSendTime());
         }
@@ -92,9 +90,7 @@ public class CommandAdminServiceImpl extends ServiceImpl<CommandInfoAdminMapper,
         if (adminCommandInfo.getStatus() != null) {
             queryWrapper.lambda().eq(AdminCommandInfo::getStatus, adminCommandInfo.getStatus());
         }
-        if (adminCommandInfo.getCommand() != null) {
-            queryWrapper.lambda().eq(AdminCommandInfo::getCommand, adminCommandInfo.getCommand());
-        }
+        queryWrapper.lambda().orderByDesc(AdminCommandInfo::getSendTime);
 
         /*else {
             adminCommandInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//0为未删除状态

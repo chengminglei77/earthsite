@@ -39,7 +39,7 @@ public class AdminCollectData {
      * 传感器数据
      */
     @TableId(value = "sensor_value", type = IdType.ID_WORKER_STR)
-    private double sensorValue;
+    private String sensorValue;
 
     /**
      * 传感器数据

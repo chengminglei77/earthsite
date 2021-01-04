@@ -9,6 +9,8 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Mapper
  *
@@ -22,8 +24,8 @@ public interface GatewaysAdminMapper extends BaseMapper<AdminGateways> {
 
     IPage<AdminGateways> queryGatewaysInfo(Page page, @Param("adminGateways") AdminGateways adminGateways);
 
-    @Select("select elc_status,elec_charge,created_at,gate_id from gateways order by id desc limit 1")
-    AdminGateways selectThelastGatewayInfo();
+    @Select("select elc_status,elec_charge,created_at,gate_id from gateways")
+    List<AdminGateways> selectThelastGatewayInfo();
 
 
 
