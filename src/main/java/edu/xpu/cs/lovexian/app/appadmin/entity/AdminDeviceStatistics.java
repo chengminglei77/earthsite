@@ -25,19 +25,19 @@ public class AdminDeviceStatistics {
      * 工作时间
      */
     @TableField("eq_duration")
-    private int eqDuration;
+    private String eqDuration;
 
     /**
      * 信息包总量大小，每个信息包大小是固定的
      */
     @TableField("packet_size")
-    private int packetSize;
+    private String packetSize;
 
     /**
      * 信息总量
      */
     @TableField("info_total")
-    private int infoTotal;
+    private String infoTotal;
 
     /**
      * 设备型号

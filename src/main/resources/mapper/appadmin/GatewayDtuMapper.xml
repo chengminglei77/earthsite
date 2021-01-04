@@ -60,7 +60,7 @@
     <select id="selectGatewaySettingId" resultType="String">
         select gateway_id
         from gateway_dtu
-        where dtu_id like #{settingId}
+        where dtu_id  like CONCAT(CONCAT('%',#{settingId}),'%')
     </select>
 
 </mapper>

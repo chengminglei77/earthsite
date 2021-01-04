@@ -8,4 +8,12 @@
             A6_data.setting_id=#{settingId}
         </where>
     </select>
+    <select id="getMessage" resultType="String">
+        select data
+        From A6_data
+        <where>
+            A6_data.setting_id=#{settingId}
+            limit 1
+        </where>
+    </select>
 </mapper>
