@@ -5,6 +5,7 @@ package edu.xpu.cs.lovexian.app.appadmin.utils;
  * User: 马鹏森 2020-09-25-8:46
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.influxdb.BatchOptions;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -14,6 +15,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Resource
 public class InfluxDbConnection {
     private String userName;
@@ -118,6 +120,7 @@ public class InfluxDbConnection {
             builder.time(time, timeUnit);
         }
         System.out.println(("influxDB insert data:" + builder.build().toString()));
+        log.info(("influxDB insert data:" + builder.build().toString()));
         influxdb.write(database, retentionPolicy, builder.build());
     }
 
