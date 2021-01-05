@@ -61,28 +61,58 @@ public class PerformInstrution {
         String sensorId[] = getSensorSettingId(Message);
         String [] windDirection = WindSpeedUtils.windDirection(Message);
         double [] humidity = HumidityUtils.humidityDecode(Message);
-        String [] id = new String[2];
-        for (int i=0;i<id.length;i++){
-            id[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
-        }
+        String []windSpeedId = new String[2];//风速的id
+        String [] humidityId = new String[3];//湿度的id
+        String [] humidityName = {"30cm","15cm","5cm"};
         if (sensorsType[0].equals("风速传感器")) {
             for (int i=0;i<averageSpeed.length;i++){
+                windSpeedId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
+                //在这里判断是否为空
+                if (windSpeedId[i] == null){
+                    AdminCollectData adminCollectData = new AdminCollectData();
+                    adminCollectData.setSensorId(sensorId+"0"+i);
+                    adminCollectData.setSensorType(sensorsType[0]);
+                    adminCollectData.setSensorValue(String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s");
+                    adminCollectData.setSensorParam(windDirection[i]);
+                    adminCollectData.setColTime(coltTime);
+                    collectDataAdminMapper.insert(adminCollectData);
+                }else {
+                    LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                    lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,windSpeedId[i])
+                            .set(AdminCollectData::getSensorType, sensorsType[0])
+                            .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s")
+                            .set(AdminCollectData::getSensorParam,windDirection[i])
+                            .set(AdminCollectData::getColTime, coltTime);
+                    Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+                }
                 influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(averageSpeed[i]*100)/100);
             }
-            for (int i=0;i<averageSpeed.length;i++){
-                LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,id[i])
-                        .set(AdminCollectData::getSensorType, sensorsType[0])
-                        .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s")
-                        .set(AdminCollectData::getSensorParam,windDirection[i])
-                        .set(AdminCollectData::getColTime, coltTime);
-                Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
-            }
-        }else {
+        }
+        if (sensorsType[0].equals("湿度传感器")){
             for (int i=0;i<humidity.length;i++){
+                humidityId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
+                //这里判断是否为空，为空执行插入
+               if (humidityId[i] == null){
+                   AdminCollectData adminCollectData = new AdminCollectData();
+                   adminCollectData.setSensorId(sensorId[0]+"0"+i);
+                   adminCollectData.setSensorType(sensorsType[0]);
+                   adminCollectData.setSensorValue( String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H");
+                   adminCollectData.setSensorParam(humidityName[i]);
+                   adminCollectData.setColTime(coltTime);
+                   collectDataAdminMapper.insert(adminCollectData);
+               }else {
+                   LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                   lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,humidityId[i])
+                           .set(AdminCollectData::getSensorType, sensorsType[0])
+                           .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H")
+                           .set(AdminCollectData::getSensorParam,humidityName[i])
+                           .set(AdminCollectData::getColTime, coltTime);
+                   Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+               }
                 influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(humidity[i]*100)/100);
             }
         }
+
         //插入到A6_data
         java.sql.Date time = new java.sql.Date(new java.util.Date().getTime());
         String[] sensorType = InstructionUtil.getSensorType(Message);
@@ -92,6 +122,7 @@ public class PerformInstrution {
         adminUnresovledData.setSensorType(sensorType[0]);
         adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message));
         adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
+        adminUnresovledData.setSettingID(sensorId[0]);
         adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
         adminUnresovledData.setColTime(time);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
