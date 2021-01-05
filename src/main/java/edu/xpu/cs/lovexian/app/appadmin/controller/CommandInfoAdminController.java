@@ -53,7 +53,7 @@ public class CommandInfoAdminController extends BaseController {
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateCommands(AdminCommandInfo adminCommandInfo) {
         PerformInstrution performInstrution = new PerformInstrution();
-        String SettingID = performInstrution.getDtuOrGatewaySettingId(adminCommandInfo.getDeviceID());
+        String SettingID = performInstrution.getDtuSettingId(adminCommandInfo.getDeviceID());
         adminCommandInfo.setSendTime(new Date());
         adminCommandInfo.setStatus("00");
         adminCommandInfo.setDeviceID(SettingID);
