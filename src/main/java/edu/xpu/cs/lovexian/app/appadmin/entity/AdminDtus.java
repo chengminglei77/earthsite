@@ -31,12 +31,6 @@ public class AdminDtus {
     private String dtuId;
 
     /**
-     * 设备地址
-     */
-    @TableField("dtu_address")
-    private String dtuAddress;
-
-    /**
      * dtu名
      */
     @TableField("dtu_name")
