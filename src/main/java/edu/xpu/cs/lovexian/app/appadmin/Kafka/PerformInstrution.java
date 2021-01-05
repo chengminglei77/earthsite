@@ -144,8 +144,9 @@ public class PerformInstrution {
         dtuData.setSettingID(settingId);
         updateDtus(settingId,Percentage);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
-        dtuData.setFrameNum(frameNum);
-        gatewayData.setFrameNum(frameNum);
+
+        dtuData.setFrameNum(InstructionUtil.getFrameNum(Message));
+        gatewayData.setFrameNum(InstructionUtil.getFrameNum(Message));
         if (frameNum == null){
             System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
             if(judgeDtuOrGateway(deviceId)==1)
