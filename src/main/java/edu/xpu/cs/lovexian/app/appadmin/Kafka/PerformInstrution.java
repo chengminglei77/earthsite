@@ -135,6 +135,7 @@ public class PerformInstrution {
         }else {
             adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
         }
+
         adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
         adminUnresovledData.setSettingID(sensorId[0]);
         adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
