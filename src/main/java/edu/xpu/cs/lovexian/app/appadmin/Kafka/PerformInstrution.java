@@ -175,7 +175,6 @@ public class PerformInstrution {
         dtuData.setSettingID(settingId);
         updateDtus(settingId,Percentage);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
-
         dtuData.setFrameNum(InstructionUtil.getFrameNum(Message));
         gatewayData.setFrameNum(InstructionUtil.getFrameNum(Message));
         if (frameNum == null){
