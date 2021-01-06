@@ -116,11 +116,18 @@ public class PerformInstrution {
         //插入到A6_data
         java.sql.Date time = new java.sql.Date(new java.util.Date().getTime());
         String[] sensorType = InstructionUtil.getSensorType(Message);
+        String averageWindSpeed[] = new String[2];
+        String direction[] = new String[2];
+        String shidu[] = new String[3];
         //插入到mysql数据库表A6_data
         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
         adminUnresovledData.setData(Message);
         adminUnresovledData.setSensorType(sensorType[0]);
-        adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message));
+        if (sensorsType[0].equals("风速传感器")){
+            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+averageWindSpeed[0]+direction[0]+averageWindSpeed[1]+direction[1]);
+        }else {
+            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
+        }
         adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
         adminUnresovledData.setSettingID(sensorId[0]);
         adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
