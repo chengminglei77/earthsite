@@ -51,7 +51,7 @@ public class DtuAlarmElec {
             Date currentDate = new Date(System.currentTimeMillis());
 
             String theId = alarmInfoAdminMapper.checkIfExist(dtuId);
-            if (stateOfCharge==0&&currentCapacity<=30&&currentCapacity>=10){
+            if (stateOfCharge==0&&currentCapacity<=30&&currentCapacity>10){
                 adminAlarmInfo.setId(theId);
                 adminAlarmInfo.setDeviceId(dtuId);
                 adminAlarmInfo.setAlarmTime(currentDate);

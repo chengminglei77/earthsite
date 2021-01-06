@@ -234,7 +234,7 @@ public class PerformInstrution {
         AdminDtus Dtu=new AdminDtus();
         Dtu.setDtuId(settingId);
         UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(Dtu);
-        updateWrapper.set("elec_charge",String.valueOf(Percentage));
+        updateWrapper.set("elec_charge",String.valueOf((int)Percentage));
         dtusAdminService.update(updateWrapper);
     }
     public void updateGateways(String settingId,float Percentage)
@@ -242,7 +242,7 @@ public class PerformInstrution {
         AdminGateways gateway=new AdminGateways();
         gateway.setGateId(settingId);
         UpdateWrapper<AdminGateways> updateWrapper=new UpdateWrapper(gateway);
-        updateWrapper.set("elec_charge",String.valueOf(Percentage));
+        updateWrapper.set("elec_charge",String.valueOf((int)Percentage));
         gatewaysAdminService.update(updateWrapper);
     }
     /**
