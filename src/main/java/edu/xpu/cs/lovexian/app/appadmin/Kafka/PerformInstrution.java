@@ -135,17 +135,17 @@ public class PerformInstrution {
         }else {
             adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
         }
-
         adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
         adminUnresovledData.setSettingID(sensorId[0]);
         adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
         adminUnresovledData.setColTime(time);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
+        String type = unresovledDataMapper.checkSensorType(InstructionUtil.getInstructionType(Message));
         if (frameNum == null){
             System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
             unresovledDataMapper.insert(adminUnresovledData);
         }else {
-            if (frameNum.equals(InstructionUtil.getFrameNum(Message))){
+            if (frameNum.equals(InstructionUtil.getFrameNum(Message)) && type.equals(sensorsType[0])){
                 System.out.println("数据重复，舍去");
             }else {
                 System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
