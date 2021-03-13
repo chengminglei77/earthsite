@@ -22,9 +22,9 @@ public class CRCUtil {
      * @param buffer
      * @return
      */
-    /*public static int CRC16_CCITT(byte[] buffer) {
+    public static int CRC16_CCITT(byte[] buffer) {
         int wCRCin = 0x0000;
-        int wCPoly = 0x1021;
+        int wCPoly = 0x8408;
         for (byte b : buffer) {
             wCRCin ^= ((int) b & 0x00ff);
             for (int j = 0; j < 8; j++) {
@@ -47,7 +47,7 @@ public class CRCUtil {
 
 
 
-        *//*数组中元素位置进行交换*//*
+        /*数组中元素位置进行交换*/
 
         static void reverse(int a[], int n)
 
@@ -67,8 +67,6 @@ public class CRCUtil {
 
 
 
-            *//*printing the reversed array*//*
-
             System.out.println("\n反转数组是:");
 
             for (k = 0; k < n; k++) {
@@ -79,11 +77,11 @@ public class CRCUtil {
 
         }
 
-    }*/
-
+    }
+/*
     public static int CRC16_CCITT_FALSE(byte[] buffer) {
-        int wCRCin = 0xffff;
-        int wCPoly = 0x1021;
+        int wCRCin = 0x0000;
+        int wCPoly = 0x8408;
         for (byte b : buffer) {
             for (int i = 0; i < 8; i++) {
                 boolean bit = ((b >> (7 - i) & 1) == 1);
@@ -95,11 +93,11 @@ public class CRCUtil {
         }
         wCRCin &= 0xffff;
         return wCRCin ^= 0x0000;
-    }
+    }*/
 
     public static void main(String[] args) {
-        byte[] buf = {1,0,1,0,1,0,1,0};//new StringBuilder("AA").reverse().toString().getBytes();
-        System.out.println(Integer.toHexString(CRC16_CCITT_FALSE(buf)).toUpperCase());
+        byte[] buf = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a};//new StringBuilder("AA").reverse().toString().getBytes();
+        System.out.println(Integer.toHexString(CRC16_CCITT(buf)).toUpperCase());
 
     }
 }
