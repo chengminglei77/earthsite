@@ -71,6 +71,13 @@ public class AdminAlarmInfo {
     @TableField("delete_state")
     private Integer deleteState;
 
+
+    @TableField(exist = false)
+    private String sensorId;
+
+    @TableField(exist = false)
+    private String dtuId;
+
     private transient String createTimeFrom;
 
     private transient String createTimeTo;
