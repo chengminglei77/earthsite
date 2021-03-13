@@ -11,4 +11,32 @@
         <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime"/>
         <result column="alarm_reason" jdbcType="VARCHAR" property="alarmReason"/>
     </resultMap>
+
+    <!--<select id="gatewayAlarmInfoHistory" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo">
+        select
+        device_id, alarm_info,alarm_time
+        from
+        alarm_info
+        where
+        device_id = #{gateId}
+    </select>-->
+    <!--<select id="sensorsAlarmInfoHistory" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo">
+        SELECT
+        device_id,alarm_info,alarm_time
+        FROM alarm_info
+        WHERE device_id
+        like
+         CONCAT('%',CONCAT(#{sensorId,jdbcType=VARCHAR},'%'))
+    </select>-->
+    <select id="dtuAlarmInfoHistory" resultType="edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo">
+        select
+        device_id,
+        alarm_info,
+        alarm_time
+        FROM
+        alarm_info
+        WHERE
+        device_id = #{dtuId}
+        ORDER BY alarm_time DESC
+    </select>
 </mapper>

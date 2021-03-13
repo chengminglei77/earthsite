@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -127,6 +128,28 @@ public class AlarmInfoAdminController extends BaseController {
             return EarthSiteResponse.SUCCESS().message("还原成功");
         }
         return EarthSiteResponse.FAIL().message("还原失败");
+    }
+
+    @Log("查询网关的历史报警信息")
+    @GetMapping("gatewayAlarmInfoHistory")
+    public EarthSiteResponse checkGatewayAlarmInfo(QueryRequest request,String gateId){
+        Map<String, Object> dataTable = getDataTable(this.alarmInfoAdminService.gatewayAlarmInfoHistory(request,gateId));
+        return EarthSiteResponse.SUCCESS().data(dataTable);
+    }
+
+    @Log("查询传感器的历史报警信息")
+    @GetMapping("sensorsAlarmInfoHistory")
+    public EarthSiteResponse checkSensorsAlarmInfo(String sensorId){
+        //System.out.println(alarmInfoAdminService.queryById(sensorId));
+        List A =  alarmInfoAdminService.sensorsAlarmInfoHistory(sensorId);
+        return EarthSiteResponse.SUCCESS().data(A);
+    }
+
+    @Log("查询dtu的历史报警信息")
+    @GetMapping("dtuAlarmInfoHistory")
+    public EarthSiteResponse checkDtuAlarmInfo(QueryRequest request,String dtuId){
+        Map<String, Object> dataTable = getDataTable(this.alarmInfoAdminService.dtuAlarmInfoHistory(request,dtuId));
+        return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 
 }

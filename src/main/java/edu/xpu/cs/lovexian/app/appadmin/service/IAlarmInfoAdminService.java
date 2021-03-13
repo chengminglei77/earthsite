@@ -4,7 +4,12 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
+
+import java.util.List;
 
 /**
  * Service接口
@@ -29,9 +34,20 @@ public interface IAlarmInfoAdminService extends IService<AdminAlarmInfo> {
 
     IPage<AdminAlarmInfo> queryAlarmInfos(QueryRequest request, AdminAlarmInfo adminAlarmInfo);
 
+    //查询网关历史报警信息
+    IPage<AdminAlarmInfo> gatewayAlarmInfoHistory(QueryRequest request, String gateId);
+
+    //查询传感器历史报警信息
+    List<AdminAlarmInfo> sensorsAlarmInfoHistory(String sensorId);
+    //IPage<AdminSensors> sensorsAlarmInfoHistory(QueryRequest request, String sensorId);
+
+    //查询dtu历史报警信息
+    IPage<AdminAlarmInfo> dtuAlarmInfoHistory(QueryRequest request, String dtuId);
+
     public IPage<AdminAlarmInfo> findAlarmInfosByTypeId(QueryRequest request, AdminAlarmInfo adminAlarmInfo);
 
     public boolean completelyDeletealarmInfo(String id);
+
 
     public boolean restoreAlarms(String id);
 }

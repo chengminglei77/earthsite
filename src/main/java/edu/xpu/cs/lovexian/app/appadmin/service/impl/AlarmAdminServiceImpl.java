@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu;
+import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.AlarmInfoAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IAlarmInfoAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -15,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Service实现
@@ -61,6 +66,42 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
         Page<AdminAlarmInfo> adminDtusPage = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(adminDtusPage, queryWrapper);
     }
+
+    /**
+     * 查询网关历史报警信息
+     * @param request
+     * @param gateId
+     * @return
+     */
+    @Override
+    public IPage<AdminAlarmInfo> gatewayAlarmInfoHistory(QueryRequest request, String gateId) {
+        Page<AdminAlarmInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return alarmInfoAdminMapper.gatewayAlarmInfoHistory(page,gateId);
+    }
+
+    /**
+     * 查询传感器历史报警信息
+     * @param
+     * @param sensorId
+     * @return
+     */
+    @Override
+    public List<AdminAlarmInfo> sensorsAlarmInfoHistory(String sensorId) {
+        return alarmInfoAdminMapper.sensorsAlarmInfoHistory(sensorId);
+    }
+
+    /**
+     * 查询dtu历史报警信息
+     * @param request
+     * @param dtuId
+     * @return
+     */
+    @Override
+    public IPage<AdminAlarmInfo> dtuAlarmInfoHistory(QueryRequest request, String dtuId) {
+        Page<AdminDtus> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return alarmInfoAdminMapper.dtuAlarmInfoHistory(page,dtuId);
+    }
+
 
     /**
      * 分页查找和所有的搜索
@@ -124,6 +165,4 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
         return true;
 
     }
-
-
 }
