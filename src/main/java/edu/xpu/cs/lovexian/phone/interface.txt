@@ -1,0 +1,7 @@
+
+
+用户登录： localhost:9090/user/login?username=456&password=123 （示例）
+
+用户注册： localhost:9090/user/regist?username=456&password=123 （示例）
+
+数据库表位于 earthsitebac.user里
