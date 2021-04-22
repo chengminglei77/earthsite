@@ -110,7 +110,8 @@ earthsite:
 
   shiro:
     # 后端免认证接口 url
-    anonUrl: /system/login/login,/system/logout/**,/system/admin/check/**,/api/**,/fileupload/smallfile
+    anonUrl: /system/login/login,/system/logout/**,/system/admin/check/**,/api/**,/fileupload/smallfile,/user/**,/admin/alarmInfoClassify/**
+
     # token有效期，单位秒
     jwtTimeOut: 36000
   swaggerShow:

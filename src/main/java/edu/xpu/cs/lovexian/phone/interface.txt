@@ -1,0 +1,11 @@
+
+登录注册：
+    用户登录： localhost:9090/user/login?username=456&password=123 （示例）
+    用户注册： localhost:9090/user/regist?username=456&password=123 （示例）
+    数据库表位于 earthsitebac.user里
+
+
+报警信息：
+    全部报警信息列表：/admin/alarmInfoClassify/list
+    DTU报警信息列表：/admin/alarmInfoClassify/getAllDTUinfo
+    传感器报警信息列表：/admin/alarmInfoClassify/getAllSensorsinfo
