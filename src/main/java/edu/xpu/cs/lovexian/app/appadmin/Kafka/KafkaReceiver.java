@@ -1,5 +1,6 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminUnresovledData;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @Component
 public class KafkaReceiver {
+
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
     @Autowired
     SensorsDataAdminServiceImpl sensorsDataAdminService;
@@ -37,61 +39,73 @@ public class KafkaReceiver {
     IDeviceStatisticsAdminService deviceStatisticsAdminService;
     @Autowired
     PerformInstrution performInstrution;
+    private  static  Boolean state=false;
+
     @KafkaListener(topics = {"sensorsTopic"})
     public void listen(ConsumerRecord<?, ?> record) {
+      
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
             String command=null;
             try {
                 Object message = kafkaMessage.get();
+                System.out.println("message为"+message.toString());
+                if (message.toString().startsWith("0D0A")&&message.toString().startsWith("0D0A")) {
+                    performInstrution.performCommand(message.toString());
+                }
+else {
+
                 command = message.toString().substring(6, 8);
                 String Message = message.toString();
                 boolean ifTrueMes = Message.startsWith("A");
                 if (ifTrueMes == true) {
-                //插入到mysql数据库表A6_data
-                Date time2 = new java.sql.Date(new java.util.Date().getTime());
-                KafkaReceiveData kafkaReceiveData = new KafkaReceiveData();
-                kafkaReceiveData.setReceiveData((message.toString()));
-                kafkaReceiveData.setColTime(time2);
-                kafkaReceiveDataMapper.insert(kafkaReceiveData);
-                switch (command) {
-                    case "A1":
-                        sensorsDataAdminService.setSensorAddrAndType(message.toString());
-                        break;
-                    case "A2":
-                        sensorsDataAdminService.reportSensorAddrAndTypeAndNum(message.toString());
-                        break;
-                    case "A3":
-                        sensorsDataAdminService.deleteSensor(message.toString());
-                        break;
-                    case "A4":
-                        System.out.println("此处调用方法A4");
-                        break;
-                    case "A5":
-                        System.out.println("此处调用方法A5");
-                        break;
-                    case "A6":
-                        System.out.println("A6:" + message);
-                        performInstrution.performA6(Message);
-                        break;
-                    case "A7": {
-                        performInstrution.performA7(Message);
-                        break;
-                    }
-                    case "A8": {
-                        System.out.println("执行A8");
-                        performInstrution.performA8(Message);
-                        break;
-                    }
-                    case "A9": {
-                      performInstrution.performA9(Message);
-                        break;
-                    }
-                    default:
-                        System.out.println(message);
-                        log.error("传入数据不合法" + message);
-                }
+                    //插入到mysql数据库表A6_data
+                    Date time2 = new java.sql.Date(new java.util.Date().getTime());
+                    KafkaReceiveData kafkaReceiveData = new KafkaReceiveData();
+                    kafkaReceiveData.setReceiveData((message.toString()));
+                    kafkaReceiveData.setColTime(time2);
+                    kafkaReceiveDataMapper.insert(kafkaReceiveData);
+                    switch (command) {
+                        case "A1":
+                            sensorsDataAdminService.setSensorAddrAndType(message.toString());
+                            break;
+                        case "A2":
+                            sensorsDataAdminService.reportSensorAddrAndTypeAndNum(message.toString());
+                            break;
+                        case "A3":
+                            sensorsDataAdminService.deleteSensor(message.toString());
+                            break;
+                        case "A4":
+                            System.out.println("此处调用方法A4");
+                            break;
+                        case "A5":
+                            System.out.println("此处调用方法A5");
+                            break;
+                        case "A6":
+                            System.out.println("A6:" + message);
+                            this.performInstrution.performA6(Message);
+                            break;
+                        case "A7": {
+                            this.performInstrution.performA7(Message);
+                            break;
+                        }
+                        case "A8": {
+                            System.out.println("执行A8");
+                            this.performInstrution.performA8(Message);
+                            break;
+                        }
+                        case "A9": {
+                            this.performInstrution.performA9(Message);
+                            break;
+                        }
+                        default: {
+                            System.out.println(message);
 
+                        }
+
+//                        log.error("传入数据不合法" + message);
+                    }
+                }
             }
             }catch (Exception e){
                 e.printStackTrace();
