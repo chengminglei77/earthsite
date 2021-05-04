@@ -4,16 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.*;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.AlarmInfoAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.GatewayDtuAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
-import edu.xpu.cs.lovexian.common.utils.HumidityUtils;
-import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
-import edu.xpu.cs.lovexian.common.utils.TransferVUtil;
-import edu.xpu.cs.lovexian.common.utils.WindSpeedUtils;
+import edu.xpu.cs.lovexian.common.utils.*;
 import lombok.Data;
 import org.apache.log4j.Logger;
 
@@ -45,6 +43,8 @@ public class PerformInstrution {
     IDtusAdminService dtusAdminService;
     @Autowired
     IGatewaysAdminService gatewaysAdminService;
+    @Autowired
+    AlarmInfoAdminMapper alarmInfoAdminMapper;
 
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
 
@@ -55,13 +55,31 @@ public class PerformInstrution {
 
     }
     public void performA6(String Message){
-        Date coltTime = new Date();
-        String sensorsType[] = InstructionUtil.getSensorType(Message);
-        double [] averageSpeed = WindSpeedUtils.windSpeed(Message);
         String sensorId[] = getSensorSettingId(Message);
+        String checkNum = A6Utils.getCheckNum(Message);
+        Date coltTime = new Date();
+        /*AdminAlarmInfo alarmInfo = new AdminAlarmInfo();
+        alarmInfo.setAlarmTime(coltTime);
+        alarmInfo.setStatus(0);
+        alarmInfo.setDeleteState(0);
+        alarmInfo.setDeviceId(sensorId[0]);
+        if (checkNum.equals("01")){
+            alarmInfo.setAlarmInfo("设备工作状态异常");
+            alarmInfo.setAlarmReason("传感器或者连接线路已经损坏，需要实地抢修");
+        }else {
+            if (checkNum.equals("02")){
+                alarmInfo.setAlarmInfo("02数据异常");
+                alarmInfo.setAlarmReason("传感器在使用过程中可能部分损坏,此时也需要现场检修");
+            }else {
+                System.out.println("未知错误");
+            }
+        }
+        alarmInfoAdminMapper.insert(alarmInfo);*/
+        String []sensorsType = InstructionUtil.getSensorType(Message);
+        double [] averageSpeed = WindSpeedUtils.windSpeed(Message);
         String [] windDirection = WindSpeedUtils.windDirection(Message);
+        String []windSpeedId = new String[1];//风速的id
         double [] humidity = HumidityUtils.humidityDecode(Message);
-        String []windSpeedId = new String[2];//风速的id
         String [] humidityId = new String[3];//湿度的id
         String [] humidityName = {"30cm","15cm","5cm"};
         if (sensorsType[0].equals("风速传感器")) {
@@ -115,23 +133,23 @@ public class PerformInstrution {
 
         //插入到A6_data
         java.sql.Date time = new java.sql.Date(new java.util.Date().getTime());
-        String[] sensorType = InstructionUtil.getSensorType(Message);
-        String averageWindSpeed[] = new String[2];
-        String direction[] = new String[2];
+        String sensorType = A6Utils.getSensorType(Message);
+        String averageWindSpeed[] = new String[1];
+        String direction[] = new String[1];
         String shidu[] = new String[3];
-        for (int i=0;i<averageWindSpeed.length;i++){
-            averageWindSpeed[i] = String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s";
-            direction[i] = windDirection[i];
-        }
-        for (int i=0;i<shidu.length;i++){
-            shidu[i] = String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H";
-        }
+            for (int i=0;i<averageWindSpeed.length;i++){
+                averageWindSpeed[i] = String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s";
+                direction[i] = windDirection[i];
+            }
+            for (int i=0;i<shidu.length;i++){
+                shidu[i] = String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H";
+            }
         //插入到mysql数据库表A6_data
         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
         adminUnresovledData.setData(Message);
-        adminUnresovledData.setSensorType(sensorType[0]);
+        adminUnresovledData.setSensorType(sensorType);
         if (sensorsType[0].equals("风速传感器")){
-            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+averageWindSpeed[0]+direction[0]+averageWindSpeed[1]+direction[1]);
+            adminUnresovledData.setSensorData(A6Utils.getSensorData(Message)+"#"+averageWindSpeed[0]+direction[0]);
         }else {
             adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
         }
@@ -299,10 +317,14 @@ public class PerformInstrution {
     }
 
     public static void main(String[] args) {
-        PerformInstrution performInstrution = new PerformInstrution();
+       /* PerformInstrution performInstrution = new PerformInstrution();
         String[] settingId = performInstrution.getSensorSettingId("AA552AA6001F020200011A004A0000006A016400510150003400E1002B00CB002500C100129DA655AA");
         for (int i = 0; i <settingId.length ; i++) {
             System.out.println(settingId[i]);
-        }
+        }*/
+        //AA55F9A60028010200010F00140000001600420014004B0001A0
+        String test = "AA5573A6001F010200011A005500090033014D003301520047001E0039016300360000010D6C9C55AA0D0AAA5573A6001F010200011A005500090033014D003301520047001E0039016300360000010D6C9C55AA0D0A";//AA5573A6001F010200011A005500090033014D003301520047001E0039016300360000010D6C9C55AA0D0AAA5573A6001F010200011A005500090033014D003301520047001E0039016300360000010D6C9C55AA0D0A
+        PerformInstrution performInstrution = new PerformInstrution();
+        performInstrution.performA6(test);
     }
 }
