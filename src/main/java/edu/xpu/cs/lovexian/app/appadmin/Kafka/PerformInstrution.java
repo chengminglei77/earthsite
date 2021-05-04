@@ -4,16 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.*;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.AtDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.GatewayDtuAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
-import edu.xpu.cs.lovexian.common.utils.HumidityUtils;
-import edu.xpu.cs.lovexian.common.utils.InstructionUtil;
-import edu.xpu.cs.lovexian.common.utils.TransferVUtil;
-import edu.xpu.cs.lovexian.common.utils.WindSpeedUtils;
+import edu.xpu.cs.lovexian.common.utils.*;
 import lombok.Data;
 import org.apache.log4j.Logger;
 
@@ -21,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.print.Book;
+import java.math.BigInteger;
+import java.net.URL;
 import java.util.Date;
 
 
@@ -45,71 +45,80 @@ public class PerformInstrution {
     IDtusAdminService dtusAdminService;
     @Autowired
     IGatewaysAdminService gatewaysAdminService;
+    @Autowired
+    AtDataMapper AtDataMapper;
 
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
-
-    public void performA4(String Message){
+    //从前端传过来这次要下入的命令为"AT...//+++"
+    public static  String ATcommand="";
+    public static void setATcommand(String command)
+    {
+        ATcommand=command;
+    }
+    public void performA4(String Message) {
 
     }
-    public void performA5(String Message){
+
+    public void performA5(String Message) {
 
     }
-    public void performA6(String Message){
+
+    public void performA6(String Message) {
         Date coltTime = new Date();
         String sensorsType[] = InstructionUtil.getSensorType(Message);
-        double [] averageSpeed = WindSpeedUtils.windSpeed(Message);
+        double[] averageSpeed = WindSpeedUtils.windSpeed(Message);
         String sensorId[] = getSensorSettingId(Message);
-        String [] windDirection = WindSpeedUtils.windDirection(Message);
-        double [] humidity = HumidityUtils.humidityDecode(Message);
-        String []windSpeedId = new String[2];//风速的id
-        String [] humidityId = new String[3];//湿度的id
-        String [] humidityName = {"30cm","15cm","5cm"};
+        String[] windDirection = WindSpeedUtils.windDirection(Message);
+        double[] humidity = HumidityUtils.humidityDecode(Message);
+        String[] windSpeedId = new String[2];//风速的id
+        String[] humidityId = new String[3];//湿度的id
+        String[] humidityName = {"30cm", "15cm", "5cm"};
         if (sensorsType[0].equals("风速传感器")) {
-            for (int i=0;i<averageSpeed.length;i++){
-                windSpeedId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
+            for (int i = 0; i < averageSpeed.length; i++) {
+                windSpeedId[i] = collectDataAdminMapper.selectId(sensorId[0] + "0" + i);
                 //在这里判断是否为空
-                if (windSpeedId[i] == null){
+                if (windSpeedId[i] == null) {
                     AdminCollectData adminCollectData = new AdminCollectData();
-                    adminCollectData.setSensorId(sensorId+"0"+i);
+                    adminCollectData.setSensorId(sensorId + "0" + i);
                     adminCollectData.setSensorType(sensorsType[0]);
-                    adminCollectData.setSensorValue(String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s");
+                    adminCollectData.setSensorValue(String.valueOf(((double) Math.round(averageSpeed[i] * 100) / 100)) + "m/s");
                     adminCollectData.setSensorParam(windDirection[i]);
                     adminCollectData.setColTime(coltTime);
                     collectDataAdminMapper.insert(adminCollectData);
-                }else {
+                } else {
                     LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                    lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,windSpeedId[i])
+                    lambdaUpdateWrapper.eq(AdminCollectData::getSensorId, windSpeedId[i])
                             .set(AdminCollectData::getSensorType, sensorsType[0])
-                            .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s")
-                            .set(AdminCollectData::getSensorParam,windDirection[i])
+                            .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(averageSpeed[i] * 100) / 100)) + "m/s")
+                            .set(AdminCollectData::getSensorParam, windDirection[i])
                             .set(AdminCollectData::getColTime, coltTime);
                     Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
                 }
-                influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(averageSpeed[i]*100)/100);
+                influxDBContoller.insertOneToInflux(sensorId[0] + "0" + i, sensorsType[0], (double) Math.round(averageSpeed[i] * 100) / 100);
             }
         }
-        if (sensorsType[0].equals("湿度传感器")){
-            for (int i=0;i<humidity.length;i++){
-                humidityId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
+        if (sensorsType[0].equals("湿度传感器")) {
+            for (int i = 0; i < humidity.length; i++) {
+                humidityId[i] = collectDataAdminMapper.selectId(sensorId[0] + "0" + i);
                 //这里判断是否为空，为空执行插入
-               if (humidityId[i] == null){
-                   AdminCollectData adminCollectData = new AdminCollectData();
-                   adminCollectData.setSensorId(sensorId[0]+"0"+i);
-                   adminCollectData.setSensorType(sensorsType[0]);
-                   adminCollectData.setSensorValue( String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H");
-                   adminCollectData.setSensorParam(humidityName[i]);
-                   adminCollectData.setColTime(coltTime);
-                   collectDataAdminMapper.insert(adminCollectData);
-               }else {
-                   LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                   lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,humidityId[i])
-                           .set(AdminCollectData::getSensorType, sensorsType[0])
-                           .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H")
-                           .set(AdminCollectData::getSensorParam,humidityName[i])
-                           .set(AdminCollectData::getColTime, coltTime);
-                   Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
-               }
-                influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(humidity[i]*100)/100);
+                if (humidityId[i] == null) {
+                    AdminCollectData adminCollectData = new AdminCollectData();
+                    adminCollectData.setSensorId(sensorId[0] + "0" + i);
+                    adminCollectData.setSensorType(sensorsType[0]);
+                    adminCollectData.setSensorValue(String.valueOf(((double) Math.round(humidity[i] * 100) / 100)) + "%H");
+                    adminCollectData.setSensorParam(humidityName[i]);
+                    adminCollectData.setColTime(coltTime);
+                    collectDataAdminMapper.insert(adminCollectData);
+                } else {
+                    LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                    lambdaUpdateWrapper.eq(AdminCollectData::getSensorId, humidityId[i])
+                            .set(AdminCollectData::getSensorType, sensorsType[0])
+                            .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(humidity[i] * 100) / 100)) + "%H")
+                            .set(AdminCollectData::getSensorParam, humidityName[i])
+                            .set(AdminCollectData::getColTime, coltTime);
+                    Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+                }
+                influxDBContoller.insertOneToInflux(sensorId[0] + "0" + i, sensorsType[0], (double) Math.round(humidity[i] * 100) / 100);
             }
         }
 
@@ -119,21 +128,21 @@ public class PerformInstrution {
         String averageWindSpeed[] = new String[2];
         String direction[] = new String[2];
         String shidu[] = new String[3];
-        for (int i=0;i<averageWindSpeed.length;i++){
-            averageWindSpeed[i] = String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s";
+        for (int i = 0; i < averageWindSpeed.length; i++) {
+            averageWindSpeed[i] = String.valueOf(((double) Math.round(averageSpeed[i] * 100) / 100)) + "m/s";
             direction[i] = windDirection[i];
         }
-        for (int i=0;i<shidu.length;i++){
-            shidu[i] = String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H";
+        for (int i = 0; i < shidu.length; i++) {
+            shidu[i] = String.valueOf(((double) Math.round(humidity[i] * 100) / 100)) + "%H";
         }
         //插入到mysql数据库表A6_data
         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
         adminUnresovledData.setData(Message);
         adminUnresovledData.setSensorType(sensorType[0]);
-        if (sensorsType[0].equals("风速传感器")){
-            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+averageWindSpeed[0]+direction[0]+averageWindSpeed[1]+direction[1]);
-        }else {
-            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
+        if (sensorsType[0].equals("风速传感器")) {
+            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message) + "#" + averageWindSpeed[0] + direction[0] + averageWindSpeed[1] + direction[1]);
+        } else {
+            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message) + "#" + shidu[0] + shidu[1] + shidu[2]);
         }
         adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
         adminUnresovledData.setSettingID(sensorId[0]);
@@ -141,18 +150,25 @@ public class PerformInstrution {
         adminUnresovledData.setColTime(time);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
         String type = unresovledDataMapper.checkSensorType(InstructionUtil.getInstructionType(Message));
-        if (frameNum == null){
-            System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
+        if (frameNum == null) {
+            System.out.println("最新的数据为空，执行插入" + InstructionUtil.getFrameNum(Message));
             unresovledDataMapper.insert(adminUnresovledData);
-        }else {
-            if (frameNum.equals(InstructionUtil.getFrameNum(Message)) && type.equals(sensorsType[0])){
+        } else {
+            if (frameNum.equals(InstructionUtil.getFrameNum(Message)) && type.equals(sensorsType[0])) {
                 System.out.println("数据重复，舍去");
-            }else {
-                System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
+            } else {
+                System.out.println("执行插入" + InstructionUtil.getFrameNum(Message));
                 unresovledDataMapper.insert(adminUnresovledData);
             }
         }
         deviceStatisticsAdminService.insertDeviceStatistic(Message, sensorId[0]);
+        //返回给下位机的命令
+        String deviceId = InstructionUtil.getDeviceId(Message);
+        int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA6,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
+        String crcCheckFormat = String.format("%04x", crcCheck);
+        String FrameNum = Message.substring(4, 6);
+        String url="AA55"+FrameNum+"A6"+"0002"+"00"+deviceId+crcCheckFormat+"55AA";
+        sendInstrution(url);
     }
 
 
@@ -175,40 +191,51 @@ public class PerformInstrution {
         int Percentage = TransferVUtil.encrypt(batteryLevel);
         float batteryPercentage = Percentage / 100.0f;
         System.out.println("电量百分比为" + batteryPercentage);
+        //插入到influxDB中
         influxDBContoller.insertTwoToInfluxDB(deviceId, change, batteryPercentage);
         //插入到MYSQL数据库A6_data
         Date time = new Date();
-        AdminUnresovledData dtuData = setData(Message, deviceId, String.valueOf(batteryLevel), "A8",time);
-        AdminUnresovledData gatewayData = setData(Message, deviceId, String.valueOf(batteryLevel), "A8",time);
-        if(judgeDtuOrGateway(deviceId)==1) {
+        //准备两个data，可以插入对应的数据库中
+        AdminUnresovledData dtuData = setData(Message, deviceId, String.valueOf(batteryLevel), "A8", time);
+        AdminUnresovledData gatewayData = setData(Message, deviceId, String.valueOf(batteryLevel), "A8", time);
+        //如果是网关,则更新网关的电量
+        if (judgeDtuOrGateway(deviceId) == 1) {
             settingId = getGatewaySettingId(deviceId);
             gatewayData.setSettingID(settingId);
-            updateGateways(settingId,Percentage);
+            updateGateways(settingId, Percentage);
         }
         //UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(conditionBook);
-        settingId=getDtuSettingId(deviceId);
+        settingId = getDtuSettingId(deviceId);
         dtuData.setSettingID(settingId);
-        updateDtus(settingId,Percentage);
+        //更新dtu的电量（不管是网关还是DTU）
+        updateDtus(settingId, Percentage);
         String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
         dtuData.setFrameNum(InstructionUtil.getFrameNum(Message));
         gatewayData.setFrameNum(InstructionUtil.getFrameNum(Message));
-        if (frameNum == null){
-            System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
-            if(judgeDtuOrGateway(deviceId)==1)
-            unresovledDataMapper.insert(gatewayData);
+        if (frameNum == null) {
+            System.out.println("最新的数据为空，执行插入" + InstructionUtil.getFrameNum(Message));
+            if (judgeDtuOrGateway(deviceId) == 1)
+                unresovledDataMapper.insert(gatewayData);
             unresovledDataMapper.insert(dtuData);
-        }else {
-            if (frameNum.equals(InstructionUtil.getFrameNum(Message))){
+        } else {
+            if (frameNum.equals(InstructionUtil.getFrameNum(Message))) {
                 System.out.println("数据重复，舍去");
-            }else {
-                System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
-                if(judgeDtuOrGateway(deviceId)==1)
+            } else {
+                System.out.println("执行插入" + InstructionUtil.getFrameNum(Message));
+                if (judgeDtuOrGateway(deviceId) == 1)
                     unresovledDataMapper.insert(gatewayData);
                 unresovledDataMapper.insert(dtuData);
             }
         }
         //插入数据统计中
         deviceStatisticsAdminService.insertDeviceStatistic(Message, settingId);
+        //返回给下位机的命令
+        int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
+        String crcCheckFormat = String.format("%04x", crcCheck);
+        String FrameNum = Message.substring(4, 6);
+        String url="AA55"+FrameNum+"A8"+"0002"+"00"+deviceId+crcCheckFormat+"55AA";
+        sendInstrution(url);
+
     }
 
     public void performA9(String Message) {
@@ -225,8 +252,23 @@ public class PerformInstrution {
         log.info("数据终端设备电量为：" + batteryLevel);
         log.info("数据终端设备的充电状态为：" + change);
     }
-    public AdminUnresovledData setData(String message,String deviceId,String BatteryLevel,String InstructionType,Date date)
-    {AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
+
+    //执行网关配置命令
+    public  void performCommand(String message) {
+
+                AdminAtData adminAtData = new AdminAtData();
+                adminAtData.setAt(ATcommand);
+                Date date = new Date();
+                adminAtData.setCreatedTime(date);
+                adminAtData.setData(message);
+                AtDataMapper.insert(adminAtData);
+        System.out.println("插入成功");
+    }
+
+
+
+    public AdminUnresovledData setData(String message, String deviceId, String BatteryLevel, String InstructionType, Date date) {
+        AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
         adminUnresovledData.setData(message);
         adminUnresovledData.setSensorType(deviceId);
         adminUnresovledData.setSensorData(BatteryLevel);
@@ -234,32 +276,35 @@ public class PerformInstrution {
         adminUnresovledData.setColTime(date);
         return adminUnresovledData;
     }
+
     /**
      * 判断是网关还是DTU，为网关则返回1
+     *
      * @param deviceId
      * @return
      */
-    public int judgeDtuOrGateway(String deviceId)
-    {if (deviceId.equals("01")||deviceId.equals("FF"))//增加ff作为第二个网关地址
-        return 1;
-    return 0;
+    public int judgeDtuOrGateway(String deviceId) {
+        if (deviceId.equals("01") || deviceId.equals("FF"))//增加ff作为第二个网关地址
+            return 1;
+        return 0;
     }
-    public void updateDtus(String settingId,float Percentage )
-    {
-        AdminDtus Dtu=new AdminDtus();
+
+    public void updateDtus(String settingId, float Percentage) {
+        AdminDtus Dtu = new AdminDtus();
         Dtu.setDtuId(settingId);
-        UpdateWrapper<AdminDtus> updateWrapper=new UpdateWrapper(Dtu);
-        updateWrapper.set("elec_charge",String.valueOf((int)Percentage));
+        UpdateWrapper<AdminDtus> updateWrapper = new UpdateWrapper(Dtu);
+        updateWrapper.set("elec_charge", String.valueOf((int) Percentage));
         dtusAdminService.update(updateWrapper);
     }
-    public void updateGateways(String settingId,float Percentage)
-    {
-        AdminGateways gateway=new AdminGateways();
+
+    public void updateGateways(String settingId, float Percentage) {
+        AdminGateways gateway = new AdminGateways();
         gateway.setGateId(settingId);
-        UpdateWrapper<AdminGateways> updateWrapper=new UpdateWrapper(gateway);
-        updateWrapper.set("elec_charge",String.valueOf((int)Percentage));
+        UpdateWrapper<AdminGateways> updateWrapper = new UpdateWrapper(gateway);
+        updateWrapper.set("elec_charge", String.valueOf((int) Percentage));
         gatewaysAdminService.update(updateWrapper);
     }
+
     /**
      * 获取DTU或者Gateway的SettingId
      *
@@ -267,21 +312,22 @@ public class PerformInstrution {
      * @return
      */
     public String getGatewaySettingId(String deviceId) {
-            return "GW" + deviceId;
+        return "GW" + deviceId;
     }
-    public String getDtuSettingId(String deviceId)
-    {
+
+    public String getDtuSettingId(String deviceId) {
         String settingId = "DTU" + deviceId;
         String gatewaySettingId = gatewayDtuAdminMapper.selectGatewaySettingId(settingId);
         return gatewaySettingId + settingId;
     }
+
     /**
      * 获取传感器的SettingId
      *
      * @param message
      * @return
      */
-    public  String[] getSensorSettingId(String message) {
+    public String[] getSensorSettingId(String message) {
         String deviceId = InstructionUtil.getDeviceId(message);
         String dtuSettingId = getDtuSettingId(deviceId);
         String[] sensorType = InstructionUtil.getSensorType(message);
@@ -298,11 +344,41 @@ public class PerformInstrution {
         return sensorSettingId;
     }
 
+    public static  void sendInstrution(String url) {
+
+
+        RestUtil restUtil = new RestUtil();
+
+
+        try {
+            String resultString = restUtil.load(
+
+                    "http://39.105.171.192:8886/command?cmd="+url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public  static  void  getReturnMessage(String url)
+    {
+
+    }
+
+
+
+
     public static void main(String[] args) {
         PerformInstrution performInstrution = new PerformInstrution();
-        String[] settingId = performInstrution.getSensorSettingId("AA552AA6001F020200011A004A0000006A016400510150003400E1002B00CB002500C100129DA655AA");
-        for (int i = 0; i <settingId.length ; i++) {
-            System.out.println(settingId[i]);
-        }
+        String Message="AA5534A80004020130D8363255AA0D0AAA5537B1000102FBCF55AA0D0A";
+        String deviceId = InstructionUtil.getDeviceId(Message);
+        int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
+        String format = String.format("%04x", crcCheck);
+        String FrameNum = Message.substring(4, 6);
+        String url="AA55"+FrameNum+"A8"+"0002"+"00"+deviceId+format+"55AA";
+        performInstrution.sendInstrution(url);
     }
+
+
 }
