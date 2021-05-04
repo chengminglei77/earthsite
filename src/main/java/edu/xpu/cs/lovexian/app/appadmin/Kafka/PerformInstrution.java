@@ -82,7 +82,7 @@ public class PerformInstrution {
         double [] humidity = HumidityUtils.humidityDecode(Message);
         String [] humidityId = new String[3];//湿度的id
         String [] humidityName = {"30cm","15cm","5cm"};
-        if (sensorsType[0].equals("风速传感器")) {
+        if (sensorsType[0].equals("风速传感器")&&A6Utils.getDataLen(Message)>10) {
             for (int i=0;i<averageSpeed.length;i++){
                 windSpeedId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
                 //在这里判断是否为空
@@ -106,7 +106,7 @@ public class PerformInstrution {
                 influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(averageSpeed[i]*100)/100);
             }
         }
-        if (sensorsType[0].equals("湿度传感器")){
+        if (sensorsType[0].equals("湿度传感器")&&A6Utils.getDataLen(Message)>10){
             for (int i=0;i<humidity.length;i++){
                 humidityId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
                 //这里判断是否为空，为空执行插入
@@ -148,10 +148,12 @@ public class PerformInstrution {
         AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
         adminUnresovledData.setData(Message);
         adminUnresovledData.setSensorType(sensorType);
-        if (sensorsType[0].equals("风速传感器")){
+        if (sensorsType[0].equals("风速传感器")&&A6Utils.getDataLen(Message)>10){
             adminUnresovledData.setSensorData(A6Utils.getSensorData(Message)+"#"+averageWindSpeed[0]+direction[0]);
         }else {
-            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
+            if (sensorsType[0].equals("湿度传感器")&&A6Utils.getDataLen(Message)>10){
+                adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
+            }
         }
         adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
         adminUnresovledData.setSettingID(sensorId[0]);

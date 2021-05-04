@@ -2,8 +2,23 @@ package edu.xpu.cs.lovexian.common.utils;
 
 import java.math.BigInteger;
 
+/**
+ * @author zaj
+ * 新的A6工具类
+ */
 //23 02 00 01 0F 00 14 00 00 00 16 00 42 00 14 00 4B 00 01 A0 B2 21
 public class A6Utils {
+
+    /**
+     * 获取数据长度
+     * @param message
+     * @return
+     */
+    public static int getDataLen(String message){
+        String len = message.substring(8,12);
+        int dataLen = Integer.valueOf(new BigInteger(len,16).toString(10));
+        return dataLen;
+    }
     /**
      * 传感器类型
      * @param message
@@ -76,13 +91,15 @@ public class A6Utils {
         return checkNum;
     }
     public static void main(String[] args) {
-        String testNum = "AA55F9A60028010200010F00140000001600420014004B0001A0";
+        String testNum = "AA55F9A60014010200010F00140000001600420014004B0001A0";
+        int dataLen = getDataLen(testNum);
         String sensorType = getSensorType(testNum);
         String boxNum = getBoxNum(testNum);
         String sensorNum = getSensorNum(testNum);
         String sensorDataLen = getSensorDataLen(testNum);
         String sensorData = getSensorData(testNum);
         String checkNum = getCheckNum(testNum);
+        System.out.println("data_len:"+dataLen);
         System.out.println("sensorType:"+sensorType);
         System.out.println("boxNum:"+boxNum);
         System.out.println("sensorNum:"+sensorNum);
