@@ -70,7 +70,7 @@ public class PerformInstrution {
                 //在这里判断是否为空
                 if (windSpeedId[i] == null){
                     AdminCollectData adminCollectData = new AdminCollectData();
-                    adminCollectData.setSensorId(sensorId+"0"+i);
+                    adminCollectData.setSensorId(sensorId[0]+"0"+i);
                     adminCollectData.setSensorType(sensorsType[0]);
                     adminCollectData.setSensorValue(String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s");
                     adminCollectData.setSensorParam(windDirection[i]);
