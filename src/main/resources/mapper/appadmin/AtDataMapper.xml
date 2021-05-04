@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xpu.cs.lovexian.app.appadmin.mapper.AtDataMapper">
+    <resultMap id="AdminAtData" type="edu.xpu.cs.lovexian.app.appadmin.entity.AdminAtData">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="at" jdbcType="VARCHAR" property="at"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="data" jdbcType="VARCHAR" property="data"/>
+    </resultMap>
+
+
+    <select id="selectLatestData" resultMap="AdminAtData" parameterType="string">
+        SELECT at_data.*
+        FROM at_data
+        <where>
+            at_data.created_time>#{date} AND
+            at_data.at=#{at}
+            ORDER BY created_time DESC
+            limit 1
+        </where>
+    </select>
+</mapper>

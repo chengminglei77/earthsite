@@ -25,7 +25,9 @@ public class TransferV_PUtil {
 	private static int currentP;
 
 	public static int encrypt(float currentV) {
-		if(currentV<=12600&&currentV>=9300) {
+		if(currentV>=12600){
+			return 100;
+		} else if(currentV>=9300) {
 			for (int i = 0; i < 11; i++) {
 				if (currentV >= Vms[i] && currentV < Vms[i - 1]) {
 					currentP = (int) (Vmp[i - 1] - ((Vms[i - 1] - currentV) / Steps[i - 1]));
@@ -36,6 +38,6 @@ public class TransferV_PUtil {
 		return -1;
 	}
 	public static void main(String[] args) {
-		System.out.println(encrypt(12212));
+		System.out.println(encrypt(13000));
 	}
 }

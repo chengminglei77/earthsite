@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.*;
-import edu.xpu.cs.lovexian.app.appadmin.mapper.AlarmInfoAdminMapper;
-import edu.xpu.cs.lovexian.app.appadmin.mapper.CollectDataAdminMapper;
-import edu.xpu.cs.lovexian.app.appadmin.mapper.GatewayDtuAdminMapper;
-import edu.xpu.cs.lovexian.app.appadmin.mapper.UnresovledDataMapper;
+import edu.xpu.cs.lovexian.app.appadmin.mapper.*;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
@@ -45,7 +42,14 @@ public class PerformInstrution {
     IGatewaysAdminService gatewaysAdminService;
     @Autowired
     AlarmInfoAdminMapper alarmInfoAdminMapper;
-
+    @Autowired
+    AtDataMapper AtDataMapper;
+    //从前端传过来这次要下入的命令为"AT...//+++"
+    public static  String ATcommand="";
+    public static void setATcommand(String command)
+    {
+        ATcommand=command;
+    }
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
 
     public void performA4(String Message){
@@ -173,6 +177,13 @@ public class PerformInstrution {
             }
         }
         deviceStatisticsAdminService.insertDeviceStatistic(Message, sensorId[0]);
+        //返回给下位机的命令
+        String deviceId = InstructionUtil.getDeviceId(Message);
+        int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA6,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
+        String crcCheckFormat = String.format("%04x", crcCheck);
+        String FrameNum = Message.substring(4, 6);
+        String url="AA55"+FrameNum+"A6"+"0002"+"00"+deviceId+crcCheckFormat+"55AA";
+        sendInstrution(url);
     }
 
 
@@ -229,6 +240,12 @@ public class PerformInstrution {
         }
         //插入数据统计中
         deviceStatisticsAdminService.insertDeviceStatistic(Message, settingId);
+        //返回给下位机的命令
+        int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
+        String crcCheckFormat = String.format("%04x", crcCheck);
+        String FrameNum = Message.substring(4, 6);
+        String url="AA55"+FrameNum+"A8"+"0002"+"00"+deviceId+crcCheckFormat+"55AA";
+        sendInstrution(url);
     }
 
     public void performA9(String Message) {
@@ -318,6 +335,34 @@ public class PerformInstrution {
         return sensorSettingId;
     }
 
+    public static  void sendInstrution(String url) {
+
+
+        RestUtil restUtil = new RestUtil();
+
+
+        try {
+            String resultString = restUtil.load(
+
+                    "http://39.105.171.192:8886/command?cmd="+url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    //执行网关配置命令
+    public  void performCommand(String message) {
+
+        AdminAtData adminAtData = new AdminAtData();
+        adminAtData.setAt(ATcommand);
+        Date date = new Date();
+        adminAtData.setCreatedTime(date);
+        adminAtData.setData(message);
+        AtDataMapper.insert(adminAtData);
+        System.out.println("插入成功");
+    }
     public static void main(String[] args) {
        /* PerformInstrution performInstrution = new PerformInstrution();
         String[] settingId = performInstrution.getSensorSettingId("AA552AA6001F020200011A004A0000006A016400510150003400E1002B00CB002500C100129DA655AA");

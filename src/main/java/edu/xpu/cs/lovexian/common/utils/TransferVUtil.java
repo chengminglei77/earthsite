@@ -26,7 +26,9 @@ public class TransferVUtil {
     private static int currentP;
 
     public static int encrypt(float currentV) {
-        if (currentV <= 12660 && currentV >= 8100) {
+        if(currentV>=12600){
+            return 100;
+        } else if (currentV >= 8100) {
             for (int i = 0; i < 22; i++) {
                 if (currentV >= Vms[i] && currentV < Vms[i - 1]) {
                     currentP = (int)Vmp[i - 1];
@@ -38,6 +40,6 @@ public class TransferVUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(encrypt(10981));
+        System.out.println(encrypt(11000));
     }
 }
