@@ -6,16 +6,25 @@ package edu.xpu.cs.lovexian.common.utils;
 public final class CRC16 {
     
     public static void main(String[] args) {
-        //short result=CRC16.GetCrc16(new byte[]{1,2,3});
-//    	short result=CRC16.GetCrc16(new byte[]{0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a});
-//        System.out.println(Integer.toHexString(result));
-//        System.out.println(String.format("0x%04x", result));
-    	int result2=CRC16.CRC16_CCITT(new byte[]{0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a});
-    	//System.out.println(result2);
-    	System.out.println(String.format("0x%04x", result2));
-    	//System.out.println(HexUtils.hex10To16(result2, 4));
+
+        String data = "AA551EA600020002";
+
+        String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
+        System.out.println(crc);
+
+    	/*int result2=CRC16.CRC16_CCITT(new byte[]{'A',5,5,1,'E','A',6,0,0,0,2,0,0,0,2});
+    	System.out.println(String.format("0x%04x", result2));*/
     }
-    
+
+    public static String strTo16(String s) {
+        String str = "";
+        for (int i = 0; i < s.length(); i++) {
+            int ch = (int) s.charAt(i);
+            String s4 = "0x"+Integer.toHexString(ch);
+            str = str + s4;
+        }
+        return str;
+    }
     public static int CRC16_CCITT(byte[] bytes) {
         int crc = 0x0000; // initial value
         int polynomial = 0x8408;// poly value reversed 0x1021; 0x8408

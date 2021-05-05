@@ -7,8 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminDtus;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminGatewayDtu;
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminSensors;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.AlarmInfoAdminMapper;
 import edu.xpu.cs.lovexian.app.appadmin.service.IAlarmInfoAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
@@ -114,6 +112,7 @@ public class AlarmAdminServiceImpl extends ServiceImpl<AlarmInfoAdminMapper, Adm
     public IPage<AdminAlarmInfo> findAlarmInfosByTypeId(QueryRequest request, AdminAlarmInfo adminAlarmInfo) {
         QueryWrapper<AdminAlarmInfo> queryWrapper = new QueryWrapper<>();
 
+        queryWrapper.lambda().orderByDesc(AdminAlarmInfo::getAlarmTime);
         //如果DtuName不为空,那么就模糊查询:dtu名
         //如果两者都符合,那么就SELECT COUNT(1) FROM dtus WHERE dtu_name LIKE '%%' AND dtu_type LIKE '%%' AND status = 0;
         if (adminAlarmInfo.getAlarmTime() != null) {

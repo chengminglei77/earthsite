@@ -1,25 +1,22 @@
 package edu.xpu.cs.lovexian.phone.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminAlarmInfo;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SelectDTUAlarmInfo;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.SelectSensorAlarmInfo;
 import edu.xpu.cs.lovexian.app.appadmin.service.IAlarmInfoAdminService;
-import edu.xpu.cs.lovexian.app.appadmin.utils.StatusEnum;
-import edu.xpu.cs.lovexian.common.annotation.Log;
 import edu.xpu.cs.lovexian.common.controller.BaseController;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
 import edu.xpu.cs.lovexian.common.domain.QueryRequest;
-import edu.xpu.cs.lovexian.common.exception.EarthSiteException;
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Validated
@@ -49,20 +46,17 @@ public class AlarmInfoClassifyByDevice extends BaseController {
         return EarthSiteResponse.SUCCESS().data(dataTable);
     }
 
-
-
     @GetMapping("getAllDTUinfo")
     public EarthSiteResponse getAllDTUinfo() {
-        List<AdminAlarmInfo> adminAlarmInfoList=DTUAlarmInfo.selectDTUAlarmInfo();
+        List<AdminAlarmInfo> adminAlarmInfoList = DTUAlarmInfo.selectDTUAlarmInfo();
         return EarthSiteResponse.SUCCESS().data(adminAlarmInfoList);
     }
 
     @GetMapping("getAllSensorsinfo")
     public EarthSiteResponse getAllSensorsinfo() {
-        List<AdminAlarmInfo> adminAlarmInfoList=SensorAlarmInfo.selectSensorAlarmInfo();
+        List<AdminAlarmInfo> adminAlarmInfoList = SensorAlarmInfo.selectSensorAlarmInfo();
         return EarthSiteResponse.SUCCESS().data(adminAlarmInfoList);
     }
-
 
 
 }
