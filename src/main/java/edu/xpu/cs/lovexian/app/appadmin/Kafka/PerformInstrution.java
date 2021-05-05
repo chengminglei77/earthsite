@@ -175,9 +175,9 @@ public class PerformInstrution {
             String deviceId = InstructionUtil.getDeviceId(Message);
             /*int crcCheck = CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA, 0x55, (byte) 0xA6, 0x00, 0x02, 0x00, (byte) Integer.parseInt(deviceId)});
             String crcCheckFormat = String.format("%04x", crcCheck);*/
-            String data="AA55A6000200"+deviceId;
-            String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
             String FrameNum = Message.substring(4, 6);
+            String data="AA55"+FrameNum+"A6000200"+deviceId;
+            String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
             String url = "AA55" + FrameNum + "A6" + "0002" + "00" + deviceId + crc + "55AA";
             sendInstrution(url);
         }else {
@@ -254,9 +254,9 @@ public class PerformInstrution {
         //返回给下位机的命令
        /* int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
         String crcCheckFormat = String.format("%04x", crcCheck);*/
-        String data="AA55A8000200"+deviceId;
-        String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
         String FrameNum = Message.substring(4, 6);
+        String data="AA55"+FrameNum+"A8000200"+deviceId;
+        String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
         String url="AA55"+FrameNum+"A8"+"0002"+"00"+deviceId+crc+"55AA";
         sendInstrution(url);
     }
