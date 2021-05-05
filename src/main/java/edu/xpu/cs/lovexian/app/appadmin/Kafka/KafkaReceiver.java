@@ -83,7 +83,9 @@ else {
                             break;
                         case "A6":
                             System.out.println("A6:" + message);
-                            this.performInstrution.performA6(Message);
+                            if (Message.substring(8,12)!="0002"){
+                                this.performInstrution.performA6(Message);
+                            }
                             break;
                         case "A7": {
                             this.performInstrution.performA7(Message);

@@ -1,9 +1,25 @@
 package edu.xpu.cs.lovexian.common.utils;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
+/**
+ * @author zaj
+ * 新的A6工具类
+ */
 //23 02 00 01 0F 00 14 00 00 00 16 00 42 00 14 00 4B 00 01 A0 B2 21
 public class A6Utils {
+
+    /**
+     * 获取数据长度
+     * @param message
+     * @return
+     */
+    public static int getDataLen(String message){
+        String len = message.substring(8,12);
+        int dataLen = Integer.valueOf(new BigInteger(len,16).toString(10));
+        return dataLen;
+    }
     /**
      * 传感器类型
      * @param message
@@ -20,6 +36,11 @@ public class A6Utils {
         }
         if (sensorTypeNum.equals("03")){
             sensorType = "水盐传感器";
+        }
+        if (!sensorTypeNum.equals("01") && !sensorTypeNum.equals("02") && !sensorTypeNum.equals("03"))
+        {
+            sensorType = "未知传感器"+sensorTypeNum;
+            System.out.println("找不到对应的传感器，请检查数据是否有误");
         }
         return sensorType;
     }
@@ -75,19 +96,35 @@ public class A6Utils {
         String checkNum = message.substring(46,48);
         return checkNum;
     }
+
+    /**
+     * 生成UID
+     * @return
+     */
+    public static String getUUID(){
+        UUID uuid=UUID.randomUUID();
+        String str = uuid.toString();
+        return str;
+    }
+
     public static void main(String[] args) {
-        String testNum = "AA55F9A60028010200010F00140000001600420014004B0001A0";
+        String testNum = "AA55FBA600020204406D55AA0D0AAA55FBA600020202406D55AA0D0A";
+       /* int dataLen = getDataLen(testNum);
         String sensorType = getSensorType(testNum);
         String boxNum = getBoxNum(testNum);
         String sensorNum = getSensorNum(testNum);
         String sensorDataLen = getSensorDataLen(testNum);
         String sensorData = getSensorData(testNum);
         String checkNum = getCheckNum(testNum);
+        System.out.println("data_len:"+dataLen);
         System.out.println("sensorType:"+sensorType);
         System.out.println("boxNum:"+boxNum);
         System.out.println("sensorNum:"+sensorNum);
         System.out.println("sensorDataLen:"+sensorDataLen);
         System.out.println("sensorData:"+sensorData);
         System.out.println("checkNum:"+checkNum);
+        System.out.println(getUUID());*/
+        String sensorType = getSensorType(testNum);
+        System.out.println("sensorType:"+sensorType);
     }
 }

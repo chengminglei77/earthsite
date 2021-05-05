@@ -2,6 +2,7 @@ package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.*;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.*;
@@ -58,130 +59,140 @@ public class PerformInstrution {
     public void performA5(String Message){
 
     }
-    public void performA6(String Message){
+    public void performA6(String Message) {
         String sensorId[] = getSensorSettingId(Message);
         String checkNum = A6Utils.getCheckNum(Message);
         Date coltTime = new Date();
-        /*AdminAlarmInfo alarmInfo = new AdminAlarmInfo();
+        AdminAlarmInfo alarmInfo = new AdminAlarmInfo();
+        alarmInfo.setId(A6Utils.getUUID());
         alarmInfo.setAlarmTime(coltTime);
         alarmInfo.setStatus(0);
         alarmInfo.setDeleteState(0);
         alarmInfo.setDeviceId(sensorId[0]);
-        if (checkNum.equals("01")){
-            alarmInfo.setAlarmInfo("设备工作状态异常");
-            alarmInfo.setAlarmReason("传感器或者连接线路已经损坏，需要实地抢修");
-        }else {
-            if (checkNum.equals("02")){
-                alarmInfo.setAlarmInfo("02数据异常");
-                alarmInfo.setAlarmReason("传感器在使用过程中可能部分损坏,此时也需要现场检修");
-            }else {
-                System.out.println("未知错误");
-            }
-        }
-        alarmInfoAdminMapper.insert(alarmInfo);*/
-        String []sensorsType = InstructionUtil.getSensorType(Message);
-        double [] averageSpeed = WindSpeedUtils.windSpeed(Message);
-        String [] windDirection = WindSpeedUtils.windDirection(Message);
-        String []windSpeedId = new String[1];//风速的id
-        double [] humidity = HumidityUtils.humidityDecode(Message);
-        String [] humidityId = new String[3];//湿度的id
-        String [] humidityName = {"30cm","15cm","5cm"};
-        if (sensorsType[0].equals("风速传感器")) {
-            for (int i=0;i<averageSpeed.length;i++){
-                windSpeedId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
-                //在这里判断是否为空
-                if (windSpeedId[i] == null){
-                    AdminCollectData adminCollectData = new AdminCollectData();
-                    adminCollectData.setSensorId(sensorId[0]+"0"+i);
-                    adminCollectData.setSensorType(sensorsType[0]);
-                    adminCollectData.setSensorValue(String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s");
-                    adminCollectData.setSensorParam(windDirection[i]);
-                    adminCollectData.setColTime(coltTime);
-                    collectDataAdminMapper.insert(adminCollectData);
-                }else {
-                    LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                    lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,windSpeedId[i])
-                            .set(AdminCollectData::getSensorType, sensorsType[0])
-                            .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s")
-                            .set(AdminCollectData::getSensorParam,windDirection[i])
-                            .set(AdminCollectData::getColTime, coltTime);
-                    Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+        if (checkNum.equals("00")||A6Utils.getSensorType(Message).equals("湿度传感器")) {
+            log.info("设备工作正常");
+            String[] sensorsType = InstructionUtil.getSensorType(Message);
+            double[] averageSpeed = WindSpeedUtils.windSpeed(Message);
+            String[] windDirection = WindSpeedUtils.windDirection(Message);
+            String[] windSpeedId = new String[1];//风速的id
+            double[] humidity = HumidityUtils.humidityDecode(Message);
+            String[] humidityId = new String[3];//湿度的id
+            String[] humidityName = {"30cm", "15cm", "5cm"};
+            if (sensorsType[0].equals("风速传感器") && A6Utils.getDataLen(Message) > 10) {
+                for (int i = 0; i < averageSpeed.length; i++) {
+                    windSpeedId[i] = collectDataAdminMapper.selectId(sensorId[0] + "0" + i);
+                    //在这里判断是否为空
+                    if (windSpeedId[i] == null) {
+                        AdminCollectData adminCollectData = new AdminCollectData();
+                        adminCollectData.setSensorId(sensorId[0] + "0" + i);
+                        adminCollectData.setSensorType(sensorsType[0]);
+                        adminCollectData.setSensorValue(String.valueOf(WindSpeedUtils.get10minWindSpeed(Message)) + "m/s");
+                        adminCollectData.setSensorParam(windDirection[i]);
+                        adminCollectData.setColTime(coltTime);
+                        collectDataAdminMapper.insert(adminCollectData);
+                    } else {
+                        LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                        lambdaUpdateWrapper.eq(AdminCollectData::getSensorId, windSpeedId[i])
+                                .set(AdminCollectData::getSensorType, sensorsType[0])
+                                .set(AdminCollectData::getSensorValue, String.valueOf(WindSpeedUtils.get10minWindSpeed(Message)) + "m/s")
+                                .set(AdminCollectData::getSensorParam, windDirection[i])
+                                .set(AdminCollectData::getColTime, coltTime);
+                        Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+                    }
+                    influxDBContoller.insertOneToInflux(sensorId[0] + "0" + i, sensorsType[0], WindSpeedUtils.get10minWindSpeed(Message));
                 }
-                influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(averageSpeed[i]*100)/100);
             }
-        }
-        if (sensorsType[0].equals("湿度传感器")){
-            for (int i=0;i<humidity.length;i++){
-                humidityId[i] = collectDataAdminMapper.selectId(sensorId[0]+"0"+i);
-                //这里判断是否为空，为空执行插入
-               if (humidityId[i] == null){
-                   AdminCollectData adminCollectData = new AdminCollectData();
-                   adminCollectData.setSensorId(sensorId[0]+"0"+i);
-                   adminCollectData.setSensorType(sensorsType[0]);
-                   adminCollectData.setSensorValue( String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H");
-                   adminCollectData.setSensorParam(humidityName[i]);
-                   adminCollectData.setColTime(coltTime);
-                   collectDataAdminMapper.insert(adminCollectData);
-               }else {
-                   LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                   lambdaUpdateWrapper.eq(AdminCollectData::getSensorId,humidityId[i])
-                           .set(AdminCollectData::getSensorType, sensorsType[0])
-                           .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H")
-                           .set(AdminCollectData::getSensorParam,humidityName[i])
-                           .set(AdminCollectData::getColTime, coltTime);
-                   Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
-               }
-                influxDBContoller.insertOneToInflux(sensorId[0]+"0"+i,sensorsType[0],(double) Math.round(humidity[i]*100)/100);
+            if (sensorsType[0].equals("湿度传感器") && A6Utils.getDataLen(Message) > 10) {
+                for (int i = 0; i < humidity.length; i++) {
+                    humidityId[i] = collectDataAdminMapper.selectId(sensorId[0] + "0" + i);
+                    //这里判断是否为空，为空执行插入
+                    if (humidityId[i] == null) {
+                        AdminCollectData adminCollectData = new AdminCollectData();
+                        adminCollectData.setSensorId(sensorId[0] + "0" + i);
+                        adminCollectData.setSensorType(sensorsType[0]);
+                        adminCollectData.setSensorValue(String.valueOf(((double) Math.round(humidity[i] * 100) / 100)) + "%H");
+                        adminCollectData.setSensorParam(humidityName[i]);
+                        adminCollectData.setColTime(coltTime);
+                        collectDataAdminMapper.insert(adminCollectData);
+                    } else {
+                        LambdaUpdateWrapper<AdminCollectData> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                        lambdaUpdateWrapper.eq(AdminCollectData::getSensorId, humidityId[i])
+                                .set(AdminCollectData::getSensorType, sensorsType[0])
+                                .set(AdminCollectData::getSensorValue, String.valueOf(((double) Math.round(humidity[i] * 100) / 100)) + "%H")
+                                .set(AdminCollectData::getSensorParam, humidityName[i])
+                                .set(AdminCollectData::getColTime, coltTime);
+                        Integer rows = collectDataAdminMapper.update(null, lambdaUpdateWrapper);
+                    }
+                    influxDBContoller.insertOneToInflux(sensorId[0] + "0" + i, sensorsType[0], (double) Math.round(humidity[i] * 100) / 100);
+                }
             }
-        }
 
-        //插入到A6_data
-        java.sql.Date time = new java.sql.Date(new java.util.Date().getTime());
-        String sensorType = A6Utils.getSensorType(Message);
-        String averageWindSpeed[] = new String[1];
-        String direction[] = new String[1];
-        String shidu[] = new String[3];
-            for (int i=0;i<averageWindSpeed.length;i++){
-                averageWindSpeed[i] = String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s";
+            //插入到A6_data
+            java.sql.Date time = new java.sql.Date(new java.util.Date().getTime());
+            String sensorType = A6Utils.getSensorType(Message);
+            String averageWindSpeed[] = new String[1];
+            String windSpeed10min[] = new String[1];
+            String direction[] = new String[1];
+            String shidu[] = new String[3];
+            for (int i = 0; i < averageWindSpeed.length; i++) {
+                //averageWindSpeed[i] = String.valueOf(((double) Math.round(averageSpeed[i]*100)/100))+"m/s";
+                windSpeed10min[i] = String.valueOf(WindSpeedUtils.get10minWindSpeed(Message)) + "m/s";
                 direction[i] = windDirection[i];
             }
-            for (int i=0;i<shidu.length;i++){
-                shidu[i] = String.valueOf(((double) Math.round(humidity[i]*100)/100))+"%H";
+            for (int i = 0; i < shidu.length; i++) {
+                shidu[i] = String.valueOf(((double) Math.round(humidity[i] * 100) / 100)) + "%H";
             }
-        //插入到mysql数据库表A6_data
-        AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
-        adminUnresovledData.setData(Message);
-        adminUnresovledData.setSensorType(sensorType);
-        if (sensorsType[0].equals("风速传感器")){
-            adminUnresovledData.setSensorData(A6Utils.getSensorData(Message)+"#"+averageWindSpeed[0]+direction[0]);
-        }else {
-            adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message)+"#"+shidu[0]+shidu[1]+shidu[2]);
-        }
-        adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
-        adminUnresovledData.setSettingID(sensorId[0]);
-        adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
-        adminUnresovledData.setColTime(time);
-        String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
-        String type = unresovledDataMapper.checkSensorType(InstructionUtil.getInstructionType(Message));
-        if (frameNum == null){
-            System.out.println("最新的数据为空，执行插入"+InstructionUtil.getFrameNum(Message));
-            unresovledDataMapper.insert(adminUnresovledData);
-        }else {
-            if (frameNum.equals(InstructionUtil.getFrameNum(Message)) && type.equals(sensorsType[0])){
-                System.out.println("数据重复，舍去");
-            }else {
-                System.out.println("执行插入"+InstructionUtil.getFrameNum(Message));
+            //插入到mysql数据库表A6_data
+            AdminUnresovledData adminUnresovledData = new AdminUnresovledData();
+            adminUnresovledData.setData(Message);
+            adminUnresovledData.setSensorType(sensorType);
+            if (sensorsType[0].equals("风速传感器") && A6Utils.getDataLen(Message) > 10) {
+                adminUnresovledData.setSensorData(A6Utils.getSensorData(Message) + "#" + windSpeed10min[0] + direction[0]);
+            } else {
+                if (sensorsType[0].equals("湿度传感器") && A6Utils.getDataLen(Message) > 10) {
+                    adminUnresovledData.setSensorData(InstructionUtil.getSensorData(Message) + "#" + shidu[0] + shidu[1] + shidu[2]);
+                }
+            }
+            adminUnresovledData.setInstructionType(InstructionUtil.getInstructionType(Message));
+            adminUnresovledData.setSettingID(sensorId[0]);
+            adminUnresovledData.setFrameNum(InstructionUtil.getFrameNum(Message));
+            adminUnresovledData.setColTime(time);
+            String frameNum = unresovledDataMapper.checkFrameNum(InstructionUtil.getInstructionType(Message));
+            String type = unresovledDataMapper.checkSensorType(InstructionUtil.getInstructionType(Message));
+            if (frameNum == null) {
+                System.out.println("最新的数据为空，执行插入" + InstructionUtil.getFrameNum(Message));
                 unresovledDataMapper.insert(adminUnresovledData);
+            } else {
+                if (frameNum.equals(InstructionUtil.getFrameNum(Message)) && type.equals(sensorsType[0])) {
+                    System.out.println("数据重复，舍去");
+                } else {
+                    System.out.println("执行插入" + InstructionUtil.getFrameNum(Message));
+                    unresovledDataMapper.insert(adminUnresovledData);
+                }
+            }
+            deviceStatisticsAdminService.insertDeviceStatistic(Message, sensorId[0]);
+           /* //返回给下位机的命令
+            String deviceId = InstructionUtil.getDeviceId(Message);
+            int crcCheck = CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA, 0x55, (byte) 0xA6, 0x00, 0x02, 0x00, (byte) Integer.parseInt(deviceId)});
+            String crcCheckFormat = String.format("%04x", crcCheck);
+            String FrameNum = Message.substring(4, 6);
+            String url = "AA55" + FrameNum + "A6" + "0002" + "00" + deviceId + crcCheckFormat + "55AA";
+            sendInstrution(url);*/
+        }else {
+            if (checkNum.equals("02")) {
+                alarmInfo.setAlarmInfo("数据异常");
+                alarmInfo.setAlarmReason("传感器在使用过程中可能部分损坏,此时可能需要现场检修");
+                alarmInfoAdminMapper.insert(alarmInfo);
+            } else {
+                if (checkNum.equals("01")){
+                    alarmInfo.setAlarmInfo("设备工作状态异常");
+                    alarmInfo.setAlarmReason("传感器或者连接线路可能已经损坏，需要实地抢修");
+                    alarmInfoAdminMapper.insert(alarmInfo);
+                }else {
+                    log.info("设备未知错误");
+                }
             }
         }
-        deviceStatisticsAdminService.insertDeviceStatistic(Message, sensorId[0]);
-        //返回给下位机的命令
-        String deviceId = InstructionUtil.getDeviceId(Message);
-        int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA6,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
-        String crcCheckFormat = String.format("%04x", crcCheck);
-        String FrameNum = Message.substring(4, 6);
-        String url="AA55"+FrameNum+"A6"+"0002"+"00"+deviceId+crcCheckFormat+"55AA";
-        sendInstrution(url);
     }
 
 
@@ -239,11 +250,11 @@ public class PerformInstrution {
         //插入数据统计中
         deviceStatisticsAdminService.insertDeviceStatistic(Message, settingId);
         //返回给下位机的命令
-        int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
+      /*  int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
         String crcCheckFormat = String.format("%04x", crcCheck);
         String FrameNum = Message.substring(4, 6);
         String url="AA55"+FrameNum+"A8"+"0002"+"00"+deviceId+crcCheckFormat+"55AA";
-        sendInstrution(url);
+        sendInstrution(url);*/
     }
 
     public void performA9(String Message) {
