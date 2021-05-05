@@ -1,6 +1,7 @@
 package edu.xpu.cs.lovexian.common.utils;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 /**
  * @author zaj
@@ -35,6 +36,11 @@ public class A6Utils {
         }
         if (sensorTypeNum.equals("03")){
             sensorType = "水盐传感器";
+        }
+        if (!sensorTypeNum.equals("01") && !sensorTypeNum.equals("02") && !sensorTypeNum.equals("03"))
+        {
+            sensorType = "未知传感器"+sensorTypeNum;
+            System.out.println("找不到对应的传感器，请检查数据是否有误");
         }
         return sensorType;
     }
@@ -90,9 +96,20 @@ public class A6Utils {
         String checkNum = message.substring(46,48);
         return checkNum;
     }
+
+    /**
+     * 生成UID
+     * @return
+     */
+    public static String getUUID(){
+        UUID uuid=UUID.randomUUID();
+        String str = uuid.toString();
+        return str;
+    }
+
     public static void main(String[] args) {
-        String testNum = "AA55F9A60014010200010F00140000001600420014004B0001A0";
-        int dataLen = getDataLen(testNum);
+        String testNum = "AA55FBA600020204406D55AA0D0AAA55FBA600020202406D55AA0D0A";
+       /* int dataLen = getDataLen(testNum);
         String sensorType = getSensorType(testNum);
         String boxNum = getBoxNum(testNum);
         String sensorNum = getSensorNum(testNum);
@@ -106,5 +123,8 @@ public class A6Utils {
         System.out.println("sensorDataLen:"+sensorDataLen);
         System.out.println("sensorData:"+sensorData);
         System.out.println("checkNum:"+checkNum);
+        System.out.println(getUUID());*/
+        String sensorType = getSensorType(testNum);
+        System.out.println("sensorType:"+sensorType);
     }
 }

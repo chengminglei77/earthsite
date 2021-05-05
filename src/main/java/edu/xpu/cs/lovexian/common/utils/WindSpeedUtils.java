@@ -37,6 +37,15 @@ public class WindSpeedUtils {
     }
 
     /**
+     * 获取传感器10min时的风速
+     * @return
+     */
+    public static double get10minWindSpeed(String message){
+        double WindSpeed10min = windSpeedDouble[0][2]/100.0;
+        return WindSpeed10min;
+    }
+
+    /**
      * 传感器的方向
      */
     private static final double[] windDirection_10min_no = new double[1];//修改为1，后期若多个设备整合一条数据发过来，只需修改数组长度
@@ -137,13 +146,12 @@ public class WindSpeedUtils {
     public static void main(String[] args) {
         String test = "AA55F9A60014010200010F00140000001600420014004B0001A0";
         double [] weedSpeed = windSpeed(test);
+        double [][] a = new double[2][3];
         for (int i = 0; i < weedSpeed.length; i++) {
-            System.out.println(weedSpeed[i]);
+            System.out.println(String.valueOf(((double) Math.round(weedSpeed[i]*100)/100)));
         }
         String [] windDirection = windDirection(test);
-        for (int i = 0; i < weedSpeed.length; i++) {
-            System.out.println(windDirection[i]);
-        }
+        System.out.println(get10minWindSpeed(test));
         String wendu = temperature(test);
         System.out.println(wendu);
         String checkNum = alarmInfo(test);
