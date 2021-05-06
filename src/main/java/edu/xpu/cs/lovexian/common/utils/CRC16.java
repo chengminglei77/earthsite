@@ -8,9 +8,9 @@ public final class CRC16 {
     public static void main(String[] args) {
 
         String data = "AA551EA600020002";
-
         String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
         System.out.println(crc);
+
 
     	/*int result2=CRC16.CRC16_CCITT(new byte[]{'A',5,5,1,'E','A',6,0,0,0,2,0,0,0,2});
     	System.out.println(String.format("0x%04x", result2));*/
