@@ -67,6 +67,7 @@ public class PerformInstrution {
         alarmInfo.setId(A6Utils.getUUID());
         alarmInfo.setAlarmTime(coltTime);
         alarmInfo.setStatus(0);
+        alarmInfo.setDeviceId(sensorId[0]+"00");
         alarmInfo.setDeleteState(0);
         alarmInfo.setDeviceId(sensorId[0]);
         if (checkNum.equals("00")||A6Utils.getSensorType(Message).equals("湿度传感器")) {
@@ -181,12 +182,12 @@ public class PerformInstrution {
             String url = "AA55" + FrameNum + "A6" + "0002" + "00" + deviceId + crc + "55AA";
             sendInstrution(url);
         }else {
-            if (checkNum.equals("02")) {
+            if (checkNum.equals("02")&&A6Utils.getSensorType(Message).equals("风速传感器")) {
                 alarmInfo.setAlarmInfo("数据异常");
                 alarmInfo.setAlarmReason("传感器在使用过程中可能部分损坏,此时可能需要现场检修");
                 alarmInfoAdminMapper.insert(alarmInfo);
             } else {
-                if (checkNum.equals("01")){
+                if (checkNum.equals("01")&&A6Utils.getSensorType(Message).equals("风速传感器")){
                     alarmInfo.setAlarmInfo("设备工作状态异常");
                     alarmInfo.setAlarmReason("传感器或者连接线路可能已经损坏，需要实地抢修");
                     alarmInfoAdminMapper.insert(alarmInfo);
