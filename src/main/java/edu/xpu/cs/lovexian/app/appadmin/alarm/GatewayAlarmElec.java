@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Configuration("gatewayElecScheduled")
@@ -48,24 +49,30 @@ public class GatewayAlarmElec {
             //2.当前时间
             Date currentDate = new Date(System.currentTimeMillis());
 
-            String theId = alarmInfoAdminMapper.checkIfExist(dtuId);
-            if (stateOfCharge==0&&currentCapacity<=30&&currentCapacity>10){
-                adminAlarmInfo.setId(theId);
+            //String theId = alarmInfoAdminMapper.checkIfExist(dtuId);
+            if (stateOfCharge==0&&currentCapacity<=50&&currentCapacity>30){
+                UUID uuid=UUID.randomUUID();
+                String uuidStr=uuid.toString();
+                adminAlarmInfo.setId(uuidStr);
+                //adminAlarmInfo.setId(theId);
                 adminAlarmInfo.setDeviceId(dtuId);
                 adminAlarmInfo.setAlarmTime(currentDate);
-                adminAlarmInfo.setAlarmInfo("网关电量30%预警");
+                adminAlarmInfo.setAlarmInfo("网关电量50%预警");
                 adminAlarmInfo.setAlarmReason(dtuId+"电量为："+currentCapacity);
                 adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//未删除状态
-                alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
+                alarmInfoAdminService.save(adminAlarmInfo);
             }
-            if (currentCapacity<=10){
-                adminAlarmInfo.setId(theId);
+            if (currentCapacity<=30){
+                UUID uuid=UUID.randomUUID();
+                String uuidStr=uuid.toString();
+                adminAlarmInfo.setId(uuidStr);
+                //adminAlarmInfo.setId(theId);
                 adminAlarmInfo.setDeviceId(dtuId);
                 adminAlarmInfo.setAlarmTime(currentDate);
-                adminAlarmInfo.setAlarmInfo("网关电量10%警告");
+                adminAlarmInfo.setAlarmInfo("网关电量30%警告");
                 adminAlarmInfo.setAlarmReason(dtuId+"电量为："+currentCapacity);
                 adminAlarmInfo.setStatus(StatusEnum.NORMAL_STATE.getCode());//未删除状态
-                alarmInfoAdminService.saveOrUpdate(adminAlarmInfo);
+                alarmInfoAdminService.save(adminAlarmInfo);
             }
         }
     }
