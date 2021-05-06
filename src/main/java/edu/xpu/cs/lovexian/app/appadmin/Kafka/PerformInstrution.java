@@ -171,13 +171,15 @@ public class PerformInstrution {
                 }
             }
             deviceStatisticsAdminService.insertDeviceStatistic(Message, sensorId[0]);
-           /* //返回给下位机的命令
+            //返回给下位机的命令
             String deviceId = InstructionUtil.getDeviceId(Message);
-            int crcCheck = CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA, 0x55, (byte) 0xA6, 0x00, 0x02, 0x00, (byte) Integer.parseInt(deviceId)});
-            String crcCheckFormat = String.format("%04x", crcCheck);
+            /*int crcCheck = CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA, 0x55, (byte) 0xA6, 0x00, 0x02, 0x00, (byte) Integer.parseInt(deviceId)});
+            String crcCheckFormat = String.format("%04x", crcCheck);*/
             String FrameNum = Message.substring(4, 6);
-            String url = "AA55" + FrameNum + "A6" + "0002" + "00" + deviceId + crcCheckFormat + "55AA";
-            sendInstrution(url);*/
+            String data="AA55"+FrameNum+"A6000200"+deviceId;
+            String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
+            String url = "AA55" + FrameNum + "A6" + "0002" + "00" + deviceId + crc + "55AA";
+            sendInstrution(url);
         }else {
             if (checkNum.equals("02")) {
                 alarmInfo.setAlarmInfo("数据异常");
@@ -250,11 +252,13 @@ public class PerformInstrution {
         //插入数据统计中
         deviceStatisticsAdminService.insertDeviceStatistic(Message, settingId);
         //返回给下位机的命令
-      /*  int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
-        String crcCheckFormat = String.format("%04x", crcCheck);
+       /* int crcCheck=CRC16.CRC16_CCITT(new byte[]{(byte) 0xAA,0x55, (byte) 0xA8,0x00,0x02,0x00,(byte) Integer.parseInt(deviceId)});
+        String crcCheckFormat = String.format("%04x", crcCheck);*/
         String FrameNum = Message.substring(4, 6);
-        String url="AA55"+FrameNum+"A8"+"0002"+"00"+deviceId+crcCheckFormat+"55AA";
-        sendInstrution(url);*/
+        String data="AA55"+FrameNum+"A8000200"+deviceId;
+        String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
+        String url="AA55"+FrameNum+"A8"+"0002"+"00"+deviceId+crc+"55AA";
+        sendInstrution(url);
     }
 
     public void performA9(String Message) {
