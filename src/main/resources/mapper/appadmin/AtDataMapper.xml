@@ -13,7 +13,6 @@
         SELECT at_data.*
         FROM at_data
         <where>
-            at_data.created_time>#{date} AND
             at_data.at=#{at}
             ORDER BY created_time DESC
             limit 1
