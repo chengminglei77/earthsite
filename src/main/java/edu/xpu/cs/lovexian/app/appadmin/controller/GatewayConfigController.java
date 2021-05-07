@@ -35,7 +35,7 @@ public class GatewayConfigController implements Runnable {
     @ApiOperation(value = "网关配置")
     @Log("网关配置管理:发送下发命令请求")
     @PostMapping("setGatewayConfig")
-    public EarthSiteResponse setGatewayConfig(@RequestBody AdminGatewayConfig Command) {
+    public EarthSiteResponse setGatewayConfig(AdminGatewayConfig Command) {
         //插入数据库at_data中，(插入命令和时间)
         AdminAtData adminAtData = new AdminAtData();
         Date date = new Date();
