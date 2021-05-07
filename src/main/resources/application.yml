@@ -110,7 +110,7 @@ earthsite:
 
   shiro:
     # 后端免认证接口 url
-    anonUrl: /system/login/login,/system/logout/**,/system/admin/check/**,/api/**,/fileupload/smallfile,/user/**,/admin/alarmInfoClassify/**,/admin/alarmInfo/**,/influxDBQuery
+    anonUrl: /admin/**,/system/login/login,/system/logout/**,/system/admin/check/**,/api/**,/fileupload/smallfile,/user/**,/admin/alarmInfoClassify/**,/admin/alarmInfo/**,/influxDBQuery
 
     # token有效期，单位秒
     jwtTimeOut: 36000
