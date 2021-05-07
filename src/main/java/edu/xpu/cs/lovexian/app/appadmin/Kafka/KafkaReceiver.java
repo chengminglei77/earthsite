@@ -45,16 +45,15 @@ public class KafkaReceiver {
             try {
                 Object messageReceive = kafkaMessage.get();
                 String message2String = messageReceive.toString();
-                String str3 = message2String.substring(0, message2String.lastIndexOf("55AA0D0A"));
+                if (messageReceive.toString().startsWith("0D0A") && messageReceive.toString().startsWith("0D0A")) {
+                    performInstrution.performCommand(messageReceive.toString());
+                }
+            else{        String str3 = message2String.substring(0, message2String.lastIndexOf("55AA0D0A"));
                 String str1[] = str3.split("55AA0D0A");
                 for (String temp : str1) {
                     String message = temp + "55AA0D0A";
 
                 System.out.println("message为" + message.toString());
-                if (message.toString().startsWith("0D0A") && message.toString().startsWith("0D0A")) {
-                    performInstrution.performCommand(message.toString());
-                } else {
-
                     command = message.toString().substring(6, 8);
                     String Message = message.toString();
                     boolean ifTrueMes = Message.startsWith("A");
