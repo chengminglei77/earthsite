@@ -37,11 +37,12 @@ public class GatewayConfigController implements Runnable {
     @PostMapping("setGatewayConfig")
     public EarthSiteResponse setGatewayConfig(AdminGatewayConfig Command) {
         //插入数据库at_data中，(插入命令和时间)
-        AdminAtData adminAtData = new AdminAtData();
+       /* AdminAtData adminAtData = new AdminAtData();
         Date date = new Date();
         adminAtData.setCreatedTime(date);
         adminAtData.setAt(Command.getAt());
-        AtDataMapper.insert(adminAtData);
+        AtDataMapper.insert(adminAtData);*/
+        Date date = new Date();
         //设置发送的命令
         PerformInstrution.setATcommand(Command.getAt());
         //调用方法，发送数据，请求网 关允许配置管理
@@ -58,14 +59,12 @@ public class GatewayConfigController implements Runnable {
         }
 
 
-        AdminAtData Data = AtDataMapper.selectLatestData(Command.getAt(), DateUtil.DateToString(date));
+        AdminAtData Data = AtDataMapper.selectLatestData(Command.getAt());
         System.out.println("Data为" + Data);
-        if (Data != null&&Data.getData()!=null) {
-            if (Data.getCreatedTime().equals(date) != true) {
+        if (Data != null) {
                 if (Data.getData().contains("4F4B"))
                     return EarthSiteResponse.SUCCESS().data("OK");
-             else  return EarthSiteResponse.SUCCESS().data(Data.getData());
-            }
+                else return EarthSiteResponse.SUCCESS().data(Data.getData());
         }
         return EarthSiteResponse.FAIL().data("下发失败");
 
