@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @DS("slave")
 public interface AtDataMapper extends BaseMapper<AdminAtData> {
 
-    AdminAtData selectLatestData(String at,String date);
+    AdminAtData selectLatestData(String at);
 
 
 }
