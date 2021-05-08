@@ -36,7 +36,7 @@ public class KafkaReceiver {
     PerformInstrution performInstrution;
     private  static  Boolean state=false;
 
-    @KafkaListener(topics = {"sensorsTopic"})
+    @KafkaListener(topics = {"test_02"})//sensorsTopic
     public void listen(ConsumerRecord<?, ?> record) {
       
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
