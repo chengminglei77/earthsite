@@ -1,6 +1,8 @@
 package edu.xpu.cs.lovexian.phone.controller;
 
 import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
+import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
+import edu.xpu.cs.lovexian.phone.entity.SensorData;
 import edu.xpu.cs.lovexian.phone.service.SensorInfoService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class FindDeviceIdController {
     @ApiOperation(value = "查找风速和湿度的设备id")
     @GetMapping("getSettingId")
     public Map<String,Object> getSettingId(){
-        List<AdminCollectData> sensorDataAdmins = new ArrayList<>(19);
+        List<SensorData> sensorDataAdmins = new ArrayList<>(19);
         sensorDataAdmins = sensorInfoService.findDeviceId();
         List<String> names = sensorDataAdmins.stream().map(p -> p.getSensorId())
                 .collect(Collectors.toList());
@@ -42,7 +44,8 @@ public class FindDeviceIdController {
 
     @ApiOperation(value = "查找传感器的设备信息")
     @GetMapping("getSensorInfo")
-    public List<AdminCollectData> getSensorInfo(){
-        return sensorInfoService.getSensorInfo();
+    public EarthSiteResponse getSensorInfo(){
+        List sensorInfo = sensorInfoService.getSensorInfo();
+        return EarthSiteResponse.SUCCESS().data(sensorInfo);
     }
 }
