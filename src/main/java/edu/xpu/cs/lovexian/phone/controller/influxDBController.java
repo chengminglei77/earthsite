@@ -24,10 +24,10 @@ public class influxDBController {
 
     @GetMapping("/influxDBQuery")
     public EarthSiteResponse influxDBQuery() {
-        LocalDateTime dateTime=LocalDateTime.now();
-        String datetemp=dateTime.toString().substring(0,10);
+        LocalDateTime dateTime = LocalDateTime.now().minusDays(1);
+        String datetemp = dateTime.toString().substring(0, 10);
         QueryResult results = influxDBConnection
-                .query("SELECT * FROM sensor_data where time >= '"+datetemp+"T00:00:00Z' order by time desc");
+                .query("SELECT * FROM sensor_data where time >= '" + datetemp + "T16:00:00Z' and sensor_id = 'SDGW01DTU0201000801' order by time asc");
         //results.getResults()是同时查询多条SQL语句的返回值，此处我们只有一条SQL，所以只取第一个结果集即可。
         QueryResult.Result oneResult = results.getResults().get(0);
 
@@ -35,7 +35,7 @@ public class influxDBController {
             List<List<Object>> valueList = oneResult.getSeries().stream().map(QueryResult.Series::getValues)
                     .collect(Collectors.toList()).get(0);
 
-          return EarthSiteResponse.SUCCESS().data(valueList);
+            return EarthSiteResponse.SUCCESS().data(valueList);
         }
         return EarthSiteResponse.FAIL().message("无数据");
     }
