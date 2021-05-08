@@ -70,7 +70,7 @@ public class PerformInstrution {
         alarmInfo.setDeviceId(sensorId[0]+"00");
         alarmInfo.setDeleteState(0);
         alarmInfo.setDeviceId(sensorId[0]);
-        if (checkNum.equals("00")||A6Utils.getSensorType(Message).equals("湿度传感器")) {
+        if (checkNum.equals("00")||checkNum.equals("02")||A6Utils.getSensorType(Message).equals("湿度传感器")) {
             log.info("设备工作正常");
             String[] sensorsType = InstructionUtil.getSensorType(Message);
             double[] averageSpeed = WindSpeedUtils.windSpeed(Message);
@@ -181,19 +181,19 @@ public class PerformInstrution {
             String crc = HexUtils.hex10To16(CRC16.CRC16_CCITT(HexUtils.hexStringToBytes(data)),4) ;
             String url = "AA55" + FrameNum + "A6" + "0002" + "00" + deviceId + crc + "55AA";
             sendInstrution(url);
-        }else {
-            if (checkNum.equals("02")&&A6Utils.getSensorType(Message).equals("风速传感器")) {
+        }else {//02只是表明这段时间内数据波动比较大，也可以是正常数据
+            /*if (checkNum.equals("02")&&A6Utils.getSensorType(Message).equals("风速传感器")) {
                 alarmInfo.setAlarmInfo("数据异常");
                 alarmInfo.setAlarmReason("传感器在使用过程中可能部分损坏,此时可能需要现场检修");
-                alarmInfoAdminMapper.insert(alarmInfo);
-            } else {
+                //alarmInfoAdminMapper.insert(alarmInfo);
+            } else {*/
                 if (checkNum.equals("01")&&A6Utils.getSensorType(Message).equals("风速传感器")){
                     alarmInfo.setAlarmInfo("设备工作状态异常");
                     alarmInfo.setAlarmReason("传感器或者连接线路可能已经损坏，需要实地抢修");
                     alarmInfoAdminMapper.insert(alarmInfo);
                 }else {
                     log.info("设备未知错误");
-                }
+                //}
             }
         }
     }
