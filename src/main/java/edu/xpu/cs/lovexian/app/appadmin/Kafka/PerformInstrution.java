@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 
 /**
@@ -49,6 +50,8 @@ public class PerformInstrution {
     AlarmInfoAdminMapper alarmInfoAdminMapper;
     @Autowired
     AtDataMapper AtDataMapper;
+    @Autowired
+    WindSpeedCountMapper windSpeedCountMapper;
     //从前端传过来这次要下入的命令为"AT...//+++"
     public static  String ATcommand="";
     public static void setATcommand(String command)
@@ -156,6 +159,26 @@ public class PerformInstrution {
                     }
                     influxDBContoller.insertOneToInflux(sensorId[0] + "0" + i, sensorsType[0], (double) Math.round(humidity[i] * 100) / 100);
                 }
+            }
+
+
+
+            //将统计次数插入到wind_speed_count表中
+            if (sensorsType[0].equals("风速传感器")){
+                String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+                String [] countSpeed = WindSpeedUtils.windSpeedCount(Message);
+                WindSpeedCount count = new WindSpeedCount();
+                count.setId(uuid);
+                count.setSensorData(Message);
+                count.setSensorId(sensorId[0]);
+                count.setWindSpeedCount0(countSpeed[0]+"次");
+                count.setWindSpeedCount1(countSpeed[1]+"次");
+                count.setWindSpeedCount2(countSpeed[2]+"次");
+                count.setWindSpeedCount3(countSpeed[3]+"次");
+                count.setWindSpeedCount4(countSpeed[4]+"次");
+                count.setWindSpeedCount5(countSpeed[5]+"次");
+                count.setColTime(coltTime);
+                windSpeedCountMapper.insert(count);
             }
 
             //插入到A6_data
