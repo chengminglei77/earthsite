@@ -1,6 +1,5 @@
 package edu.xpu.cs.lovexian.phone.controller;
 
-import edu.xpu.cs.lovexian.app.appadmin.entity.AdminCollectData;
 import edu.xpu.cs.lovexian.common.domain.EarthSiteResponse;
 import edu.xpu.cs.lovexian.phone.entity.SensorData;
 import edu.xpu.cs.lovexian.phone.service.SensorInfoService;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
  *
  */
 @RestController
-@RequestMapping("/settingId")
+@RequestMapping("/settingId/")
 public class FindDeviceIdController {
 
     @Autowired
@@ -40,6 +39,12 @@ public class FindDeviceIdController {
         map.put("风速传感器",list1);
         map.put("湿度传感器",list2);;
         return map;
+    }
+
+    @GetMapping("/settingId")
+    public EarthSiteResponse settingId(){
+        List<SensorData> settingList = sensorInfoService.findDeviceId();
+        return EarthSiteResponse.SUCCESS().data(settingList);
     }
 
     @ApiOperation(value = "查找传感器的设备信息")
