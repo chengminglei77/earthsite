@@ -53,10 +53,9 @@ public class CommandInfoAdminController extends BaseController {
     @PostMapping("saveOrUpdate")
     public EarthSiteResponse addOrUpdateCommands(AdminCommandInfo adminCommandInfo) {
         PerformInstrution performInstrution = new PerformInstrution();
-        String SettingID = performInstrution.getDtuSettingId(adminCommandInfo.getDeviceID());
+        //performInstrution.getDtuSettingId(adminCommandInfo.getDeviceID());
         adminCommandInfo.setSendTime(new Date());
-        adminCommandInfo.setStatus("00");
-        adminCommandInfo.setDeviceID(SettingID);
+
         boolean actOper = commandInfoAdminService.saveOrUpdate(adminCommandInfo);
         return EarthSiteResponse.SUCCESS().data(actOper);
     }
@@ -68,7 +67,7 @@ public class CommandInfoAdminController extends BaseController {
      * @param adminCommandInfo
      * @return
      */
-    @Log("dtu管理:查询相关信息")
+    @Log("命令历史:查询相关信息")
     @GetMapping("queryCommandInfo")
     public EarthSiteResponse queryCommand(QueryRequest request, AdminCommandInfo adminCommandInfo) {
         IPage<AdminCommandInfo> commandInfos = commandInfoAdminService.queryCommandInfos(request, adminCommandInfo);

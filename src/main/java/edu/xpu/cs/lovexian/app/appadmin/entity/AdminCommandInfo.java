@@ -62,10 +62,22 @@ public class AdminCommandInfo {
     private String deviceID;
 
     /**
+     * 解析内容
+     */
+    @TableField("content")
+    private String content;
+
+    /**
      * TYPE
      */
     @TableField("type")
     private String type;
+
+    /**
+     * 帧序号
+     */
+    @TableField("frame_num")
+    private String frameNum;
 
     private transient String sendTimeFrom;
 

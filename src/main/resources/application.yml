@@ -30,15 +30,15 @@ spring:
         # 数据源-1，名称为 master
         master:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://39.105.171.192/earthsiterbac?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
+          url: jdbc:mysql://8.136.221.62/earthsiterbac?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
           username: root
-          password: 123456
+          password: Jason1220
           # 数据源-2，名称为 slave
         slave:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://39.105.171.192/earthsite?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
+          url: jdbc:mysql://8.136.221.62/earthsite?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
           username: root
-          password: 123456
+          password: Jason1220
   messages:
     encoding: utf-8
   servlet:
@@ -110,7 +110,7 @@ earthsite:
 
   shiro:
     # 后端免认证接口 url
-    anonUrl: /admin/**,/system/login/login,/system/logout/**,/system/admin/check/**,/api/**,/fileupload/smallfile,/user/**,/admin/alarmInfoClassify/**,/admin/alarmInfo/**,/influxDBQuery
+    anonUrl: /admin/**,/system/login/login,/system/logout/**,/system/admin/check/**,/api/**,/fileupload/smallfile,/user/**,/admin/alarmInfoClassify/**,/admin/alarmInfo/**,/influxDBQuery,/influxDBquery,/settingId/**,
 
     # token有效期，单位秒
     jwtTimeOut: 36000

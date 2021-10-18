@@ -1,22 +1,22 @@
 package edu.xpu.cs.lovexian.app.appadmin.Kafka;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.xpu.cs.lovexian.app.appadmin.controller.InfluxDBContoller;
 import edu.xpu.cs.lovexian.app.appadmin.entity.*;
 import edu.xpu.cs.lovexian.app.appadmin.mapper.*;
+import edu.xpu.cs.lovexian.app.appadmin.service.ICommandInfoAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDeviceStatisticsAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IDtusAdminService;
 import edu.xpu.cs.lovexian.app.appadmin.service.IGatewaysAdminService;
+import edu.xpu.cs.lovexian.app.constant.MessageAckEnum;
 import edu.xpu.cs.lovexian.common.utils.*;
 import lombok.Data;
 import org.apache.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.print.Book;
 import java.util.Date;
 
 
@@ -31,6 +31,10 @@ public class PerformInstrution {
     InfluxDBContoller influxDBContoller;
     @Autowired
     UnresovledDataMapper unresovledDataMapper;
+    @Autowired
+    CommandInfoAdminMapper commandInfoAdminMapper;
+    @Autowired
+    private ICommandInfoAdminService commandInfoAdminService;
     @Autowired
     IDeviceStatisticsAdminService deviceStatisticsAdminService;
     @Autowired
@@ -53,12 +57,38 @@ public class PerformInstrution {
     }
     public static Logger log = Logger.getLogger(KafkaReceiver.class);
 
-    public void performA4(String Message){
-
+    public void SetAndReadFrequency(String Message,String type){
+        String ACK = Message.substring(12,14);
+        String deviceId = Message.substring(14,16);
+        AdminCommandInfo commandInfo= new AdminCommandInfo();
+        String frameNum = commandInfo.getFrameNum();
+        commandInfo = findOne(deviceId,type);
+        MessageAckEnum ackResult = MessageAckEnum.findAck(ACK);
+        commandInfo.setStatus(ackResult.getAck());
+        if("A5".equals(type)&&MessageAckEnum.SuccessMes.getAck().equals(ACK)){
+            String time = Message.substring(16,20);
+            commandInfo.setContent(ackResult.getDesc()+time);
+        }else if("A4".equals(type)){
+            commandInfo.setContent("设置成功");
+        }else{
+            commandInfo.setContent(ackResult.getDesc());
+        }
+        commandInfo.setReceiveTime(new Date());
+        commandInfoAdminService.saveOrUpdate(commandInfo);
     }
-    public void performA5(String Message){
 
+    /**
+     * 匹配已发送命令
+     * @param deviceId,type
+     */
+    public AdminCommandInfo findOne(String deviceId,String type){
+        QueryWrapper<AdminCommandInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().eq(AdminCommandInfo::getType,type)
+                    .eq(AdminCommandInfo::getDeviceID,deviceId)
+                    .orderByDesc(AdminCommandInfo::getSendTime);
+            return commandInfoAdminMapper.selectOne(queryWrapper.last("limit 1"));
     }
+
     public void performA6(String Message) {
         String sensorId[] = getSensorSettingId(Message);
         String checkNum = A6Utils.getCheckNum(Message);

@@ -1,6 +1,7 @@
 package edu.xpu.cs.lovexian.common.utils;
 
 import java.math.BigInteger;
+import java.util.*;
 
 /**
  *author:zhanganjie
@@ -47,6 +48,19 @@ public class WindSpeedUtils {
 
     /**
      * 传感器的方向
+     * 外墙01号机（标准高度135cm）
+     * 01号传感器高度 -115cm ，矫正角度： 180°
+     * 02号传感器高度 290cm,   矫正角度： 180°
+     * 内墙00号机（标准高度113cm）
+     * 01号传感器高度87cm， 不需要角度矫正。
+     * 02号传感器高度287cm，不需要角度矫正。
+     * 2m杆距离墙面5m
+     * 外墙03号机
+     * 01号传感器高度16cm ，矫正角度： 31°
+     * 02号传感器高度155cm, 矫正角度： 159°
+     * 内墙02号机
+     * 01号传感器高度15cm，矫正角度： -40°
+     * 02号传感器高度90cm，矫正角度： -20°
      */
     private static final double[] windDirection_10min_no = new double[1];//修改为1，后期若多个设备整合一条数据发过来，只需修改数组长度
     private static final String[] sensor_data_direction_10min_no = new String[1];//同上
@@ -65,21 +79,56 @@ public class WindSpeedUtils {
             direction_10min_no[i] = new BigInteger(sensor_data_direction_10min_no[i], 16).toString(10);
         }
         //判断是几号设备
-        /*
-        1号机：在所测风向上 +92°        位置： 位于架子的 右侧
-        2号机：在所测风向上 -22°		  位置： 位于架子的 左侧
+        /**
+         * 外墙01号机（标准高度135cm）
          */
-        if (message.substring(18, 20).equals("01")) {
-            windDirection_10min_no[0] = Double.valueOf(direction_10min_no[0]) + 92;
-            if (windDirection_10min_no[0] > 359) {
-                windDirection_10min_no[0] = windDirection_10min_no[0] - 359;
-            }
-        } else {
-            windDirection_10min_no[0] = Double.valueOf(direction_10min_no[0]) - 22;
-            if (windDirection_10min_no[0] < 0) {
-                windDirection_10min_no[0] = windDirection_10min_no[0] + 359;
+        if (message.substring(16,18).equals("01")){
+            windDirection_10min_no[0] = Double.valueOf(direction_10min_no[0]) + 180;
+            if (windDirection_10min_no[0] > 360) {
+                windDirection_10min_no[0] = windDirection_10min_no[0] - 360;
             }
         }
+
+        /**
+         * 外墙03号机
+         */
+        if (message.substring(16,18).equals("03")){
+            if (message.substring(18,20).equals("01")){
+                windDirection_10min_no[0] =  Double.valueOf(direction_10min_no[0]) + 31;
+            }else {
+                windDirection_10min_no[0] =  Double.valueOf(direction_10min_no[0]) + 159;
+            }
+            if (windDirection_10min_no[0] > 360) {
+                windDirection_10min_no[0] = windDirection_10min_no[0] - 360;
+            }
+        }
+
+        /**
+         * 内墙02号机
+         */
+        if (message.substring(16,18).equals("02")){
+            if (message.substring(18,20).equals("01")){
+                windDirection_10min_no[0] =  Double.valueOf(direction_10min_no[0]) - 40;
+            }else {
+                windDirection_10min_no[0] =  Double.valueOf(direction_10min_no[0]) - 20;
+            }
+            if (windDirection_10min_no[0] < 0) {
+                windDirection_10min_no[0] = windDirection_10min_no[0] + 360;
+            }
+        }
+
+        if (windDirection_10min_no[0] == 360 ){
+            windDirection_10min_no[0] = 0.0;
+        }
+        /**
+         * 内墙00号机（标准高度113cm）
+         * 不需要矫正
+         */
+        if (message.substring(16,18).equals("00")){
+            windDirection_10min_no[0] = Double.valueOf(direction_10min_no[0]);
+        }
+
+
 
 
         for (int i = 0; i < directionNum.length; i++) {
@@ -96,6 +145,7 @@ public class WindSpeedUtils {
                 }
             }
         }
+        System.out.println(windDirection_10min_no[0]);
         return direction;
     }
 
@@ -120,41 +170,75 @@ public class WindSpeedUtils {
         }
     }
 
+    /**统计风速次数
+     * 风速计数器0  ：  采样间隔内风速位于 6m/s—8m/s   的次数，计数范围 0- 200
+     * 风速计数器1  ：  采样间隔内风速位于 8m/s—10m/s  的次数，计数范围 0- 200
+     * 风速计数器2  ：  采样间隔内风速位于 10m/s—12m/s 的次数，计数范围 0- 200
+     * 风速计数器3  ：  采样间隔内风速位于 12m/s—14m/s 的次数，计数范围 0- 200
+     * 风速计数器4  ：  采样间隔内风速位于 14m/s—16m/s 的次数，计数范围 0- 200
+     * 风速计数器5  ：  采样间隔内风速位于 16m/s—18m/s 的次数，计数范围 0- 200
+     * @param message
+     * @return返回一个长度为6的传感器计数的数组
+     */
+    private static final String [] count = new String[6];
+    private static final String [] decodeCount = new String[6];
+    public static String[] windSpeedCount(String message){
+        WindSpeedUtils windSpeedUtils = new WindSpeedUtils();
+        List<String> list = new ArrayList<>();
+        String windSpeedCount = A6Utils.getWindSpeedCount(message);
+        System.out.println(windSpeedCount);
+        for(int i=0;i<windSpeedCount.length();i++){
+            String o = Integer.toString(i);
+            //list.add(windSpeedCount.substring(48,50));
+        }
+        for (int j=0;j<6;j++){
+            count[j] = message.substring(48+2*j,50+2*j);
+            decodeCount[j] = new BigInteger(count[j],16).toString();
+        }
+        //count = windSpeedUtils.splitList(list,2);
+        return decodeCount;
+    }
+
 
     /**
-     * 报警信息
-     *
-     * @param
+     * 数组分割算法,由风速次数统计调用
+     * @param list
+     * @param groupSize
+     * @return
      */
-    public static String alarmInfo(String message) {
-        String alarmInfo = null;
-        String info = message.substring(46, 48);
-        if (info.equals("00")) {
-            //System.out.println("正常");
-            alarmInfo = "正常";
+    private List<List<String>> splitList(List<String> list , int groupSize){
+        int length = list.size();
+        // 计算可以分成多少组
+        int num = ( length + groupSize - 1 )/groupSize ; // TODO
+        List<List<String>> newList = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            // 开始位置
+            int fromIndex = i * groupSize;
+            // 结束位置
+            int toIndex = (i+1) * groupSize < length ? ( i+1 ) * groupSize : length ;
+            newList.add(list.subList(fromIndex,toIndex)) ;
         }
-        if (info.equals("01")) {
-            //System.out.println("设备工作状态异常");
-            alarmInfo = "设备工作状态异常";
-        }
-        if (info.equals("02")) {
-            alarmInfo = "数据异常";
-        }
-        return alarmInfo;
+        return  newList ;
     }
 
     public static void main(String[] args) {
-        String test = "AA55F9A60014010200010F00140000001600420014004B0001A0";
-        double [] weedSpeed = windSpeed(test);
-        double [][] a = new double[2][3];
-        for (int i = 0; i < weedSpeed.length; i++) {
-            System.out.println(String.valueOf(((double) Math.round(weedSpeed[i]*100)/100)));
+        String test = "AA55DBA6001A0402030215003C014B0039015A00250155000000000000000102624E55AA0D0A";
+        String test1 = "AA55F7A6001A0402010115001F014800360002003A016200011000000000010C952155AA0D0A";
+        //System.out.println(A6Utils.getDataLen(test)*2);//现在的风速传感器长度为0014,40位
+        //System.out.println(Integer.valueOf(A6Utils.getSensorDataLen(test))*2);//风速数据长度为0F，30位
+        double [] speed = windSpeed(test);
+        String [] s = windSpeedCount(test);
+        String[] f = windDirection(test);
+        for (int i=0;i<1;i++){
+            System.out.println(f[i]);
+            System.out.println(speed[i]);
         }
-        String [] windDirection = windDirection(test);
-        System.out.println(get10minWindSpeed(test));
-        String wendu = temperature(test);
-        System.out.println(wendu);
-        String checkNum = alarmInfo(test);
-        System.out.println(checkNum);
+
+        //System.out.println(s);
+        for (int i=0;i<6;i++){
+            System.out.println(s[i]);
+        }
+        //String checkNum = alarmInfo(test);
+        //System.out.println(checkNum);
     }
 }

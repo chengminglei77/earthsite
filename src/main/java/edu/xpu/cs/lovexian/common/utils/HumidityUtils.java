@@ -24,7 +24,7 @@ public class HumidityUtils {
             deep[i] = new BigInteger(message.substring(34+12*i, 40+12*i), 16).toString(10);
         }
        for (int i=0;i<3;i++){
-               humidity[i] = 100-(Math.pow(Double.valueOf(deep[i])/2,0.25))*10;
+               humidity[i] = 100-(Math.pow(Double.valueOf(deep[i])/2,0.25))*10-4.8;
        }
        return humidity;
     }
